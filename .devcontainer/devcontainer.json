@@ -1,9 +1,9 @@
 {
-    "name": "sentinel-dev-env",
+	"name": "sentinel-dev-env",
 	"image": "ext/sentinel/dev:v0.3.0",
-    "containerEnv": {
-        "PYTHONPATH": "/workspaces/"
-    },
+	"containerEnv": {
+		"PYTHONPATH": "/workspaces/"
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -13,7 +13,7 @@
 			]
 		}
 	},
-    "remoteUser": "sentinel-dev",
+	"remoteUser": "sentinel-dev",
 	"runArgs": [
 		"--hostname=sentinel-lab"
 	],
