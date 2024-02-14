@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-SENTINEL_VERSION="0.2.0"
+SENTINEL_VERSION="0.3.0"
 
 help() {
 
