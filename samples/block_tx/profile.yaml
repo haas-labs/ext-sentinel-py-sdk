@@ -1,0 +1,34 @@
+
+- name: BlockTxDetector
+  type: samples.block_tx.processes.BlockTxDetector
+  description: >
+    Simple Block TX Detector for detecting mulitple 
+    transactions towards DEX inside of one block
+  parameters:
+    chain_id: 1
+    network: ethereum
+
+  inputs:
+
+  - name: transactions
+    type: sentinel.channels.fs.transactions.TransactionsChannel
+    parameters:
+      path: samples/block_tx/data/transactions.json
+
+  outputs:
+
+  - name: events
+    type: sentinel.channels.fs.aio.AioProducerFileChannel
+    parameters:
+      record_type: sentinel.models.event.Event
+      path: samples/block_tx/events/simple-block-tx.json
+      mode: overwrite
+
+  databases:
+
+  - name: dex_addresses
+    type: sentineldb.dex.LocalDEXAddresses
+    description: >
+      Simple local database for DEX addresses
+    parameters:
+      path: samples/block_tx/data/dex.list 
