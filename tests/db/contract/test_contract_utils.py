@@ -55,37 +55,39 @@ def test_get_abi_input_types_without_indexed():
     """
     Test Get ABI Input Types, Without Indexed Input
     """
-    abi = ABIRecord(**{
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "to",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bytes32",
-                "name": "nullifierHash",
-                "type": "bytes32",
-            },
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "relayer",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "fee",
-                "type": "uint256",
-            },
-        ],
-        "name": "Withdrawal",
-        "type": "event",
-    })
+    abi = ABIRecord(
+        **{
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bytes32",
+                    "name": "nullifierHash",
+                    "type": "bytes32",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "relayer",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "fee",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Withdrawal",
+            "type": "event",
+        }
+    )
     assert get_abi_input_types(abi) == [
         "address",
         "bytes32",
@@ -98,37 +100,39 @@ def test_extract_data_from_topics():
     """
     Test Extract Data From Topics
     """
-    abi = ABIRecord(**{
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "to",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bytes32",
-                "name": "nullifierHash",
-                "type": "bytes32",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "relayer",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "fee",
-                "type": "uint256",
-            },
-        ],
-        "name": "Withdrawal",
-        "type": "event",
-    })
+    abi = ABIRecord(
+        **{
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bytes32",
+                    "name": "nullifierHash",
+                    "type": "bytes32",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "relayer",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "fee",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Withdrawal",
+            "type": "event",
+        }
+    )
 
     topics = [
         "0xe9e508bad6d4c3227e881ca19068f099da81b5164dd6d62b2eaf1e8bc6c34931",
@@ -144,37 +148,39 @@ def test_extract_date_from_event_log():
     """
     Test Extract Data from Event Log
     """
-    abi = ABIRecord(**{
-        "anonymous": False,
-        "inputs": [
-            {
-                "indexed": False,
-                "internalType": "address",
-                "name": "to",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "bytes32",
-                "name": "nullifierHash",
-                "type": "bytes32",
-            },
-            {
-                "indexed": True,
-                "internalType": "address",
-                "name": "relayer",
-                "type": "address",
-            },
-            {
-                "indexed": False,
-                "internalType": "uint256",
-                "name": "fee",
-                "type": "uint256",
-            },
-        ],
-        "name": "Withdrawal",
-        "type": "event",
-    })
+    abi = ABIRecord(
+        **{
+            "anonymous": False,
+            "inputs": [
+                {
+                    "indexed": False,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "bytes32",
+                    "name": "nullifierHash",
+                    "type": "bytes32",
+                },
+                {
+                    "indexed": True,
+                    "internalType": "address",
+                    "name": "relayer",
+                    "type": "address",
+                },
+                {
+                    "indexed": False,
+                    "internalType": "uint256",
+                    "name": "fee",
+                    "type": "uint256",
+                },
+            ],
+            "name": "Withdrawal",
+            "type": "event",
+        }
+    )
 
     topics = [
         "0xe9e508bad6d4c3227e881ca19068f099da81b5164dd6d62b2eaf1e8bc6c34931",
