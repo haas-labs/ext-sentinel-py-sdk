@@ -18,14 +18,14 @@ class Event(BaseModel):
     Event Model
     """
 
-    # Attack detector ID, currently attack detector name + version(optional)
+    # Sentinel detector ID, currently: detector name + version(optional)
     did: str
 
     # Event UUID
     eid: str = Field(default=uuid.uuid4().hex)
 
     # Source ID
-    # Default value for Attack Detector
+    # TODO Default value for Sentinel Detector
     sid: str = Field(default="ext:ad")
 
     # Event Category: EVENT (default) or ALERT or ...
