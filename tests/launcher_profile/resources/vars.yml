@@ -1,0 +1,3 @@
+---
+TOKEN: '123'
+transactions_path: /tmp/transactions.jsonl

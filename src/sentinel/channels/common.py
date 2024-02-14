@@ -22,21 +22,21 @@ class Channel:
         raise NotImplementedError()
 
 
-class ConsumerChannel(Channel):
+class InboundChannel(Channel):
     """
-    Consumer Channel
+    Inbound Channel
     """
 
     async def on_message(self, message: Any) -> None:
         """
-        Handle consumer message
+        Handle inbound message
         """
         pass
 
 
-class ProducerChannel(Channel):
+class OutboundChannel(Channel):
     """
-    Producer Channel
+    Outbound Channel
     """
 
     async def send(self, message: Any) -> None:

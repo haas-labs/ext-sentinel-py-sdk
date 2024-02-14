@@ -31,7 +31,7 @@ class BlockTxDetector(BlockDetector):
 
 ## Profile
 
-The detector code structure helps concentrate more on business logic of detection itself and make it inftrustruture agnosostic. Where an detector profile responsible for integration an attacl detector with an environment:
+The detector code structure helps concentrate more on business logic of detection itself and make it inftrustruture agnosostic. Where an detector profile responsible for integration an detector with an environment:
 - data source(-s): local file system, ASW S3 storage, Kafka
 - notification system(-s)
 - integration with local/remote databases

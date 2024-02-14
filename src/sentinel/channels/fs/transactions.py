@@ -3,10 +3,10 @@ import time
 from pathlib import Path
 
 from sentinel.models.transaction import Transaction
-from sentinel.channels.fs.common import ConsumerFileChannel
+from sentinel.channels.fs.common import InboundFileChannel
 
 
-class TransactionsChannel(ConsumerFileChannel):
+class InboundTransactionsChannel(InboundFileChannel):
     """
     Inbound Transactions File Channel
     """
