@@ -14,7 +14,9 @@
 		}
 	},
     "remoteUser": "sentinel-dev",
-	
+	"runArgs": [
+		"--hostname=sentinel-lab"
+	],
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/home/sentinel-dev/.local/bin"
 	},
