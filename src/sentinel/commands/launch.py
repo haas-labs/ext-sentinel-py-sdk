@@ -21,14 +21,14 @@ class LaunchCommand(Command):
     Launch Command
     '''
     name = 'launch'
-    help = 'Launch attack detector(-s)'
+    help = 'Launch sentinel process(-es)'
 
     def add(self):
         '''
         Add Launch command and arguments
         '''
         self._parser.add_argument('--profile', type=pathlib.Path, required=True,
-                            help='Sentinel Profile')
+                            help='Sentinel Process Profile')
         self._parser.add_argument('--import-service-tokens', action='store_true',
                             help = "Import service tokens before launch")
         self._parser.add_argument('--vars', type=str, action='append',
