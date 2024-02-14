@@ -1,0 +1,28 @@
+{
+	"name": "sentinel-dev-env",
+	"image": "ext/sentinel/dev:v0.3.0",
+	"containerEnv": {
+		"PYTHONPATH": "/workspaces/"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"charliermarsh.ruff",
+				"tal7aouy.icons"
+			]
+		}
+	},
+	"remoteUser": "sentinel-dev",
+	"runArgs": [
+		"--hostname=sentinel-lab"
+	],
+	"remoteEnv": {
+		"PATH": "${containerEnv:PATH}:/home/sentinel-dev/.local/bin"
+	},
+	// For Debian based containers
+	// "postCreateCommand": "pip install -e ."
+	
+	// For Alpine based containers
+	"postCreateCommand": "pip install --break-system-packages -e ."
+}

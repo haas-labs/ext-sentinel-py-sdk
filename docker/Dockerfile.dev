@@ -1,0 +1,29 @@
+FROM ext/sentinel/base:v0.2.0
+
+RUN echo "[INFO] Install dev env helpers" \
+        && apk add --no-cache \
+            fish \
+            bash \
+            git \
+            ruff \
+    && echo "[INFO] Install dev tools" \
+        && apk add --no-cache \
+            py3-hatchling \
+            py3-pytest \
+            py3-pytest-cov \
+            py3-pytest-xdist \
+            py3-pytest-benchmark \
+            py3-pytest-mock \
+            py3-pytest-asyncio \
+            py3-faker \
+    && echo "[INFO] Setup user" \
+        && adduser -D -u 1000 -s /usr/local/bin/fish sentinel-dev \
+        && echo 'sentinel-dev ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers  \
+    && echo "[INFO] Remove cache" \
+        && rm -f \
+            /tmp/* \
+            /etc/apk/cache/* \
+        && find /usr -path '*/__pycache__/*' -delete \
+        && find /usr -type d -name '__pycache__' -delete
+
+USER sentinel-dev
