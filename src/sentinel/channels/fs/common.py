@@ -7,9 +7,7 @@ import aiofiles
 
 from typing import Any, Dict
 
-from sentinel.channels.common import ConsumerChannel, ProducerChannel
-
-from sentinel.models.event import Event
+from sentinel.channels.common import InboundChannel, OutboundChannel
 
 
 logger = logging.getLogger(__name__)
@@ -18,9 +16,9 @@ logger = logging.getLogger(__name__)
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
 
 
-class ConsumerFileChannel(ConsumerChannel):
+class InboundFileChannel(InboundChannel):
     """
-    Consumer File Channel
+    Inbound File Channel
     """
 
     def __init__(
@@ -32,7 +30,7 @@ class ConsumerFileChannel(ConsumerChannel):
         **kwargs,
     ) -> None:
         """
-        Consumer File Channel Init
+        Inbound File Channel Init
 
         @param time_interval: int - the time interface between
                                     messages in seconfs, default: 0
@@ -43,7 +41,7 @@ class ConsumerFileChannel(ConsumerChannel):
 
     async def run(self):
         """
-        Run Consumer File Channel Processing
+        Run Inbound File Channel Processing
         """
         async with aiofiles.open(self.path, mode="r") as source:
             async for raw_record in source:
@@ -60,9 +58,9 @@ class ConsumerFileChannel(ConsumerChannel):
         pass
 
 
-class ProducerFileChannel(ProducerChannel):
+class OutboundFileChannel(OutboundChannel):
     """
-    Producer File Channel
+    Outbound File Channel
     """
 
     def __init__(
@@ -74,7 +72,7 @@ class ProducerFileChannel(ProducerChannel):
         **kwargs,
     ) -> None:
         """
-        Producer File Channel Init
+        Outbound File Channel Init
         """
         super().__init__(name, record_type, **kwargs)
 
@@ -84,7 +82,7 @@ class ProducerFileChannel(ProducerChannel):
 
     async def run(self):
         """
-        Run Producer File Channel Processing
+        Run Inbound File Channel Processing
         """
         logger.info(
             f"{self.name} -> Starting channel for publishing messages to file channel: {self.name}"
@@ -97,7 +95,7 @@ class ProducerFileChannel(ProducerChannel):
 
     async def send(self, msg: Any) -> None:
         """
-        Send message to Producer Queue
+        Send message to in-process Queue
         """
         if isinstance(msg, Dict):
             msg = self.record_type(**msg)
