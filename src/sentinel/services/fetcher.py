@@ -336,7 +336,7 @@ class Fetcher:
     #                                      rpc_method='trace_transaction',
     #                                      params=[transaction_hash]))
 
-    def get_trace_transaction(self, tx_hash: Union[str, List[str]]) -> Dict:
+    def get_trace_transaction(self, tx_hash: Union[str, List[str]]) -> Iterator[Dict]:
         """
         returns transaction trace
         """
