@@ -27,7 +27,7 @@
   databases:
 
   - name: dex_addresses
-    type: sentineldb.dex.LocalDEXAddresses
+    type: sentinel.db.dex.LocalDEXAddresses
     description: >
       Simple local database for DEX addresses
     parameters:
