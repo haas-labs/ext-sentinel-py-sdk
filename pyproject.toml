@@ -24,7 +24,7 @@ path = "src/sentinel/version.py"
 
 [tool.hatch.build.targets.wheel]
 include = [
-  "src/sentinel/*.py",
+  "src/sentinel/**",
 ]
 
 [build-system]
