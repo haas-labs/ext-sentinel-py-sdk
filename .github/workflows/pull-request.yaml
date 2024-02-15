@@ -30,3 +30,7 @@ jobs:
     - name: Install Sentinel Python SDK
       run: |
         pip install -e .
+
+    - name: Run tests
+      run: |
+        pytest
