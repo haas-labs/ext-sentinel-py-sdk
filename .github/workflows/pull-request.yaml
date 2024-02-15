@@ -33,5 +33,5 @@ jobs:
 
     - name: Run tests
       run: |
-        pip install pytest pytest-cov
+        pip install pytest pytest-asyncio pytest-cov
         pytest
