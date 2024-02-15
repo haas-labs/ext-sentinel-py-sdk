@@ -1,0 +1,37 @@
+name: pull-request
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build-on-pull-request:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+    
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        # cache: "poetry"
+
+    - name: Ensure latest pip
+      run: python -m pip install --upgrade pip
+
+    - name: Install Sentinel Python SDK
+      run: |
+        pip install -e .
+
+    - name: Run tests
+      run: |
+        pip install pytest pytest-asyncio pytest-cov
+        pytest
