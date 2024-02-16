@@ -37,3 +37,6 @@ jobs:
     - name: Run tests
       run: |
         pytest
+
+    # Add linter checks
+    
