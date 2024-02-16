@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class BlockTxDetector(BlockDetector):
-    
     async def on_block(self, transactions: List[Transaction]) -> None:
         """
         Handle block transactions
@@ -26,14 +25,12 @@ class BlockTxDetector(BlockDetector):
             if not self.databases["dex_addresses"].exists(tx.to_address):
                 continue
             selected_transactions[tx.hash] = tx
-            to_from_pairs[tx.to_address, tx.from_address].append(
-                {"hash": tx.hash, "gas_price": tx.gas_price}
-            )
+            to_from_pairs[tx.to_address, tx.from_address].append({"hash": tx.hash, "gas_price": tx.gas_price})
             if len(to_from_pairs[tx.to_address, tx.from_address]) == 2:
                 tx1, tx2 = to_from_pairs[tx.to_address, tx.from_address]
                 if tx1["gas_price"] != tx2["gas_price"]:
-                    await self.send_notification(selected_transactions[tx1['hash']])
-                    await self.send_notification(selected_transactions[tx2['hash']])
+                    await self.send_notification(selected_transactions[tx1["hash"]])
+                    await self.send_notification(selected_transactions[tx2["hash"]])
 
     async def send_notification(self, transaction: Transaction) -> None:
         """
