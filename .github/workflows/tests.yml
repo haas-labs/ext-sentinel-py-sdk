@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build-on-pull-request:
+  checks:
     runs-on: ubuntu-latest
     strategy:
       matrix:
