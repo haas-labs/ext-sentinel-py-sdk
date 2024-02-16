@@ -50,13 +50,16 @@ jobs:
       continue-on-error: true
 
     - name: Run static analysis
-      run: hatch fmt --check
+      run: |
+        hatch fmt --check
       continue-on-error: true
 
     - name: Check types
-      run: hatch run types:check
+      run: |
+        hatch run types:check
       continue-on-error: true
 
     - name: Run tests
-      run: hatch run full
+      run: |
+        hatch run full
       continue-on-error: true
