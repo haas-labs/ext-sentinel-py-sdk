@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  build-on-pull-request:
+  merge-to-main:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -37,25 +37,3 @@ jobs:
     - name: Run tests
       run: |
         pytest
-
-    - name: Getting Sentinel Python SDK version
-      run: |-
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        SDK_VERSION=`hatch version`
-        hatch version release
-        NEW_SDK_VERSION=`hatch version`
-        echo "NEW_SDK_VERSION=$NEW_SDK_VERSION" >> $GITHUB_ENV
-        git add src/sentinel/version.py
-        git commit -m "Bump version: $SDK_VERSION → $NEW_SDK_VERSION"
-
-    - name: Tagging Sentinel Python SDK and preparing new version
-      run: |-
-        git tag ${{env.NEW_SDK_VERSION}}
-        SDK_VERSION=`hatch version`
-        hatch version fix,dev
-        NEW_SDK_VERSION=`hatch version`
-        git add src/sentinel/version.py
-        git commit -m "Bump version: $SDK_VERSION → $NEW_SDK_VERSION"
-        git push
-        git push --tags
