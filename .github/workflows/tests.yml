@@ -12,6 +12,7 @@ jobs:
 
   checks:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version:
@@ -24,7 +25,7 @@ jobs:
         fetch-depth: 0
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: "pip"
@@ -47,3 +48,12 @@ jobs:
       run: |
         ruff --output-format=github .
       continue-on-error: true
+
+    - name: Run static analysis
+      run: hatch fmt --check
+
+    - name: Check types
+      run: hatch run types:check
+
+    - name: Run tests
+      run: hatch run full
