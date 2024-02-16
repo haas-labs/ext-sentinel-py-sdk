@@ -15,9 +15,9 @@ class RemoteTraceDB(CommonTraceDB):
     """
 
     def __init__(self, endpoint_url: str, network: str, timeout: int = 60) -> None:
-        '''
+        """
         Remote Trace DB Init
-        '''
+        """
         self.tracer = Tracer(endpoint=endpoint_url, network=network, timeout=timeout)
 
     async def get(self, tx_hash: str) -> Trace:

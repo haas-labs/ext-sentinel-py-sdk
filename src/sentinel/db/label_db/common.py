@@ -54,9 +54,7 @@ class CommonLabelDB:
         """
         raise NotImplementedError()
 
-    async def search_by_address(
-        self, addresses: List[str], tags: List[str]
-    ) -> List[LabelDBRecord]:
+    async def search_by_address(self, addresses: List[str], tags: List[str]) -> List[LabelDBRecord]:
         """
         Search by address(-es)
         """
@@ -78,15 +76,11 @@ class CommonLabelDB:
         Update local address db for predefined tags
         """
         time_interval_between_updates = self.current_time() - self._last_update
-        if self._addresses_updated and (
-            time_interval_between_updates < self._update_interval
-        ):
+        if self._addresses_updated and (time_interval_between_updates < self._update_interval):
             return
 
         self._last_update = self.current_time()
-        last_update_dt = datetime.datetime.utcfromtimestamp(
-            self._last_update
-        ).isoformat()
+        last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
         logger.info(f"Updating label database, last update: {last_update_dt}")
 
         for tag in self._addresses.keys():

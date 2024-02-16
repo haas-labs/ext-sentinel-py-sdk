@@ -39,21 +39,15 @@ class FetchCommand(Command):
         """
         Add Fetch command and arguments
         """
-        self._parser.add_argument(
-            "--rpc", type=str, required=True, help="JSON-RPC End-Point"
-        )
+        self._parser.add_argument("--rpc", type=str, required=True, help="JSON-RPC End-Point")
         self._parser.add_argument(
             "--dataset",
             type=DatasetType,
             choices=list(DatasetType),
             help="Dataset type for fetching",
         )
-        self._parser.add_argument(
-            "--from-file", type=pathlib.Path, required=True, help="Fetch data from list"
-        )
-        self._parser.add_argument(
-            "--to-file", type=pathlib.Path, help="Store results into file"
-        )
+        self._parser.add_argument("--from-file", type=pathlib.Path, required=True, help="Fetch data from list")
+        self._parser.add_argument("--to-file", type=pathlib.Path, help="Store results into file")
 
         self._parser.set_defaults(handler=self.handle)
 
@@ -102,16 +96,12 @@ class FetchCommand(Command):
         except KeyboardInterrupt:
             logger.warning("Interrupted by user")
 
-    def handle_blocks(
-        self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path
-    ) -> None:
+    def handle_blocks(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle fetch block transactions
         """
         with source_path.open("r") as source:
-            block_nums = [
-                blk_nm.strip() for blk_nm in source.readlines() if blk_nm != ""
-            ]
+            block_nums = [blk_nm.strip() for blk_nm in source.readlines() if blk_nm != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
                 for transaction in fetcher.get_block_transactions(block_nums):
@@ -119,9 +109,7 @@ class FetchCommand(Command):
             finally:
                 target.close()
 
-    def handle_transactions(
-        self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path
-    ) -> None:
+    def handle_transactions(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle fetch transactions
         """
@@ -134,9 +122,7 @@ class FetchCommand(Command):
             finally:
                 target.close()
 
-    def handle_trace_transactions(
-        self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path
-    ) -> None:
+    def handle_trace_transactions(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle Trace Transactions
         """

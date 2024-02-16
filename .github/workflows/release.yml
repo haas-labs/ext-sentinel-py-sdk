@@ -41,7 +41,7 @@ jobs:
 
     - name: Tagging Sentinel Python SDK and preparing new version
       run: |-
-        git tag ${{env.NEW_SDK_VERSION}}
+        git tag ${{ env.NEW_SDK_VERSION }}
         SDK_VERSION=`hatch version`
         hatch version fix,dev
         NEW_SDK_VERSION=`hatch version`

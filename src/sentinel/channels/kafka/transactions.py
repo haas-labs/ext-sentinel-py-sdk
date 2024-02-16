@@ -18,9 +18,7 @@ class InboundTransactionsChannel(InboundKafkaChannel):
         """
         Inbound Transactions Kafka Channel
         """
-        super().__init__(
-            name, record_type="sentinel.models.transaction.Transaction", **kwargs
-        )
+        super().__init__(name, record_type="sentinel.models.transaction.Transaction", **kwargs)
 
         self.config["value_deserializer"] = json_deserializer
 

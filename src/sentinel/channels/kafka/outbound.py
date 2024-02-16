@@ -33,9 +33,7 @@ class OutboundKafkaChannel(KafkaChannel):
         logger.info(f"{self.name} -> Subscribing to Kafka topics: {self.topics}")
         self.producer = KafkaProducer(**self.config)
 
-        logger.info(
-            f"{self.name} -> Starting channel for publishing messages towards Kafka channel: {self.name}"
-        )
+        logger.info(f"{self.name} -> Starting channel for publishing messages towards Kafka channel: {self.name}")
         await self.producer.start()
         try:
             while True:
@@ -56,7 +54,4 @@ class OutboundKafkaChannel(KafkaChannel):
         if isinstance(msg, self.record_type):
             self.msg_queue.put_nowait(msg.model_dump(exclude_none=True))
         else:
-            raise RuntimeError(
-                f"Unknown message type, type: {type(msg)}, "
-                + "supported: Dict or pydantic.BaseModel"
-            )
+            raise RuntimeError(f"Unknown message type, type: {type(msg)}, " + "supported: Dict or pydantic.BaseModel")

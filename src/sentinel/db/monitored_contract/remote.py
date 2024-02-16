@@ -40,9 +40,9 @@ class MonitoredContractsDB:
         self._network = network
         self._contracts = []
 
-        # The flag for tracking first database update 
+        # The flag for tracking first database update
         self._initial_update = True
-        
+
         self._last_update = self.current_time()
         self._update_interval = update_interval
 
@@ -59,9 +59,7 @@ class MonitoredContractsDB:
         interval: will trigger update every N secs
         """
         time_interval_between_updates = self.current_time() - self._last_update
-        if not self._initial_update and (
-            time_interval_between_updates < self._update_interval
-        ):
+        if not self._initial_update and (time_interval_between_updates < self._update_interval):
             return self.contracts
 
         self._last_update = self.current_time()
@@ -69,35 +67,25 @@ class MonitoredContractsDB:
         endpoint = self._endpoint_url + "/api/v1/contract/search"
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(
-                url=endpoint, headers=self._headers, json=query
-            )
+            response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
         if response.status_code == 200:
             data = response.json().get("data", [])
             # extract only required contract fields
             self._contracts = [
-                contract.get("address").lower()
-                for contract in data
-                if contract.get("chainUid") == self._network
+                contract.get("address").lower() for contract in data if contract.get("chainUid") == self._network
             ]
             # remove duplicates
             self._contracts = list(set(self._contracts))
 
-            last_update_dt = datetime.datetime.utcfromtimestamp(
-                self._last_update
-            ).isoformat()
-            logger.info(
-                f"Detected monitored contracts: {len(self.contracts)}, last update: {last_update_dt}"
-            )
+            last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
+            logger.info(f"Detected monitored contracts: {len(self.contracts)}, last update: {last_update_dt}")
             self._initial_update = False
             return self._contracts
 
         elif response.status_code == 404:
             return []
         else:
-            raise RuntimeError(
-                f"Request error, status code: {response.status_code}, response: {response}"
-            )
+            raise RuntimeError(f"Request error, status code: {response.status_code}, response: {response}")
 
     @property
     def contracts(self) -> List[str]:

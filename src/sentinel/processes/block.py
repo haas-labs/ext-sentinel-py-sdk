@@ -58,11 +58,7 @@ class BlockDetector(TransactionDetector):
 
         last_blk_num = max(blk_numbers)
 
-        self._blocks = {
-            k: v
-            for k, v in self._blocks.items()
-            if last_blk_num - k < self._blocks_stack_size
-        }
+        self._blocks = {k: v for k, v in self._blocks.items() if last_blk_num - k < self._blocks_stack_size}
 
     async def on_transaction(self, transaction: Transaction) -> None:
         """

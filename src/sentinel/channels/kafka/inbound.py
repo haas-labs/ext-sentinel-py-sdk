@@ -21,9 +21,7 @@ class InboundKafkaChannel(KafkaChannel):
         logger.info(f"{self.name} -> Subscribing to Kafka topics: {self.topics}")
         self.consumer = KafkaConsumer(*self.topics, **self.config)
 
-        logger.info(
-            f"{self.name} -> Starting consuming messages fromn Kafka channel: {self.name}"
-        )
+        logger.info(f"{self.name} -> Starting consuming messages fromn Kafka channel: {self.name}")
         await self.consumer.start()
         try:
             async for msg in self.consumer:

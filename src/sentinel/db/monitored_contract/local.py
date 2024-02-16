@@ -1,4 +1,3 @@
-
 import csv
 import time
 import logging
@@ -13,24 +12,22 @@ from .common import Contract
 logger = logging.getLogger(__name__)
 
 
-
 class MonitoredContractsDB:
-    '''
+    """
     Local Monitored Contracts Database
 
-    '''
-    def __init__(self, path: pathlib.Path, 
-                       network: str,
-                       update_interval: int = 300) -> None:
-        '''
+    """
+
+    def __init__(self, path: pathlib.Path, network: str, update_interval: int = 300) -> None:
+        """
         Static Monitored Constacts Database Init
-        '''
+        """
         # The path to local static monitored contracts DB
         if isinstance(path, str):
             self.path = pathlib.Path(path)
         else:
             self.path = path
-        
+
         self.network = network
 
         self._contracts = []
@@ -38,54 +35,54 @@ class MonitoredContractsDB:
         self._last_update = self.current_time()
         self._update_interval = update_interval
 
-        if self.path.suffix == '.csv':
+        if self.path.suffix == ".csv":
             self._import_csv(self.path)
 
     def current_time(self):
-        '''
+        """
         returns current time in epoch time (seconds)
-        '''
+        """
         return int(time.time())
 
     def _import_csv(self, path: pathlib.Path) -> None:
-        '''
+        """
         Import Mixer DB from csv file
-        '''
-        reader = csv.DictReader(path.open('r'))
+        """
+        reader = csv.DictReader(path.open("r"))
         for row in reader:
             contract = Contract(**row)
             if contract.network == self.network:
                 self._contracts.append(contract.contract_address.lower())
-        logger.info(f'Imported {len(self.contracts)} monitored contracts')
+        logger.info(f"Imported {len(self.contracts)} monitored contracts")
         self._contracts = list(set(self._contracts))
 
     async def update(self) -> None:
-        '''
+        """
         Update Local Monitored Contracts list
 
-        interval: will trigger update every N secs        
-        '''
+        interval: will trigger update every N secs
+        """
         time_interval_between_updates = self.current_time() - self._last_update
         if len(self.contracts) > 0 and (time_interval_between_updates < self._update_interval):
             return self.contracts
 
         self._last_update = self.current_time()
         last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
-        logger.info(f'Updating monitored contract list, last update: {last_update_dt}')
+        logger.info(f"Updating monitored contract list, last update: {last_update_dt}")
 
         self._import_csv(self.path)
 
     @property
     def contracts(self) -> List[Contract]:
-        '''
+        """
         returns the list of contracts
-        '''
+        """
         return self._contracts
 
     def exists(self, address: str) -> bool:
-        '''
+        """
         returns True if address is in monitored contracts list
-        '''
+        """
         address = address.lower() if address is not None else address
         if address in self._contracts:
             return True

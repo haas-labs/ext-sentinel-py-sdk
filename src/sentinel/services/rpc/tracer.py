@@ -61,9 +61,7 @@ class Tracer:
         """
         JSONRPC Fetch
         """
-        async with httpx.AsyncClient(
-            verify=False, timeout=self.timeout, follow_redirects=True
-        ) as client:
+        async with httpx.AsyncClient(verify=False, timeout=self.timeout, follow_redirects=True) as client:
             response = await client.post(
                 url=self.endpoint,
                 headers=HEADERS,
@@ -79,9 +77,7 @@ class Tracer:
                 else:
                     return data.get("result", {})
             case _:
-                logger.error(
-                    f"RPC Data Fetching error code: {response.status_code}, request: {request.data}"
-                )
+                logger.error(f"RPC Data Fetching error code: {response.status_code}, request: {request.data}")
                 logger.error(response.content)
                 return {}
 
@@ -102,9 +98,7 @@ class Tracer:
         """
         returns latest block transactions
         """
-        response = await self.fetch(
-            JsonRpcRequest(method="eth_getBlockByNumber", params=["latest", False])
-        )
+        response = await self.fetch(JsonRpcRequest(method="eth_getBlockByNumber", params=["latest", False]))
         if limit is None:
             return response.get("transactions", [])
         else:

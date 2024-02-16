@@ -36,3 +36,10 @@ jobs:
     - name: Run tests
       run: |
         pytest
+
+    # Add linter checks
+    
+    # - name: Run formatting checks
+    #   run: |
+    #     pip install hatch
+    #     hatch --help

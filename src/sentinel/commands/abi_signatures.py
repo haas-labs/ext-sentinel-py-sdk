@@ -32,9 +32,7 @@ class AbiSignaturesCommand(Command):
         """
         Add ABI Signatures command and arguments
         """
-        self._parser.add_argument(
-            "--env-vars", type=str, help="Set environment variables from JSON/YAML file"
-        )
+        self._parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
         self._parser.add_argument(
             "--from",
             dest="contract_list",
@@ -74,9 +72,7 @@ class AbiSignaturesCommand(Command):
 
         import_service_tokens()
         try:
-            logger.info(
-                f"Fetching ABI Signatures from the contract list, {args.contract_list}"
-            )
+            logger.info(f"Fetching ABI Signatures from the contract list, {args.contract_list}")
             contracts = [addr for addr in csv.DictReader(args.contract_list.open("r"))]
             asyncio.run(
                 self.fetch_abi_signatures(
@@ -123,18 +119,12 @@ class AbiSignaturesCommand(Command):
 
             abi_signatures = await dbs[chain_id].get_abi_signatures(contract_address)
             if len(abi_signatures) == 0:
-                logger.info(
-                    f"No ABI signatures for chain id: {chain_id}, contract: {contract['address']}"
-                )
+                logger.info(f"No ABI signatures for chain id: {chain_id}, contract: {contract['address']}")
                 continue
 
             if target_path is not None:
                 os.makedirs(target_path / f"chain_id={chain_id}/", exist_ok=True)
-                target_file = (
-                    target_path / f"chain_id={chain_id}/{contract_address}.json"
-                )
+                target_file = target_path / f"chain_id={chain_id}/{contract_address}.json"
                 with target_file.open("w") as abi_signatures_file:
                     for signature in abi_signatures:
-                        abi_signatures_file.write(
-                            f"{json.dumps(signature.model_dump())}\n"
-                        )
+                        abi_signatures_file.write(f"{json.dumps(signature.model_dump())}\n")
