@@ -36,9 +36,7 @@ async def test_local_label_db_add_and_search_by_address(tmpdir):
     assert len(search_result) == 2, "Incorrect number of search result"
 
     founded_addresses = [rec.address for rec in search_result]
-    assert (
-        founded_addresses == suspicious_account_addresses
-    ), "Incorrect suspicious account addresses"
+    assert founded_addresses == suspicious_account_addresses, "Incorrect suspicious account addresses"
 
 
 @pytest.mark.asyncio
@@ -59,9 +57,7 @@ async def test_local_label_db_add_and_search_by_tag(tmpdir):
     assert len(search_result) == 1, "Incorrect number of search result"
 
     suspicious_account_record = search_result[0]
-    assert (
-        suspicious_account_record.address == suspicious_account_address
-    ), "Incorrect suspicious account address"
+    assert suspicious_account_record.address == suspicious_account_address, "Incorrect suspicious account address"
 
 
 @pytest.mark.asyncio
@@ -112,6 +108,4 @@ async def test_local_label_db_update(tmpdir):
         suspicious_account_address, "suspicious_account"
     ), "Suspicious account missed in the Label DB"
 
-    assert not label_db.has_tag(
-        "0x0123456789", "suspicious_account"
-    ), "Wrong suspicious account in the Label DB"
+    assert not label_db.has_tag("0x0123456789", "suspicious_account"), "Wrong suspicious account in the Label DB"
