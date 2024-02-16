@@ -1,4 +1,4 @@
-name: pull-request
+name: merge-to-main
 
 on:
   push:
@@ -48,3 +48,14 @@ jobs:
         echo "NEW_SDK_VERSION=$NEW_SDK_VERSION" >> $GITHUB_ENV
         git add src/sentinel/version.py
         git commit -m "Bump version: $SDK_VERSION → $NEW_SDK_VERSION"
+
+    - name: Tagging Sentinel Python SDK and preparing new version
+      run: |-
+        git tag ${{env.NEW_SDK_VERSION}}
+        SDK_VERSION=`hatch version`
+        hatch version fix,dev
+        NEW_SDK_VERSION=`hatch version`
+        git add src/sentinel/version.py
+        git commit -m "Bump version: $SDK_VERSION → $NEW_SDK_VERSION"
+        git push
+        git push --tags
