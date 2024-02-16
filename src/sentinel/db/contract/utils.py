@@ -54,9 +54,7 @@ def extract_data_from_topics(abi_record: ABIRecord, topics: List[str]) -> Dict:
     return kv
 
 
-def extract_data_from_event_log(
-    abi_record: ABIRecord, topics: List[str], data: str
-) -> Dict:
+def extract_data_from_event_log(abi_record: ABIRecord, topics: List[str], data: str) -> Dict:
     """
     Extract data from event
     """

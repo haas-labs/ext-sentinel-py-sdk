@@ -39,7 +39,7 @@ class RemoteAddressDB(CommonAddressDB):
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {token}"
-            
+
     async def _fetch(self, address: str) -> AddressType:
         """
         fetch address details: address/contract
@@ -50,9 +50,7 @@ class RemoteAddressDB(CommonAddressDB):
         }
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(
-                url=self._endpoint, headers=self._headers, json=query
-            )
+            response = await httpx_async_client.post(url=self._endpoint, headers=self._headers, json=query)
 
         match response.status_code:
             case 200:

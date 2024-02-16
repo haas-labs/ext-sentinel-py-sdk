@@ -155,10 +155,7 @@ class Dispatcher:
                 "type": proc_type,
                 "description": proc_descr,
             }
-            logger.error(
-                f"{proc_name} -> Process initialization issue, {err}, "
-                + f"Process: {process}"
-            )
+            logger.error(f"{proc_name} -> Process initialization issue, {err}, " + f"Process: {process}")
             return None
 
         return proc_instance
@@ -178,16 +175,12 @@ class Dispatcher:
         try:
             # Main loop
             while True:
-                active_processes = [
-                    p for p in self._processes.values() if p.instance.is_alive()
-                ]
+                active_processes = [p for p in self._processes.values() if p.instance.is_alive()]
                 logger.info(f"Active processes: {[ap.instance.name for ap in active_processes]}")
 
                 for name, process in self._processes.items():
                     if not process.instance.is_alive():
-                        logger.warning(
-                            f"Detected inactive process ({name}), restarting..."
-                        )
+                        logger.warning(f"Detected inactive process ({name}), restarting...")
                         process.instance.start()
 
                 time.sleep(PROCESS_STATE_CHECK_TIME_INTERVAL)

@@ -84,9 +84,7 @@ class OutboundFileChannel(OutboundChannel):
         """
         Run Inbound File Channel Processing
         """
-        logger.info(
-            f"{self.name} -> Starting channel for publishing messages to file channel: {self.name}"
-        )
+        logger.info(f"{self.name} -> Starting channel for publishing messages to file channel: {self.name}")
         async with aiofiles.open(self.path, mode=self.filemode) as target:
             while True:
                 msg = await self.msg_queue.get()
@@ -103,7 +101,4 @@ class OutboundFileChannel(OutboundChannel):
         if isinstance(msg, self.record_type):
             self.msg_queue.put_nowait(msg.model_dump(exclude_none=True))
         else:
-            raise RuntimeError(
-                f"Unknown message type, type: {type(msg)}, "
-                + "supported: Dict or pydantic.BaseModel"
-            )
+            raise RuntimeError(f"Unknown message type, type: {type(msg)}, " + "supported: Dict or pydantic.BaseModel")

@@ -27,6 +27,10 @@ include = [
   "src/sentinel/**",
 ]
 
+[tool.ruff]
+# Allow lines to be as long as 120.
+line-length = 120
+
 [build-system]
 # TODO https://github.com/ofek/hatch-vcs
 requires = ["hatchling"]

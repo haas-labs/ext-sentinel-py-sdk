@@ -56,9 +56,7 @@ class LabelDB(CommonLabelDB):
                     results.append(record)
         return results
 
-    async def search_by_address(
-        self, addresses: List[str], tags: List[str]
-    ) -> List[LabelDBRecord]:
+    async def search_by_address(self, addresses: List[str], tags: List[str]) -> List[LabelDBRecord]:
         """
         Search labels by address(-es)
         """

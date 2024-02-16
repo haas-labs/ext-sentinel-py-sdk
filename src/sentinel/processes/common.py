@@ -133,9 +133,7 @@ class Detector(mp.Process):
             if ch_name == "transactions":
                 self.channels["transactions"] = channel.instance
                 self.channels["transactions"].on_transaction = self.on_transaction
-                self.channels[
-                    "transactions"
-                ].on_transactions_batch = self.on_transactions_batch
+                self.channels["transactions"].on_transactions_batch = self.on_transactions_batch
 
         for ch_name, channel in outputs.items():
             # Setup events channel if specified

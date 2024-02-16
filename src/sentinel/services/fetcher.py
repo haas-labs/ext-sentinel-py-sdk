@@ -89,9 +89,7 @@ class Fetcher:
             else:
                 return data.get("result", {})
         else:
-            logger.error(
-                f"RPC Data Fetching error code: {response.status_code}, request: {request.data}"
-            )
+            logger.error(f"RPC Data Fetching error code: {response.status_code}, request: {request.data}")
             logger.error(response.content)
             return None
 
@@ -105,22 +103,14 @@ class Fetcher:
         - and transaction receipt
         """
         with Progress() as progress:
-            fetching_blocks = progress.add_task(
-                "Fetching block transactions", total=len(block_numbers)
-            )
+            fetching_blocks = progress.add_task("Fetching block transactions", total=len(block_numbers))
             for blk_nm in block_numbers:
                 block_data = self.get_block_by_number(blk_nm)
                 transactions = block_data.get("transactions", [])
                 block_data["transaction_count"] = len(transactions)
-                block_data = dict_fields_filter(
-                    block_data, JSONRPC_BLOCK_FIELD_IGNORE_LIST
-                )
-                block_data = dict_fields_mapping(
-                    block_data, JSONRPC_BLOCK_FIELD_MAPPINGS
-                )
-                block_data = dict_fields_transform(
-                    block_data, JSONRPC_BLOCK_FIELD_TRANSFORM
-                )
+                block_data = dict_fields_filter(block_data, JSONRPC_BLOCK_FIELD_IGNORE_LIST)
+                block_data = dict_fields_mapping(block_data, JSONRPC_BLOCK_FIELD_MAPPINGS)
+                block_data = dict_fields_transform(block_data, JSONRPC_BLOCK_FIELD_TRANSFORM)
 
                 fetching_transactions = progress.add_task(
                     f"Fetching transactions of block: {blk_nm}", total=len(transactions)
@@ -135,15 +125,9 @@ class Fetcher:
                     tx_receipt_data = self.get_transaction_receipt_by_hash(tx_hash)
                     tx_data["logs"] = []
                     for log_data in tx_receipt_data.pop("logs", []):
-                        log_data = dict_fields_filter(
-                            log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST
-                        )
-                        log_data = dict_fields_mapping(
-                            log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS
-                        )
-                        log_data = dict_fields_transform(
-                            log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_TRANSFORM
-                        )
+                        log_data = dict_fields_filter(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST)
+                        log_data = dict_fields_mapping(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS)
+                        log_data = dict_fields_transform(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_TRANSFORM)
                         tx_data["logs"].append(log_data)
 
                     if tx_receipt_data:
@@ -151,15 +135,9 @@ class Fetcher:
 
                     tx_data["block"] = block_data
 
-                    tx_data = dict_fields_filter(
-                        tx_data, JSONRPC_TRANSACTION_FIELD_IGNORE_LIST
-                    )
-                    tx_data = dict_fields_mapping(
-                        tx_data, JSONRPC_TRANSACTION_FIELD_MAPPINGS
-                    )
-                    tx_data = dict_fields_transform(
-                        tx_data, JSONRPC_TRANSACTION_FIELD_TRANSFORM
-                    )
+                    tx_data = dict_fields_filter(tx_data, JSONRPC_TRANSACTION_FIELD_IGNORE_LIST)
+                    tx_data = dict_fields_mapping(tx_data, JSONRPC_TRANSACTION_FIELD_MAPPINGS)
+                    tx_data = dict_fields_transform(tx_data, JSONRPC_TRANSACTION_FIELD_TRANSFORM)
 
                     if "root" not in tx_data:
                         tx_data["root"] = None
@@ -189,15 +167,9 @@ class Fetcher:
             tx_receipt_data = self.get_transaction_receipt_by_hash(tx_hash)
             tx_data["logs"] = []
             for log_data in tx_receipt_data.pop("logs", []):
-                log_data = dict_fields_filter(
-                    log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST
-                )
-                log_data = dict_fields_mapping(
-                    log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS
-                )
-                log_data = dict_fields_transform(
-                    log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_TRANSFORM
-                )
+                log_data = dict_fields_filter(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST)
+                log_data = dict_fields_mapping(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS)
+                log_data = dict_fields_transform(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_TRANSFORM)
                 tx_data["logs"].append(log_data)
 
             if tx_receipt_data:
@@ -207,16 +179,12 @@ class Fetcher:
             block_data["transaction_count"] = len(block_data.get("transactions", []))
             block_data = dict_fields_filter(block_data, JSONRPC_BLOCK_FIELD_IGNORE_LIST)
             block_data = dict_fields_mapping(block_data, JSONRPC_BLOCK_FIELD_MAPPINGS)
-            block_data = dict_fields_transform(
-                block_data, JSONRPC_BLOCK_FIELD_TRANSFORM
-            )
+            block_data = dict_fields_transform(block_data, JSONRPC_BLOCK_FIELD_TRANSFORM)
             tx_data["block"] = block_data
 
             tx_data = dict_fields_filter(tx_data, JSONRPC_TRANSACTION_FIELD_IGNORE_LIST)
             tx_data = dict_fields_mapping(tx_data, JSONRPC_TRANSACTION_FIELD_MAPPINGS)
-            tx_data = dict_fields_transform(
-                tx_data, JSONRPC_TRANSACTION_FIELD_TRANSFORM
-            )
+            tx_data = dict_fields_transform(tx_data, JSONRPC_TRANSACTION_FIELD_TRANSFORM)
 
             if "root" not in tx_data:
                 tx_data["root"] = None
@@ -265,9 +233,7 @@ class Fetcher:
         transaction["block_timestamp"] = int(transaction["block_timestamp"], 0)
         return transaction
 
-    def get_block_by_number(
-        self, block_number: str, transaction_detail_flag: bool = False
-    ) -> Dict:
+    def get_block_by_number(self, block_number: str, transaction_detail_flag: bool = False) -> Dict:
         """
         returns block data by number
         """
@@ -279,9 +245,7 @@ class Fetcher:
             )
         )
 
-    def get_block_by_hash(
-        self, block_hash: str, transaction_detail_flag: bool = False
-    ) -> Dict:
+    def get_block_by_hash(self, block_hash: str, transaction_detail_flag: bool = False) -> Dict:
         """
         returns block data by hash
         """
@@ -321,11 +285,7 @@ class Fetcher:
         """
         returns block trace
         """
-        return self.fetch(
-            JsonRpcRequest(
-                self.endpoint, rpc_method="trace_block", params=[block_number]
-            )
-        )
+        return self.fetch(JsonRpcRequest(self.endpoint, rpc_method="trace_block", params=[block_number]))
 
     # TODO update the code
     # def get_transaction_trace(self, transaction_hash: str) -> Dict:
@@ -362,9 +322,7 @@ class Fetcher:
                     continue
                 yield trace_data
 
-    def get_debug_trace_transaction(
-        self, tx_hash: Union[str, List[str]]
-    ) -> Iterator[Dict]:
+    def get_debug_trace_transaction(self, tx_hash: Union[str, List[str]]) -> Iterator[Dict]:
         """
         returns transaction trace
         """

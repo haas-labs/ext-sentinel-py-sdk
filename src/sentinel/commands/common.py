@@ -32,9 +32,7 @@ class Command:
             help="Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL",
         )
 
-        self._parser.add_argument(
-            "--rich-logging", action="store_true", help="Activate rich logging"
-        )
+        self._parser.add_argument("--rich-logging", action="store_true", help="Activate rich logging")
 
     def add(self):
         """

@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, List, Any
 
@@ -7,9 +6,10 @@ from sentinel.models.database import Database
 
 
 class Process(BaseModel):
-    '''
+    """
     Process
-    '''
+    """
+
     name: str
     type: str
     description: Optional[str] = None

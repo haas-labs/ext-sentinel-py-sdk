@@ -1,4 +1,4 @@
-ERC1155 = '''
+ERC1155 = """
 [
   {
     "anonymous": false,
@@ -313,4 +313,4 @@ ERC1155 = '''
     "type": "function"
   }
 ]
-'''
+"""

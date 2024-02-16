@@ -11,15 +11,11 @@ class InboundTransactionsChannel(InboundFileChannel):
     Inbound Transactions File Channel
     """
 
-    def __init__(
-        self, name: str, path: Path, use_current_time: bool = False, **kwargs
-    ) -> None:
+    def __init__(self, name: str, path: Path, use_current_time: bool = False, **kwargs) -> None:
         """
         Inbound Transaction File Channel Init
         """
-        super().__init__(
-            name, "sentinel.models.transaction.Transaction", path, **kwargs
-        )
+        super().__init__(name, "sentinel.models.transaction.Transaction", path, **kwargs)
         self.use_current_time = use_current_time
 
     async def on_message(self, message: Transaction) -> None:

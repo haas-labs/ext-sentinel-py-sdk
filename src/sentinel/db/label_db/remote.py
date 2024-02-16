@@ -44,9 +44,7 @@ class LabelDB(CommonLabelDB):
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self._token}"
 
-    async def search_by_address(
-        self, addresses: List[str], tags: List[str]
-    ) -> List[LabelDBRecord]:
+    async def search_by_address(self, addresses: List[str], tags: List[str]) -> List[LabelDBRecord]:
         """
         Search labeles for specific addresses and tags
         """
@@ -59,9 +57,7 @@ class LabelDB(CommonLabelDB):
         endpoint = self._endpoint_url + "/api/v2/label/cached"
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(
-                url=endpoint, headers=self._headers, json=query
-            )
+            response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
         if response.status_code == 200:
             results = []
             label_db_record_fields = LabelDBRecord.model_fields.keys()
@@ -72,9 +68,7 @@ class LabelDB(CommonLabelDB):
                     continue
                 uniq_addresses.append(record_address)
 
-                record = {
-                    k: v for k, v in record.items() if k in label_db_record_fields
-                }
+                record = {k: v for k, v in record.items() if k in label_db_record_fields}
                 results.append(LabelDBRecord(**record))
             return results
 
@@ -86,9 +80,7 @@ class LabelDB(CommonLabelDB):
                 + f"response: {response.content}, query: {query}"
             )
 
-    async def search_by_tag(
-        self, tags: List[str], from_pos: int = 0, limit: int = 10000
-    ) -> List[LabelDBRecord]:
+    async def search_by_tag(self, tags: List[str], from_pos: int = 0, limit: int = 10000) -> List[LabelDBRecord]:
         """
         Search labeles by tags
         """
@@ -101,9 +93,7 @@ class LabelDB(CommonLabelDB):
         endpoint = self._endpoint_url + "/api/v2/label/search"
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(
-                url=endpoint, headers=self._headers, json=query
-            )
+            response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
         if response.status_code == 200:
             results = []
             label_db_record_fields = LabelDBRecord.model_fields.keys()
@@ -114,9 +104,7 @@ class LabelDB(CommonLabelDB):
                     continue
                 uniq_addresses.append(record_address)
 
-                record = {
-                    k: v for k, v in record.items() if k in label_db_record_fields
-                }
+                record = {k: v for k, v in record.items() if k in label_db_record_fields}
                 results.append(LabelDBRecord(**record))
             return results
 
@@ -143,15 +131,10 @@ class LabelDB(CommonLabelDB):
                 "tags": tags,
             },
         }
-        endpoint = (
-            self._endpoint_url
-            + f"/api/v2/blockchain/{self._network}/address/{address}/label/upsert"
-        )
+        endpoint = self._endpoint_url + f"/api/v2/blockchain/{self._network}/address/{address}/label/upsert"
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(
-                url=endpoint, headers=self._headers, json=parameters
-            )
+            response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=parameters)
         if response.status_code != 201:
             logger.error(
                 f"Cannot add address to label DB, status: {response.status_code}, "

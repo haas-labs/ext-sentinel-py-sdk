@@ -67,8 +67,6 @@ class OutboundEventsChannel(OutboundKafkaChannel):
                 msg.metadata[k] = v
 
         if not isinstance(msg, Event):
-            raise RuntimeError(
-                f"Incorrect message type, expected: Event, detected: {type(msg)}"
-            )
+            raise RuntimeError(f"Incorrect message type, expected: Event, detected: {type(msg)}")
 
         await super().send(msg)
