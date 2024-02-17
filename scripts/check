@@ -7,9 +7,11 @@ fi
 
 set -x
 
-# export SOURCE_FILES="..."
+export SOURCE_FILES="src tests"
 
-# ${PREFIX}isort --check --diff --project=sentinel $SOURCE_FILES
-# ${PREFIX}black --check --diff $SOURCE_FILES
-# ${PREFIX}flake8 $SOURCE_FILES
-# ${PREFIX}mypy sentinel
+# ./scripts/sync-version
+${PREFIX}ruff format --check --diff $SOURCE_FILES
+
+# ${PREFIX}mypy $SOURCE_FILES
+
+${PREFIX}ruff check $SOURCE_FILES
