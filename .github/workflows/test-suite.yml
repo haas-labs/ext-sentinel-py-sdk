@@ -1,4 +1,4 @@
-name: Tests
+name: Test Suite
 
 on:
   pull_request:
@@ -40,26 +40,26 @@ jobs:
       run: |
         pip install -e .
 
+    # - name: Linter checks
+    #   run: |
+    #     ruff --output-format=github .
+    #   continue-on-error: true
+
+    # - name: Run static analysis
+    #   run: |
+    #     hatch fmt --check
+    #   continue-on-error: true
+
+    # - name: Check types
+    #   run: |
+    #     hatch run types:check
+    #   continue-on-error: true
+
     - name: Run tests
       run: |
         pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
 
-    - name: Linter checks
-      run: |
-        ruff --output-format=github .
-      continue-on-error: true
-
-    - name: Run static analysis
-      run: |
-        hatch fmt --check
-      continue-on-error: true
-
-    - name: Check types
-      run: |
-        hatch run types:check
-      continue-on-error: true
-
-    - name: Run tests
-      run: |
-        hatch run full
-      continue-on-error: true
+    # - name: Run tests
+    #   run: |
+    #     hatch run full
+    #   continue-on-error: true
