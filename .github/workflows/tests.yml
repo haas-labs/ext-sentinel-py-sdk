@@ -2,17 +2,21 @@ name: Tests
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
 
   checks:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version:
+          - "3.11"
 
     steps:
     
@@ -21,7 +25,7 @@ jobs:
         fetch-depth: 0
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: "pip"
@@ -29,7 +33,7 @@ jobs:
     - name: Install required Python packages
       run: |
         python -m pip install --upgrade pip
-        pip install ruff
+        pip install ruff hatch
         pip install pytest pytest-asyncio pytest-cov
 
     - name: Install Sentinel Python SDK
@@ -43,4 +47,19 @@ jobs:
     - name: Linter checks
       run: |
         ruff --output-format=github .
+      continue-on-error: true
+
+    - name: Run static analysis
+      run: |
+        hatch fmt --check
+      continue-on-error: true
+
+    - name: Check types
+      run: |
+        hatch run types:check
+      continue-on-error: true
+
+    - name: Run tests
+      run: |
+        hatch run full
       continue-on-error: true

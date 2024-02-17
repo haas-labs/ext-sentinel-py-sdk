@@ -192,8 +192,6 @@ def test_extract_date_from_event_log():
         "event_signature_hash": "0xe9e508bad6d4c3227e881ca19068f099da81b5164dd6d62b2eaf1e8bc6c34931",
         "relayer": "0xa591b02d27c5957fa472b4d702f52f3001aa49d1",
         "to": "0xa591b02d27c5957fa472b4d702f52f3001aa49d1",
-        "nullifierHash": bytes.fromhex(
-            "131a48dffe430d128db78cb6fb80d2b08590536251da8baae08de93573db6d73"
-        ),
+        "nullifierHash": bytes.fromhex("131a48dffe430d128db78cb6fb80d2b08590536251da8baae08de93573db6d73"),
         "fee": 0,
     }, "Incorrect event log data"

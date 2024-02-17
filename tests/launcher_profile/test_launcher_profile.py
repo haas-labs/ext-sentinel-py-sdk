@@ -18,9 +18,7 @@ def test_launcher_profile_parse():
     Launcher Profile Parse
     """
     profile = LauncherProfile()
-    settings = profile.parse(
-        pathlib.Path("tests/launcher_profile/resources/single-process-profile.yml")
-    )
+    settings = profile.parse(pathlib.Path("tests/launcher_profile/resources/single-process-profile.yml"))
 
     assert len(settings.processes) == 1, "Incorrect number of processes"
 
@@ -66,12 +64,8 @@ def test_launcher_profile_parse_with_extra_vars():
     """
     os.environ["TOKEN"] = "123"
     profile = LauncherProfile()
-    path = pathlib.Path(
-        "tests/launcher_profile/resources/single-process-profile-with-placeholders.yml"
-    )
-    settings = profile.parse(
-        path, extra_vars={"transactions_path": "/tmp/transactions.json"}
-    )
+    path = pathlib.Path("tests/launcher_profile/resources/single-process-profile-with-placeholders.yml")
+    settings = profile.parse(path, extra_vars={"transactions_path": "/tmp/transactions.json"})
 
     assert len(settings.processes) == 1, "Incorrect number of processes"
     assert settings.processes[0].inputs[0].parameters == {

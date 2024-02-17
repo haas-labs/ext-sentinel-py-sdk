@@ -23,13 +23,9 @@ def test_fs_channels_init(tmpdir):
         path=outbound_channel_filepath,
     )
 
-    assert isinstance(
-        inbound_channel, InboundFileChannel
-    ), "Incorrect type for InboundFileChannel"
+    assert isinstance(inbound_channel, InboundFileChannel), "Incorrect type for InboundFileChannel"
 
-    assert isinstance(
-        outbound_channel, OutboundFileChannel
-    ), "Incorrect type for OutboundFileChannel"
+    assert isinstance(outbound_channel, OutboundFileChannel), "Incorrect type for OutboundFileChannel"
 
 
 @pytest.mark.asyncio
