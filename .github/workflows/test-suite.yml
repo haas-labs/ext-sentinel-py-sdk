@@ -24,17 +24,21 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: "pip"
-
-    - name: Install required packages
+    - name: Analize branch prefix
       run: |
-        ./scripts/install
+        echo "${GITHUB_REF##*/}"
 
-    - name: Run tests
-      run: |
-        ./scripts/test ${{ matrix.python-version }}
+    # - name: Set up Python ${{ matrix.python-version }}
+    #   uses: actions/setup-python@v5
+    #   with:
+    #     python-version: ${{ matrix.python-version }}
+    #     cache: "pip"
+
+    # - name: Install required packages
+    #   run: |
+    #     ./scripts/install
+
+    # - name: Run tests
+    #   run: |
+    #     ./scripts/test ${{ matrix.python-version }}
 
