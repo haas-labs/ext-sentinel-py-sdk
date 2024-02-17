@@ -30,15 +30,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: "pip"
 
-    - name: Install required Python packages
+    - name: Install required packages
       run: |
-        python -m pip install --upgrade pip
-        pip install ruff hatch
-        pip install pytest pytest-asyncio pytest-cov
-
-    - name: Install Sentinel Python SDK
-      run: |
-        pip install -e .
+        ./scripts/install
 
     # - name: Linter checks
     #   run: |
