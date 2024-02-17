@@ -34,26 +34,7 @@ jobs:
       run: |
         ./scripts/install
 
-    # - name: Linter checks
-    #   run: |
-    #     ruff --output-format=github .
-    #   continue-on-error: true
-
-    # - name: Run static analysis
-    #   run: |
-    #     hatch fmt --check
-    #   continue-on-error: true
-
-    # - name: Check types
-    #   run: |
-    #     hatch run types:check
-    #   continue-on-error: true
-
     - name: Run tests
       run: |
-        pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+        ./scripts/test ${{ matrix.python-version }}
 
-    # - name: Run tests
-    #   run: |
-    #     hatch run full
-    #   continue-on-error: true

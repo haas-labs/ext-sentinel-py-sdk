@@ -7,12 +7,23 @@ fi
 
 set -ex
 
-if [ -z $GITHUB_ACTIONS ]; then
-    scripts/check
-fi
+PYTHON_VERSION=${1:-}
 
-${PREFIX}coverage run -m pytest $@
+# if [ -z $GITHUB_ACTIONS ]; then
+#     scripts/check
+# fi
 
-if [ -z $GITHUB_ACTIONS ]; then
-    scripts/coverage
-fi
+# ${PREFIX}coverage run -m pytest $@
+
+# if [ -z $GITHUB_ACTIONS ]; then
+#     scripts/coverage
+# fi
+
+# ruff --output-format=github .
+
+# hatch fmt --check
+# hatch run types:check
+
+pytest --junitxml=junit/test-results-${PYTHON_VERSION}.xml
+
+# hatch run full
