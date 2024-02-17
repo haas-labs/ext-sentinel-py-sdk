@@ -1,0 +1,29 @@
+#!/bin/sh
+
+export PREFIX=""
+if [ -d 'venv' ] ; then
+    export PREFIX="venv/bin/"
+fi
+
+set -ex
+
+PYTHON_VERSION=${1:-}
+
+# if [ -z $GITHUB_ACTIONS ]; then
+#     scripts/check
+# fi
+
+# ${PREFIX}coverage run -m pytest $@
+
+# if [ -z $GITHUB_ACTIONS ]; then
+#     scripts/coverage
+# fi
+
+# ruff --output-format=github .
+
+# hatch fmt --check
+# hatch run types:check
+
+pytest --junitxml=junit/test-results-${PYTHON_VERSION}.xml
+
+# hatch run full

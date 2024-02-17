@@ -6,12 +6,12 @@ set -e
 
 echo "[INFO] Getting current version"
 
-git config --local user.name "github-actions[bot]"
-git config --local user.email "github-actions[bot]@users.noreply.github.com"
+# git config --local user.name "github-actions[bot]"
+# git config --local user.email "github-actions[bot]@users.noreply.github.com"
 
-SDK_VERSION=`hatch version`
-hatch version release
-NEXT_SDK_VERSION=`hatch version`
+SDK_VERSION=`hatchling version`
+hatchling version release
+NEXT_SDK_VERSION=`hatchling version`
 
 git add src/sentinel/version.py
 git commit -m "Bump version: ${SDK_VERSION} → ${NEXT_SDK_VERSION}"
@@ -19,12 +19,12 @@ git commit -m "Bump version: ${SDK_VERSION} → ${NEXT_SDK_VERSION}"
 echo "[INFO] Tagging and preparing next version"
 
 git tag $NEXT_SDK_VERSION
-SDK_VERSION=`hatch version`
-hatch version fix,dev
+SDK_VERSION=`hatchling version`
+hatchling version fix,dev
 
-NEXT_SDK_VERSION=`hatch version`
+NEXT_SDK_VERSION=`hatchling version`
 
 git add src/sentinel/version.py
 git commit -m "Bump version: $SDK_VERSION → $NEXT_SDK_VERSION"
-git push
-git push --tags
+# git push
+# git push --tags

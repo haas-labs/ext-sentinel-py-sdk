@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+# Use the Python executable provided from the `-p` option, or a default.
+[ "$1" = "-p" ] && PYTHON=$2 || PYTHON="python3"
+
+# REQUIREMENTS="requirements.txt"
+VENV="venv"
+
+set -x
+
+if [ -z "$GITHUB_ACTIONS" ]; then
+    "$PYTHON" -m venv "$VENV"
+    PIP="$VENV/bin/pip"
+else
+    PIP="pip"
+fi
+
+echo "[INFO] Install/Upgrade pip" && \
+    python -m pip install --upgrade pip
+
+echo "[INFO] Install development tools and libs" && \
+    pip install ruff hatch && \
+    pip install pytest pytest-asyncio pytest-cov
+
+echo "[INFO] Install ext-sentinel-py-sdk package" && \
+    pip install -e .
