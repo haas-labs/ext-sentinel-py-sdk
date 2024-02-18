@@ -19,10 +19,6 @@ dependencies = [
 [tool.hatch.build]
 sources = ["src"]
 
-[tool.hatch.version]
-# path = "src/sentinel/version.py"
-source = "vcs"
-
 [tool.hatch.build.targets.wheel]
 include = [
   "src/sentinel/**",
@@ -33,9 +29,15 @@ include = [
 line-length = 120
 
 [build-system]
-# TODO https://github.com/ofek/hatch-vcs
 requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+# path = "src/sentinel/version.py"
+source = "vcs"
+
+# [tool.hatch.build.hooks.vcs]
+# version-file = "src/sentinel/version.py"
 
 [project.scripts]
 sentinel = 'sentinel.cli:run_cli_instance'
