@@ -2,8 +2,7 @@ name: Release
 
 on:
   pull_request:
-    branches:
-    - "release/**"
+    branches: [ 'release/**' ]
 
 env:
   PYTHON_VERSION: "3.11"
