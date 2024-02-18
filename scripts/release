@@ -4,27 +4,57 @@
 # i.e., returns a non-zero exit status. 
 set -e
 
-echo "[INFO] Getting current version"
+VERSION_FILE="src/sentinel/version.py"
 
-git config --local user.name "github-actions[bot]"
-git config --local user.email "github-actions[bot]@users.noreply.github.com"
+help() {
 
-SDK_VERSION=`hatchling version`
-hatchling version release
-NEXT_SDK_VERSION=`hatchling version`
+    echo "./scripts/release <command>"
+    echo
+    echo "  current-version:        show current version"
+    echo "  bump-release-version:   bump release version"
+    echo "  bump-next-version:      bump next version"
+    echo
+}
 
-git add src/sentinel/version.py
-git commit -m "Bump version: ${SDK_VERSION} → ${NEXT_SDK_VERSION}"
+set-bot-name() {
 
-echo "[INFO] Tagging and preparing next version"
+    git config --local user.name "github-actions[bot]"
+    git config --local user.email "github-actions[bot]@users.noreply.github.com"
+}
 
-git tag $NEXT_SDK_VERSION
-SDK_VERSION=`hatchling version`
-hatchling version fix,dev
+commit-version() {
 
-NEXT_SDK_VERSION=`hatchling version`
+    CURRENT_VERSION=${1:-}
+    NEXT_VERSION=${2:-}
 
-git add src/sentinel/version.py
-git commit -m "Bump version: $SDK_VERSION → $NEXT_SDK_VERSION"
-git push
-git push --tags
+    git add ${VERSION_FILE}
+    git commit -m "Bump version: ${CURRENT_VERSION} → ${NEXT_VERSION}"
+}
+
+current-version() {
+
+    CURRENT_VERSION=`hatchling version`
+    echo "[INFO] Current version: ${CURRENT_VERSION}"
+}
+
+bump-release-version() {
+
+    CURRENT_VERSION=`hatchling version`
+    hatchling version release
+    NEXT_VERSION=`hatchling version`
+    commit-version ${CURRENT_VERSION} ${NEXT_VERSION}
+}
+
+bump-next-version() {
+
+    CURRENT_VERSION=`hatchling version`
+    hatchling version fix,dev
+    NEXT_VERSION=`hatchling version`
+    commit-version ${CURRENT_VERSION} ${NEXT_VERSION}
+}
+
+# git push
+# git push --tags
+
+
+$@
