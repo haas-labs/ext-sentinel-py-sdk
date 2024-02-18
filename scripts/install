@@ -19,7 +19,7 @@ echo "[INFO] Install/Upgrade pip" && \
     python -m pip install --upgrade pip
 
 echo "[INFO] Install development tools and libs" && \
-    pip install ruff hatch && \
+    pip install ruff hatch hatch-vcs && \
     pip install pytest pytest-asyncio pytest-cov
 
 echo "[INFO] Install ext-sentinel-py-sdk package" && \
