@@ -2,11 +2,6 @@ name: Test Suite
 
 on:
   pull_request:
-    branches:
-      - main
-  # push:
-  #   branches:
-  #     - main
 
 jobs:
 
@@ -24,22 +19,16 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Analize branch prefix
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: "pip"
+
+    - name: Install required packages and tools
       run: |
-        echo "Current branch:" $(git branch --show-current)
-        echo "Source branch: ${{ github.event.pull_request.head.ref }}"
+        ./scripts/install
 
-    # - name: Set up Python ${{ matrix.python-version }}
-    #   uses: actions/setup-python@v5
-    #   with:
-    #     python-version: ${{ matrix.python-version }}
-    #     cache: "pip"
-
-    # - name: Install required packages and tools
-    #   run: |
-    #     ./scripts/install
-
-    # - name: Run tests
-    #   run: |
-    #     ./scripts/test ${{ matrix.python-version }}
-
+    - name: Run tests
+      run: |
+        ./scripts/test ${{ matrix.python-version }}

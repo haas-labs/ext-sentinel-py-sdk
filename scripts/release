@@ -6,8 +6,8 @@ set -e
 
 echo "[INFO] Getting current version"
 
-# git config --local user.name "github-actions[bot]"
-# git config --local user.email "github-actions[bot]@users.noreply.github.com"
+git config --local user.name "github-actions[bot]"
+git config --local user.email "github-actions[bot]@users.noreply.github.com"
 
 SDK_VERSION=`hatchling version`
 hatchling version release
@@ -26,5 +26,5 @@ NEXT_SDK_VERSION=`hatchling version`
 
 git add src/sentinel/version.py
 git commit -m "Bump version: $SDK_VERSION → $NEXT_SDK_VERSION"
-# git push
-# git push --tags
+git push
+git push --tags
