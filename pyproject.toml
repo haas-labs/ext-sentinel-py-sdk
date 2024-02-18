@@ -34,7 +34,7 @@ line-length = 120
 
 [build-system]
 # TODO https://github.com/ofek/hatch-vcs
-requires = ["hatchling", "hatch-vsc"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project.scripts]
