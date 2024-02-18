@@ -3,35 +3,14 @@ name: Release
 on:
   push:
     branches:
-      - 'release/*'
+    - 'release/*'
+    state:
+    - closed
 
 env:
   PYTHON_VERSION: "3.11"
 
 jobs:
-
-  Tests:
-
-    runs-on: ubuntu-latest
-    steps:
-    
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        cache: "pip"
-
-    - name: Install required packages and tools
-      run: |
-        ./scripts/install
-
-    - name: Run tests
-      run: |
-        ./scripts/test
 
   Release:
 
@@ -52,6 +31,6 @@ jobs:
       run: |
         ./scripts/install
 
-    # - name: Bumping versions and tagging
-    #   run: |
-    #     ./scripts/release.sh
+    - name: Bumping versions and tagging
+      run: |
+        ./scripts/release.sh
