@@ -1,4 +1,4 @@
-FROM ext/sentinel/base:v0.2.0
+FROM ext/sentinel/base:v0.3.0
 
 RUN echo "[INFO] Install dev env helpers" \
         && apk add --no-cache \
@@ -9,6 +9,7 @@ RUN echo "[INFO] Install dev env helpers" \
     && echo "[INFO] Install dev tools" \
         && apk add --no-cache \
             py3-hatchling \
+            py3-hatch-vcs \
             py3-pytest \
             py3-pytest-cov \
             py3-pytest-xdist \
