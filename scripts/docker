@@ -7,7 +7,7 @@ SENTINEL_VERSION="0.3.0"
 help() {
 
     echo
-    echo "Usage: ./manage.sh <command>"
+    echo "Usage: ./scripts/docker <command>"
     echo ""
     echo "Commands:"
     echo
