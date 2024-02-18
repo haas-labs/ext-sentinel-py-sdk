@@ -4,9 +4,9 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
 
@@ -20,7 +20,7 @@ jobs:
 
     steps:
     
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
