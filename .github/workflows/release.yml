@@ -8,8 +8,11 @@ name: Release
 #     - merged
 
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    branches:
+    - release/*
+    types:
+    - merged
 
 
 env:
