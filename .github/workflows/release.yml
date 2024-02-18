@@ -4,7 +4,7 @@ on:
   push:
     branches:
     - 'release/*'
-    state:
+    types:
     - closed
 
 env:
@@ -33,4 +33,4 @@ jobs:
 
     - name: Bumping versions and tagging
       run: |
-        ./scripts/release.sh
+        ./scripts/release
