@@ -1,18 +1,9 @@
 name: Release
 
-# on:
-#   pull_request:
-#     branches:
-#     - 'release/*'
-#     types:
-#     - merged
-
 on:
   pull_request:
     branches:
-    - release/*
-    types:
-    - closed
+    - "release/*"
 
 env:
   PYTHON_VERSION: "3.11"
