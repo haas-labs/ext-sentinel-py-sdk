@@ -1,11 +1,16 @@
 name: Release
 
+# on:
+#   pull_request:
+#     branches:
+#     - 'release/*'
+#     types:
+#     - merged
+
 on:
-  pull_request:
-    branches:
-    - 'release/*'
-    types:
-    - merged
+  push:
+    branches: [ main ]
+
 
 env:
   PYTHON_VERSION: "3.11"
@@ -21,16 +26,43 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        cache: "pip"
-
-    - name: Install required packages and tools
+    - name: Get branch name
       run: |
-        ./scripts/install
+        BRANCH_NAME=${{ github.event.ref }}
+      outputs: branch_name ${{ steps.get_branch_name.outputs.branch_name }}
 
-    - name: Bumping versions and tagging
+    - name: Check if release branch
+      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
       run: |
-        ./scripts/release
+        echo "Triggering release workflow for branch: ${{ steps.get_branch_name.outputs.branch_name }}"
+
+    - name: Build project (replace with your build steps)
+      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      run: |
+        echo "[INFO] Building project"
+
+    - name: Run tests (replace with your test steps)
+      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      run: |
+        echo "[INFO] Testing project"
+
+    - name: Create release (replace with your release script)
+      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      run: |
+        echo "[INFO] Releasing project"
+
+
+    # - name: Setup Python
+    #   uses: actions/setup-python@v5
+    #   with:
+    #     python-version: ${{ env.PYTHON_VERSION }}
+    #     cache: "pip"
+
+    # - name: Install required packages and tools
+    #   run: |
+    #     ./scripts/install
+
+    # - name: Bumping versions and tagging
+    #   run: |
+    #     ./scripts/release
+
