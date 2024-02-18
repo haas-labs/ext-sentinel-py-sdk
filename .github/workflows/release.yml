@@ -29,28 +29,27 @@ jobs:
     - name: Get branch name
       run: |
         BRANCH_NAME=${{ github.event.ref }}
-      outputs: branch_name ${{ steps.get_branch_name.outputs.branch_name }}
+        echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
     - name: Check if release branch
-      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      if: startsWith(env.BRANCH_NAME, 'release/')
       run: |
-        echo "Triggering release workflow for branch: ${{ steps.get_branch_name.outputs.branch_name }}"
+        echo "Triggering release workflow for branch: ${{ env.BRANCH_NAME }}"
 
     - name: Build project (replace with your build steps)
-      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      if: startsWith(env.BRANCH_NAME, 'release/')
       run: |
         echo "[INFO] Building project"
 
     - name: Run tests (replace with your test steps)
-      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      if: startsWith(env.BRANCH_NAME, 'release/')
       run: |
         echo "[INFO] Testing project"
 
     - name: Create release (replace with your release script)
-      if: startsWith(steps.get_branch_name.outputs.branch_name, 'release/')
+      if: startsWith(env.BRANCH_NAME, 'release/')
       run: |
         echo "[INFO] Releasing project"
-
 
     # - name: Setup Python
     #   uses: actions/setup-python@v5
