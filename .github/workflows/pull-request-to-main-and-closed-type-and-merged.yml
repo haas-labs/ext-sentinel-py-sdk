@@ -14,7 +14,7 @@ jobs:
 
   Release:
     if: 
-      github.event.pull_request.merged
+      github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
 
     runs-on: ubuntu-latest
     
