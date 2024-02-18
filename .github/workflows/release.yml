@@ -4,6 +4,9 @@ on:
   push:
     branches:
     - main
+  pull_request:
+    branches:
+    - main
 
 env:
   PYTHON_VERSION: "3.11"
@@ -24,7 +27,7 @@ jobs:
 
     - name: Get branch name
       run: |
-        echo "$(jq '.' ${{ toJson(github.event) }})"
+        echo "${{ toJson(github.event) }}"
 
     # - name: Check if release branch
     #   if: startsWith(env.BRANCH_NAME, 'release/')
