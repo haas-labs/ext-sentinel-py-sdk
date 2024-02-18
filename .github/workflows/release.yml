@@ -28,7 +28,7 @@ jobs:
 
     - name: Get branch name
       run: |
-        echo "Github event: ${{ github.event }}"
+        echo "Github pull request event: ${{ github.event.pull_request }}"
         echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
     - name: Check if release branch
