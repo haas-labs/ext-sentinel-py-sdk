@@ -1,11 +1,11 @@
-name: Pull request to release and closed type
+name: Pull request to main and closed type and merged
 
 on:
   pull_request:
     types:
     - closed
     branches:
-    - 'release/**'
+    - main
 
 env:
   PYTHON_VERSION: "3.11"
@@ -13,8 +13,8 @@ env:
 jobs:
 
   Release:
-    # if: 
-    #   github.event.pull_request.merged
+    if: 
+      github.event.pull_request.merged
 
     runs-on: ubuntu-latest
     
