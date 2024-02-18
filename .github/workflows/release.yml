@@ -12,7 +12,6 @@ on:
     types:
     - closed
 
-
 env:
   PYTHON_VERSION: "3.11"
 
@@ -25,7 +24,7 @@ jobs:
     
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        ref: ${{ github.event.ref }} # Checkout based on event context
 
     - name: Get branch name
       run: |
