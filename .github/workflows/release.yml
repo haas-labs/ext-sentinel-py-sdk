@@ -1,9 +1,11 @@
-name: Pull request with closed type
+name: Release
 
 on:
   pull_request:
     types:
     - closed
+    branches:
+    - main
 
 env:
   PYTHON_VERSION: "3.11"
@@ -11,8 +13,8 @@ env:
 jobs:
 
   Release:
-    # if: 
-    #   github.event.pull_request.merged
+    if: 
+      github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
 
     runs-on: ubuntu-latest
     
