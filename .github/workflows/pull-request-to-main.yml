@@ -1,9 +1,6 @@
 name: Release
 
 on:
-  push:
-    branches:
-    - main
   pull_request:
     branches:
     - main
@@ -21,13 +18,13 @@ jobs:
     
     steps:
     
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
     - name: Get branch name
       run: |
         echo "${{ toJson(github.event) }}"
+
+    # - uses: actions/checkout@v4
+    #   with:
+    #     fetch-depth: 0
 
     # - name: Check if release branch
     #   if: startsWith(env.BRANCH_NAME, 'release/')
