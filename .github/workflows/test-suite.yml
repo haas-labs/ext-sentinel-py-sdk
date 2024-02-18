@@ -1,7 +1,17 @@
 name: Test Suite
 
 on:
+  push:
+    paths-ignore:
+    - "docker/**"
+    - "docs/**"
+    - "samples/**"
+
   pull_request:
+    paths-ignore:
+    - "docker/**"
+    - "docs/**"
+    - "samples/**"
 
 jobs:
 

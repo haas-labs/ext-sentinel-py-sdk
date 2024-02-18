@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  pull_request:
+  push:
+    branches:
+    - main
 
 env:
   PYTHON_VERSION: "3.11"
@@ -22,28 +24,27 @@ jobs:
 
     - name: Get branch name
       run: |
-        echo "Full context: $(jq '.' ${{ toJson(github.event) }})"
-        echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+        echo "$(jq '.' ${{ toJson(github.event) }})"
 
-    - name: Check if release branch
-      if: startsWith(env.BRANCH_NAME, 'release/')
-      run: |
-        echo "Triggering release workflow for branch: ${{ env.BRANCH_NAME }}"
+    # - name: Check if release branch
+    #   if: startsWith(env.BRANCH_NAME, 'release/')
+    #   run: |
+    #     echo "Triggering release workflow for branch: ${{ env.BRANCH_NAME }}"
 
-    - name: Build project (replace with your build steps)
-      if: startsWith(env.BRANCH_NAME, 'release/')
-      run: |
-        echo "[INFO] Building project"
+    # - name: Build project (replace with your build steps)
+    #   if: startsWith(env.BRANCH_NAME, 'release/')
+    #   run: |
+    #     echo "[INFO] Building project"
 
-    - name: Run tests (replace with your test steps)
-      if: startsWith(env.BRANCH_NAME, 'release/')
-      run: |
-        echo "[INFO] Testing project"
+    # - name: Run tests (replace with your test steps)
+    #   if: startsWith(env.BRANCH_NAME, 'release/')
+    #   run: |
+    #     echo "[INFO] Testing project"
 
-    - name: Create release (replace with your release script)
-      if: startsWith(env.BRANCH_NAME, 'release/')
-      run: |
-        echo "[INFO] Releasing project"
+    # - name: Create release (replace with your release script)
+    #   if: startsWith(env.BRANCH_NAME, 'release/')
+    #   run: |
+    #     echo "[INFO] Releasing project"
 
     # - name: Setup Python
     #   uses: actions/setup-python@v5
