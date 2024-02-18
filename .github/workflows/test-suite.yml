@@ -26,7 +26,8 @@ jobs:
 
     - name: Analize branch prefix
       run: |
-        echo $(git branch --show-current)
+        echo "Current branch:" $(git branch --show-current)
+        echo "Source branch: ${{ github.event.pull_request.head.ref }}"
 
     # - name: Set up Python ${{ matrix.python-version }}
     #   uses: actions/setup-python@v5
