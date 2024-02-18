@@ -9,6 +9,7 @@
 - [scripts/lint](/scripts/lint) - Run the code linting.
 - [scripts/release](/scripts/release) - Release the latest version to Github.
 - [scripts/test](/scripts/test) - Run the test suite.
+- [scripts/docker](/scripts/docker) - Work with docker images
 
 Styled after GitHub's [Scripts to Rule Them All](https://github.com/github/scripts-to-rule-them-all).
 
