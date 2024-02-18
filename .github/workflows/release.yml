@@ -24,11 +24,11 @@ jobs:
     
     - uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.ref }} # Checkout based on event context
+        fetch-depth: 0
 
     - name: Get branch name
       run: |
-        BRANCH_NAME=${{ github.event.ref_name }}
+        echo "Github event: ${{ github.event }}"
         echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
     - name: Check if release branch
