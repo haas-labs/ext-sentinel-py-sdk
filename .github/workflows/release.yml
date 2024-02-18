@@ -28,7 +28,7 @@ jobs:
 
     - name: Get branch name
       run: |
-        echo "Full context: $(jq '.github' ${{ toJson(github) }})"
+        echo "Full context: $(jq '.' ${{ toJson(github.event) }})"
         echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
     - name: Check if release branch
