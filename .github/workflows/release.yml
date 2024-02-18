@@ -2,7 +2,6 @@ name: Release
 
 on:
   pull_request:
-    branches: [ 'release/**' ]
 
 env:
   PYTHON_VERSION: "3.11"
@@ -10,8 +9,11 @@ env:
 jobs:
 
   Release:
+    if: 
+      github.event.pull_request.merged
 
     runs-on: ubuntu-latest
+    
     steps:
     
     - uses: actions/checkout@v4
