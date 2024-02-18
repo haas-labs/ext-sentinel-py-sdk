@@ -1,7 +1,9 @@
-name: Push to main
+name: Pull request to main and closed type
 
 on:
-  push:
+  pull_request:
+    types:
+    - closed
     branches:
     - main
 
