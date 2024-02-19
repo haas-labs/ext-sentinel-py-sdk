@@ -26,7 +26,7 @@ jobs:
 
     - name: Bumping version and tagging
       run: |
-        RELEASE_VERSION=`./scripts/release get-release-version {{ github.event.pull_request.head.ref }}`
+        RELEASE_VERSION=`./scripts/release get-release-version ${{ github.event.pull_request.head.ref }}`
         git tag ${RELEASE_VERSION}
         git push --tags
 
