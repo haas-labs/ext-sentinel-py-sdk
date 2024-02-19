@@ -53,8 +53,8 @@ Installation steps:
 
 - Build dev docker images
 ```sh
-./manage.sh build-base-image
-./manage.sh build-dev-image
+./scripts/docker build-base-image
+./scripts/docker build-dev-image
 ```
 
 - Clone Sentinel Python SDK
