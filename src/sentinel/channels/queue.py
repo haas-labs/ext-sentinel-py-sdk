@@ -9,7 +9,7 @@ import multiprocessing as mp
 logger = logging.getLogger(__name__)
 
 
-class Channel:
+class LocalChannel:
     """
     Local Channel
     """
