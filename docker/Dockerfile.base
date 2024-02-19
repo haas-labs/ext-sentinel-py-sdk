@@ -24,6 +24,7 @@ RUN echo "[INFO] Adding Alpine testing repo" \
             aiokafka==0.10.0 \
             pydantic==2.6.1 \
             web3==6.15.1 \
+            websockets==12.0 \
     && echo "[INFO] Remove build deps" \
         && apk del .build-deps \    
     && echo "[INFO] Remove cache" \
