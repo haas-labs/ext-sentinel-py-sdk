@@ -2,6 +2,6 @@
 
 source scripts/common
 
-${PREFIX}autoflake --in-place --recursive $SOURCE_FILES
-${PREFIX}isort --project=typesystem $SOURCE_FILES
-${PREFIX}black $SOURCE_FILES
+# ${PREFIX}autoflake --in-place --recursive $SOURCE_FILES
+# ${PREFIX}isort --project=typesystem $SOURCE_FILES
+# ${PREFIX}black $SOURCE_FILES
