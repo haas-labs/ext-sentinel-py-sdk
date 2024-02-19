@@ -32,6 +32,7 @@ sentinel = 'sentinel.cli:run_cli_instance'
 
 [tool.setuptools-git-versioning]
 enabled = true
+starting_version = "0.3.0"
 
 [tool.ruff]
 # Allow lines to be as long as 120.
