@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
 
 
-class WebsockerChannel(Channel):
+class WebsocketChannel(Channel):
     """
     Websocket Channel
     """
@@ -30,7 +30,7 @@ class WebsockerChannel(Channel):
         self.ws_server = self.config.get("server")
 
 
-class InboundWebsocketChannel(WebsockerChannel):
+class InboundWebsocketChannel(WebsocketChannel):
     """
     Inbound Websocket Channel
     """
