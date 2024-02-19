@@ -19,10 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    
-    - name: Get branch name
-      run: |
-        echo "${{ toJson(github.event) }}"
 
     - uses: actions/checkout@v4
       with:
@@ -40,5 +36,5 @@ jobs:
 
     - name: Bumping versions and tagging
       run: |
-        ./scripts/release
+        ./scripts/release current-version
 
