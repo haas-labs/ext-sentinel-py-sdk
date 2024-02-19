@@ -1,0 +1,16 @@
+
+- name: SimpleTxDetector
+  type: samples.transaction_ws_channel.processes.SimpleTxDetector
+  description: >
+    Simple Transaction Detector w/ Websocket Inbound Channel
+  parameters:
+    chain_id: 1
+    network: ethereum
+
+  inputs:
+
+  - name: transactions
+    type: sentinel.channels.ws.transactions.InboundTransactionChannel
+    parameters:
+      server_uri: {{ env["DEV_TRANSACTION_WS_URI"] }}
+
