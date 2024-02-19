@@ -1,4 +1,4 @@
-FROM ext/sentinel/base:v0.2.0
+FROM ext/sentinel/base:v0.3.0
 
 RUN echo "[INFO] Install dev env helpers" \
         && apk add --no-cache \
@@ -6,9 +6,10 @@ RUN echo "[INFO] Install dev env helpers" \
             bash \
             git \
             ruff \
-    && echo "[INFO] Install dev tools" \
+    && echo "[INFO] Install dev tools from alpine repo" \
         && apk add --no-cache \
-            py3-hatchling \
+            py3-build \
+            py3-setuptools \
             py3-pytest \
             py3-pytest-cov \
             py3-pytest-xdist \
@@ -16,6 +17,9 @@ RUN echo "[INFO] Install dev env helpers" \
             py3-pytest-mock \
             py3-pytest-asyncio \
             py3-faker \
+    && echo "[INFO] Install dev tools via pip" \
+        && pip install --break-system-packages \
+            setuptools-git-versioning \
     && echo "[INFO] Setup user" \
         && adduser -D -u 1000 -s /usr/local/bin/fish sentinel-dev \
         && echo 'sentinel-dev ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers  \

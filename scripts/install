@@ -15,12 +15,19 @@ else
     PIP="pip"
 fi
 
-echo "[INFO] Install/Upgrade pip" && \
-    python -m pip install --upgrade pip
+echo "[INFO] Install/Upgrade pip" \
+    && python -m pip install --upgrade pip
 
-echo "[INFO] Install development tools and libs" && \
-    pip install ruff hatch && \
-    pip install pytest pytest-asyncio pytest-cov
+echo "[INFO] Install development tools and libs" \
+    && pip install \
+        build \
+        setuptools \
+        setuptools-git-versioning \
+        ruff \
+    && pip install \
+        pytest \
+        pytest-asyncio \
+        pytest-cov
 
 echo "[INFO] Install ext-sentinel-py-sdk package" && \
     pip install -e .
