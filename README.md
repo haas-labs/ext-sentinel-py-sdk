@@ -1,35 +1,21 @@
 # Sentinel Python SDK
 
-Sentinel Python SDK is a library for building and running different processors based on data from different blockchains
+Sentinel Python SDK is a library for building and running on-chain data processors and sending events to [Extractor](https://extractor.live).
 
-The list of supported chains:
-- Ethereum
-- Arbitrum
-- BSC
+Detector Examples:
+- Contract Attacks
+- Liquidity Monitoring
+- DEX Activity
+- Large Funds transfers
+- MEV Artbitrage
+- Spam Detection
+- Labels collection
+- ...
 
-One example is a detector process. Please follow the reference about [How to develop and deploy sample detector](samples/block_tx/README.md)
+Sentinel supports all blockchain networks supported by [Extractor](https://extractor.live) (e.g. Ethereum,Arbitrum,BSC,...). Please, visit [Extractor](https://extractor.live) for full list of supported networks
 
-## Detectors
 
-The role of the detector is to identify various events that have occurred in blockchain's transactions
-
-- [BlockTx Example](samples/block_tx/README.md)
-- Suspicious Address
-  - Suspicious Account
-  - Suspicious Account By Transfer
-  - Suspicious Contract
-- Indirect Transaction towards Monitored Contract
-- Monitored Contract
-  - Ownership Change
-  - Transfer
-  - Transactions from Blacklisted addresses
-  - Transactions from suspicious accounts/contracts
-
-## The Bundle
-
-The processes bundle allows to run several processes in one docker container
-
-## How to install Sentinel Python SDK locally 
+## Installation
 
 ### "Classical" way
 
@@ -109,32 +95,20 @@ options:
   -h, --help            show this help message and exit
 ```
 
-## How to launch detector locally
+## Detectors
 
-As sample, we can use 'BlockTx' detector (`samples/block_tx/`). There are several required files to run the detector locally:
-- `profile.yaml`: contains a detector configuration
-- `processes.py`: python code with BlockTx detection logic
-- `data/transactions.json`: the file contains sample transactions
-- `data/dex.list`: the file contains details about DEX addesses (Decentralized Exchanges)
+The role of the detector is to identify various events that have occurred in blockchain's transactions
 
-To run the detector locally:
-```sh
-sentinel launch --profile samples/block_tx/profile.yaml 
+- [BlockTx Example](examples/block_tx/README.md)
+- [Transaction Example](examples/transaction/README.md)
+- [Extrctor Attack Detectors](https://github.com/haas-labs/ext-sentinel-detectors-py)
 
-2024-02-15T14:24:20.183 (MainProcess::sentinel.dispatcher:115) [INFO] Initializing channel: transactions, type: sentinel.channels.fs.transactions.InboundTransactionsChannel
-2024-02-15T14:24:20.206 (MainProcess::sentinel.dispatcher:115) [INFO] Initializing channel: events, type: sentinel.channels.fs.common.OutboundFileChannel
-2024-02-15T14:24:20.209 (MainProcess::sentinel.dispatcher:99) [INFO] Initializing database: dex_addresses, type: sentinel.db.dex.LocalDEXAddresses
-2024-02-15T14:24:20.210 (MainProcess::sentinel.db.dex:39) [INFO] Imported 100 DEX addresses
-2024-02-15T14:24:20.210 (MainProcess::sentinel.dispatcher:141) [INFO] Initializing process: BlockTxDetector, type: samples.block_tx.processes.BlockTxDetector
-2024-02-15T14:24:20.230 (MainProcess::sentinel.dispatcher:184) [INFO] Active processes: ['ethereum@BlockTxDetector']
-2024-02-15T14:24:20.232 (ethereum@BlockTxDetector::sentinel.processes.transaction:70) [INFO] Starting channel, name: transactions
-2024-02-15T14:24:20.232 (ethereum@BlockTxDetector::sentinel.processes.transaction:70) [INFO] Starting channel, name: events
-2024-02-15T14:24:20.233 (ethereum@BlockTxDetector::sentinel.channels.fs.common:87) [INFO] events -> Starting channel for publishing messages to file channel: events
-2024-02-15T14:24:20.235 (ethereum@BlockTxDetector::samples.block_tx.processes:42) [WARNING] Detected block_tx transaction: 0x9756341d
-2024-02-15T14:24:20.235 (ethereum@BlockTxDetector::samples.block_tx.processes:42) [WARNING] Detected block_tx transaction: 0x9756341e
-^C2024-02-15T14:24:24.725 (MainProcess::sentinel.dispatcher:196) [WARNING] Interrupting by user
-2024-02-15T14:24:24.725 (MainProcess::sentinel.dispatcher:207) [INFO] Terminating the process: BlockTxDetector
-2024-02-15T14:24:24.725 (MainProcess::sentinel.dispatcher:200) [INFO] Completed
-```
 
-to interrupt processing, press `Ctrl+C`
+## Tutorial
+
+[BlockTx Detector](examples/block_tx/README.md) provides step-by-step guide and information
+
+## The Bundle
+
+The processes bundle allows to run several processes in one docker container.
+
