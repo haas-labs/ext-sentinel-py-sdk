@@ -4,6 +4,7 @@ description = "Sentinel Python SDK"
 requires-python = ">=3.11"
 readme = "README.md"
 dynamic = ["version"]
+
 dependencies = [
     "rich==13.7.0",
     "httpx==0.26.0",
@@ -16,31 +17,25 @@ dependencies = [
     "web3==6.15.1",
 ]
 
-[tool.hatch.build]
-sources = ["src"]
+[build-system]
+requires = ["setuptools", "setuptools-git-versioning<2"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
-include = [
-  "src/sentinel/**",
-]
+[tool.setuptools.packages.find]
+where = ["src"]
+# include = []
+# exclude = []
+# namespaces = false # true by default
+
+[project.scripts]
+sentinel = 'sentinel.cli:run_cli_instance'
+
+[tool.setuptools-git-versioning]
+enabled = true
 
 [tool.ruff]
 # Allow lines to be as long as 120.
 line-length = 120
-
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
-
-[tool.hatch.version]
-# path = "src/sentinel/version.py"
-source = "vcs"
-
-# [tool.hatch.build.hooks.vcs]
-# version-file = "src/sentinel/version.py"
-
-[project.scripts]
-sentinel = 'sentinel.cli:run_cli_instance'
 
 [tool.pytest.ini_options]
 addopts = "--cov=sentinel --cov-report term-missing"
