@@ -5,13 +5,10 @@ source scripts/common
 # Use the Python executable provided from the `-p` option, or a default.
 [ "$1" = "-p" ] && PYTHON=$2 || PYTHON="python3"
 
-# REQUIREMENTS="requirements.txt"
 VENV=".venv"
 
-set -x
-
 if [ -z "$GITHUB_ACTIONS" ]; then
-    "$PYTHON" -m venv "$VENV"
+    source scripts/venv
     PIP="$VENV/bin/pip"
 else
     PIP="pip"
@@ -26,7 +23,6 @@ echo "[INFO] Install development tools and libs" \
         setuptools \
         setuptools-git-versioning \
         ruff \
-    && pip install \
         pytest \
         pytest-asyncio \
         pytest-cov
