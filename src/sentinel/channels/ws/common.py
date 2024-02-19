@@ -2,7 +2,7 @@ import json
 import logging
 import websockets
 
-from typing import Any, Dict
+from typing import Any
 
 from sentinel.channels.common import Channel
 
@@ -26,8 +26,8 @@ class WebsocketChannel(Channel):
 
         logger.info(f"{self.name} -> Connecting to Websocket server: {kwargs}")
 
-        # Web socket server
-        self.ws_server = self.config.get("server")
+        # Web socket server URI
+        self.server_uri = self.config.get("server_uri")
 
 
 class InboundWebsocketChannel(WebsocketChannel):
@@ -38,13 +38,12 @@ class InboundWebsocketChannel(WebsocketChannel):
         """
         Run Inbound Websocket Channel Processing
         """
-        logger.info(f"{self.name} -> Starting channel for consuming messages from websocket channel: {self.name}")
-
         try:
-            async for msg in websockets.connect(self.ws_server):
-                json_record = json.loads(msg)
-                record = self._record_type(**json_record)
-                await self.on_message(record)
+            async with websockets.connect(self.server_uri) as ws_server:
+                async for msg in ws_server:
+                    json_record = json.loads(msg)
+                    record = self.record_type(**json_record)
+                    await self.on_message(record)
         finally:
             logger.info(f"Closing connection to websocket channel: {self.name}")
 

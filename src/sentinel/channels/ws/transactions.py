@@ -1,20 +1,17 @@
-from pathlib import Path
-
 from sentinel.models.transaction import Transaction
 from sentinel.channels.ws.common import InboundWebsocketChannel
 
 
-class InboundTransactionsChannel(InboundWebsocketChannel):
+class InboundTransactionChannel(InboundWebsocketChannel):
     """
-    Inbound Transactions Websocket Channel
+    Inbound Transaction Websocket Channel
     """
 
-    def __init__(self, name: str, path: Path, use_current_time: bool = False, **kwargs) -> None:
+    def __init__(self, name: str, **kwargs) -> None:
         """
         Inbound Transaction Websocket Channel Init
         """
-        super().__init__(name, "sentinel.models.transaction.Transaction", path, **kwargs)
-        self.use_current_time = use_current_time
+        super().__init__(name, "sentinel.models.transaction.Transaction", **kwargs)
 
     async def on_message(self, message: Transaction) -> None:
         """
