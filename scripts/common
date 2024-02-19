@@ -1,12 +1,14 @@
 
-PACKAGE="sentinel"
-
-SENTINEL_DOCKER_VERSION="0.3.0"
+# Environment prefix
 
 export PREFIX=""
 if [ -d '.venv' ] ; then
     PREFIX=".venv/bin/"
 fi
 
+# Variables
+
+PACKAGE="sentinel"
+SENTINEL_DOCKER_VERSION="0.3.0"
 SOURCE_FILES="sentinel tests"
 
