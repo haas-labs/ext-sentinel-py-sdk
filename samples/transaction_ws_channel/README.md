@@ -3,8 +3,9 @@
 Simple Transaction Detector demostrates how to use and configure inbound transaction websocket channel
 
 ```bash
-sentinel launch --profile samples/transaction_ws_channel/profile.yaml \
-                --env-vars .envs/local.yml \
+cd samples/transaction_ws_channel/
+sentinel launch --profile profile.yaml \
+                --env-vars ../../.envs/local.yml \
                 --rich-logging
 ```
 

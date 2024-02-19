@@ -1,11 +1,8 @@
 
 - name: SimpleTxDetector
-  type: samples.transaction_ws_channel.processes.SimpleTxDetector
+  type: processes.SimpleTxDetector
   description: >
     Simple Transaction Detector w/ Websocket Inbound Channel
-  parameters:
-    chain_id: 1
-    network: ethereum
 
   inputs:
 
