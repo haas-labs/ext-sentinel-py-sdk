@@ -1,7 +1,7 @@
 [project]
 name = "ext-sentinel-py-sdk"
 description = "Sentinel Python SDK"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
 

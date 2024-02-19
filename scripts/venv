@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+echo "[INFO] Check virtual environment in .venv"
+
+if [ ! -d '.venv' ] ; then
+    echo "[INFO] Creating virtial environment"
+    python3 -m venv .venv
+else
+    echo "[INFO] Virtual env ready to use"
+fi
