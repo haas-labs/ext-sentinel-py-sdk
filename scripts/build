@@ -1,14 +1,8 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
-if [ -d 'venv' ] ; then
-    PREFIX="venv/bin/"
-else
-    PREFIX=""
-fi
+source scripts/common
 
-set -x
-
-${PREFIX}python -m build
+${PREFIX}python3 -m build
 
 # ${PREFIX}python setup.py sdist bdist_wheel
 # ${PREFIX}twine check dist/*

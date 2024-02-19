@@ -1,0 +1,22 @@
+- name: BlockTxDetector
+  type: processes.BlockTxDetector
+  description: >
+    Simple Block TX Detector for detecting mulitple 
+    transactions towards DEX inside of one block
+  parameters:
+    chain_id: 1
+    network: ethereum
+
+  inputs:
+  - name: transactions
+    type: sentinel.channels.ws.transactions.InboundTransactionChannel
+    parameters:
+      server_uri: ws://ethereum-ingest-proxy.dev.hacken.cloud/849dd74c05160b3ebffb2d5547164337a204b7f88d0322d25e18684c0a2d248a
+
+  databases:
+  - name: dex_addresses
+    type: sentinel.db.dex.LocalDEXAddresses
+    description: >
+      Simple local database for DEX addresses
+    parameters:
+      path: ./data/dex.list 

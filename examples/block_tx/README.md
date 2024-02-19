@@ -9,6 +9,13 @@ The detector should
 - select transactions towards DEX (Distributed Exchanges)
 - detect multiple transaction in a block with difference in a gas price 
 
+There are several required files to run the detector locally:
+- `profile-<source>.yaml`: contains a detector configuration
+- `processes.py`: python code with BlockTx detection logic
+- `data/transactions.json`: the file contains sample transactions (only for testing)
+- `data/dex.list`: the file contains details about DEX addesses (Decentralized Exchanges)
+
+
 ## General code structure of detector
 
 ```python
@@ -31,16 +38,17 @@ class BlockTxDetector(BlockDetector):
 
 ## Profile
 
-The detector code structure helps concentrate more on business logic of detection itself and make it inftrustruture agnosostic. Where an detector profile responsible for integration an detector with an environment:
-- data source(-s): local file system, ASW S3 storage, Kafka
-- notification system(-s)
-- integration with local/remote databases
+The detector code structure helps concentrate more on business logic of detection itself and make it inftrastruture agnosostic. Where an detector profile responsible for integration an detector with an environment:
+- Data source(-s): local file system, ASW S3 storage, Kafka, Websocket
+- Notification system(-s)
+- Integration with local/remote Databases
+
 
 The sample of profile structure
 ```yaml
 
 - name: BlockTxDetector
-  type: samples.block_tx.processes.BlockTxDetector
+  type: processes.BlockTxDetector
   description: >
     Simple Block/Tx Detector
   ...
@@ -61,9 +69,35 @@ The sample of profile structure
     ...
 ```
 
-## Example of transactions file
+## Running with Extractor Websocket Stream Source
 
-The data source for sample detector is transaction. The transaction example: 
+This will stream data from Extractor Websocket proxy:
+
+```sh
+sentinel launch --profile ./profile-ws-extractor.yaml
+```
+
+
+## Running with collected Transaction Files Source 
+
+For local testing, Sentinel SDK has console tool for fetching transactions content in required format based on provided blocks list. To collect it
+
+```sh
+sentinel fetch --rpc http://rpc3-ethereum-mainnet.hacken.cloud/api/v1/rpc3 \
+               --dataset block \
+               --from-file ./data/blocks.list \
+               --to-file ./data/transactions.json
+```
+
+The content of `blocks.list`
+```
+0x1238cfe
+0x1238cff
+```
+
+
+Example of transactions file:
+
 ```json
 {
     "block": {
@@ -119,29 +153,15 @@ The data source for sample detector is transaction. The transaction example:
         ...
     ]
 }
+
 ```
-For local testing, Sentinel SDK has console tool for fetching transactions content in required format based on provided blocks list. To collect it
+
+Run a detector agains collected data (from Detector directory):
 
 ```sh
-sentinel fetch --rpc http://rpc3-ethereum-mainnet.hacken.cloud/api/v1/rpc3 \
-               --dataset block \
-               --from-file samples/block_tx/data/blocks.list \
-               --to-file samples/block_tx/data/transactions.json
+sentinel launch --profile ./profile-local.yaml
 ```
 
-The content of `blocks.list`
-```
-0x1238cfe
-0x1238cff
-```
-
-## How to run and debug a detector locally
-
-For testing there is an option to run a detector locally
-
-```sh
-sentinel launch --profile samples/block_tx/local-profile.yaml
-```
 The command output
 ```
 2024-02-01T19:58:21.888 (MainProcess::sentinel.dispatcher:122) [INFO] Initializing channel: transactions, type: sentinel.channels.fs.transactions.TransactionsChannel

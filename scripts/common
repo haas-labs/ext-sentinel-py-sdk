@@ -1,0 +1,12 @@
+
+PACKAGE="sentinel"
+
+SENTINEL_DOCKER_VERSION="0.3.0"
+
+export PREFIX=""
+if [ -d '.venv' ] ; then
+    PREFIX=".venv/bin/"
+fi
+
+SOURCE_FILES="sentinel tests"
+
