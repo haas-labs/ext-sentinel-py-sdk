@@ -33,26 +33,23 @@ commit-version() {
 
 current-version() {
 
-    CURRENT_VERSION=`hatchling version`
+    CURRENT_VERSION=`setuptools-git-versioning`
     echo "[INFO] Current version: ${CURRENT_VERSION}"
 }
 
-bump-release-version() {
+get-release-version() {
 
-    CURRENT_VERSION=`hatchling version`
-    hatchling version release
-    NEXT_VERSION=`hatchling version`
-    commit-version ${CURRENT_VERSION} ${NEXT_VERSION}
+    RELEASE_BRANCH=${1:-}
+    if [[ $RELEASE_BRANCH == release/* ]];
+    then
+        VERSION=${RELEASE_BRANCH#release/}
+        echo "[INFO] Release branch: ${RELEASE_BRANCH}, Version: ${VERSION}" 1>&2
+        echo $VERSION
+    else
+        echo "[ERROR] Incorrect release branch name, ${RELEASE_BRANCH}, expected: release/v{}.{}.{}" 1>&2 
+        exit 1
+    fi
 }
-
-bump-next-version() {
-
-    CURRENT_VERSION=`hatchling version`
-    hatchling version fix,dev
-    NEXT_VERSION=`hatchling version`
-    commit-version ${CURRENT_VERSION} ${NEXT_VERSION}
-}
-
 # git push
 # git push --tags
 
