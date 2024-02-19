@@ -24,17 +24,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-        cache: "pip"
-
-    - name: Install required packages and tools
+    - name: Bumping version and tagging
       run: |
-        ./scripts/install
+        RELEASE_VERSION=`./scripts/release get-release-version`
+        git tag ${RELEASE_VERSION}
+        git push --tags
 
-    - name: Bumping versions and tagging
-      run: |
-        ./scripts/release current-version
 
