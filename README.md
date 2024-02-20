@@ -101,7 +101,7 @@ The role of the detector is to identify various events that have occurred in blo
 
 - [BlockTx Example](examples/block_tx/README.md)
 - [Transaction Example](examples/transaction/README.md)
-- [Extractor Attack Detectors](https://github.com/haas-labs/ext-sentinel-detectors-py)
+- [Extrctor Attack Detectors](https://github.com/haas-labs/ext-sentinel-detectors-py)
 
 
 ## Tutorial
