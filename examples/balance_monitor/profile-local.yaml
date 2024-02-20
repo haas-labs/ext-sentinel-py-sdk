@@ -1,0 +1,29 @@
+- name: BalanceMonitor
+  type: processes.BalanceMonitor
+  description: >
+    Balance Monitor
+  parameters:
+    chain_id: 1
+    network: ethereum
+
+  inputs:
+  - name: transactions
+    type: sentinel.channels.fs.transactions.InboundTransactionsChannel
+    parameters:
+      path: ./data/transactions.json
+
+  outputs:
+  - name: events
+    type: sentinel.channels.fs.common.OutboundFileChannel
+    parameters:
+      record_type: sentinel.models.event.Event
+      path: ./events/simple-block-tx.json
+      mode: overwrite
+
+  databases:
+  - name: dex_addresses
+    type: sentinel.db.dex.LocalDEXAddresses
+    description: >
+      Addresses to monitor
+    parameters:
+      path: ./data/address.list 
