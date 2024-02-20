@@ -22,9 +22,9 @@ class Process(mp.Process):
         name: str,
         description: str,
         parameters: Dict,
-        inputs: List,
-        outputs: List,
-        databases: List,
+        inputs: Dict,
+        outputs: Dict,
+        databases: Dict,
     ) -> None:
         """
         Sentinel Process Init
@@ -40,8 +40,17 @@ class Process(mp.Process):
         self.channels = dict()
         self.databases = dict()
 
+        self.init(parameters=parameters)
         self.init_databases(databases)
         self.init_channels(inputs, outputs)
+
+    def init(self, parameters: Dict) -> None:
+        '''
+        Detector specific initialization
+
+        User can add custom init logic here
+        '''
+        pass
 
     def init_databases(self, databases: Dict) -> None:
         """
