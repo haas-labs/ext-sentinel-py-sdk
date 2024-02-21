@@ -1,4 +1,3 @@
-
 import logging
 import pathlib
 
@@ -33,5 +32,5 @@ class AddressStore:
         else:
             return False
 
-    def all(self,label:str) -> list:
+    def all(self) -> list:
         return self._db
