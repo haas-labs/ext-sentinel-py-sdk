@@ -16,15 +16,14 @@ Sentinel supports all blockchain networks supported by [Extractor](https://extra
 
 ## Installation
 
-- [Installation: common steps](docs/Install/Install.md)
-- [Python Virtual Environment](Virt-Environment.md) (Recommended)
-- [Dev Container Setup](Dev-Container.md) (Optional)
+- [Installation: common steps](/docs/Install/Install.md)
+- [Python Virtual Environment](/docs/Install/Virt-Environment.md) (Recommended)
+- [Dev Container Setup](/docs/Install/Dev-Container.md) (Optional)
+- [Python Virtual Environment for SDK developers](/docs/Install/Virtualenv-for-SDK-Developers.md)
 
 ## How to use Sentinel commands
 
-Sentinel Python SDK includes command line interface for launching processes. After the installation steps, described above, you should have `sentinel` command available in your terminal or VS Code shell. 
-
-In VS Code environment, call Terminal (Ctrl-`) or via menu View -> Terminal and type
+Sentinel Python SDK includes command line interface for launching processes. After the installation steps described above, you should be able to run `sentinel` command in your terminal or VS Code shell. 
 
 - [Sentinel Commands](docs/Commands/Main.md)
 - [Launch Command](docs/Commands/Launch.md) to run detector/monitor/... from a profile or a bundle
