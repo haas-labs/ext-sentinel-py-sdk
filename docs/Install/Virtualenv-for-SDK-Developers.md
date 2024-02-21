@@ -1,4 +1,10 @@
-# Python Virtual Environment
+# Python Virtual Environment for Sentinel SDK Developers
+
+Please clone the repository from Github
+```sh
+git clone https://github.com/haas-labs/ext-sentinel-py-sdk
+cd ext-sentinel-py-sdk
+```
 
 ## Configuration
 
