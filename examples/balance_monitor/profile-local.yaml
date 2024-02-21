@@ -5,6 +5,8 @@
   parameters:
     chain_id: 1
     network: ethereum
+    rpc_proxy_node: {{ env['ETHEREUM_PROXY_RPC_ENDPOINT'] }}
+    balance_threshold: 10.0
 
   inputs:
   - name: transactions
@@ -21,9 +23,9 @@
       mode: overwrite
 
   databases:
-  - name: dex_addresses
-    type: sentinel.db.dex.LocalDEXAddresses
+  - name: address
+    type: address_store.AddressStore
     description: >
-      Addresses to monitor
+      Monitored Addresses
     parameters:
       path: ./data/address.list 
