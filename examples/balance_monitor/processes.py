@@ -1,7 +1,6 @@
 import logging
 
 from typing import List
-from collections import defaultdict
 from web3 import Web3
 
 from sentinel.processes.block import BlockDetector
@@ -20,9 +19,11 @@ class BalanceMonitor(BlockDetector):
         self.balances = {value: 0.0 for value in addresses}
         logger.info(self.balances)
 
-        self.threshold = 10.0
+        self.threshold = self.parameters.get('balance_threshold', 10.0)
+        logger.info(f"Using balance threshold: {self.threshold}")
 
-        self.w3 = Web3(Web3.HTTPProvider('http://geth.demo.hacken.cloud:8545'))
+        rpc_proxy_node_url = self.parameters.get('rpc_proxy_node')
+        self.w3 = Web3(Web3.HTTPProvider(rpc_proxy_node_url))
 
         for addr in self.balances:            
             self.askBalance(addr)

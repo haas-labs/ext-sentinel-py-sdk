@@ -3,24 +3,32 @@
 source scripts/common
 
 if [ -d 'dist' ] ; then
+    echo "[INFO] Removing dist/ directory"
     rm -r dist
 fi
 
 if [ -d 'site' ] ; then
+    echo "[INFO] Removing site/ directory"
     rm -r site
 fi
 
 if [ -d 'htmlcov' ] ; then
+    echo "[INFO] Removing htmlcov/ directory"
     rm -r htmlcov
 fi
 
 if [ -d 'junit' ] ; then
+    echo "[INFO] Removing junit/ directory"
     rm -r junit
 fi
 
-if [ -d "${PACKAGE}.egg-info" ] ; then
-    rm -r "${PACKAGE}.egg-info"
-fi
+# if [ -d "src/${PACKAGE}.egg-info" ] ; then
+#     echo "[INFO] Removing src/${PACKAGE}.egg-info directory"
+#     rm -r "src/${PACKAGE}.egg-info"
+# fi
+
+find src/*.egg-info -type f -delete
+find src/ -type d -name "*.egg-info" -delete
 
 find src/${PACKAGE} -type f -name "*.py[co]" -delete
 find src/${PACKAGE} -type d -name __pycache__ -delete
