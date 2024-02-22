@@ -15,6 +15,8 @@ db_name = "address"
 
 class BalanceMonitor(BlockDetector):
     async def init(self):
+
+        logger.info("User defined init process started")
         addresses: list = self.databases[db_name].all()
         self.balances = {value: 0.0 for value in addresses}
         logger.info(f"Initial balance values: f{self.balances}")
