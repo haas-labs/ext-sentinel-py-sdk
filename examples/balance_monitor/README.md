@@ -61,7 +61,8 @@ If there is no base image, you can created by the next command:
 ```sh
 ./scripts/docker build-base-image
 
-[+] Building 48.3s (6/6 FINISHED                                                             [internal] load build definition from Dockerfile.base ... 0.1s
+[+] Building 48.3s 6/6 FINISHED
+[internal] load build definition from Dockerfile.base ... 0.1s
 transferring dockerfile: 1.24kB ... 0.0s
 [internal] load metadata for docker.io/library/alpine:edge ... 0.0s
 [internal] load .dockerignore ... 0.1s
@@ -114,4 +115,24 @@ docker run -ti --rm --name sentinel-balance-monitor \
       --profile profile.yaml \
       --env-vars envs.yaml
 
+2024-02-22T14:02:09.686 (MainProcess::sentinel.dispatcher:115) [INFO] Initializing channel: transactions, type: sentinel.channels.ws.transactions.InboundTransactionChannel
+2024-02-22T14:02:09.693 (MainProcess::sentinel.channels.ws.common:27) [INFO] transactions -> Connecting to Websocket server: {'server_uri': 'ws://ethereum-ingest-proxy.dev.hacken.cloud/...'}
+2024-02-22T14:02:09.694 (MainProcess::sentinel.dispatcher:115) [INFO] Initializing channel: events, type: sentinel.channels.fs.common.OutboundFileChannel
+2024-02-22T14:02:09.701 (MainProcess::sentinel.dispatcher:99) [INFO] Initializing database: address, type: address_store.AddressStore
+2024-02-22T14:02:09.702 (MainProcess::address_store:27) [INFO] Imported 2 addresses
+2024-02-22T14:02:09.702 (MainProcess::sentinel.dispatcher:141) [INFO] Initializing process: BalanceMonitor, type: processes.BalanceMonitor
+2024-02-22T14:02:09.710 (MainProcess::processes:20) [INFO] Initial balance values: f{'0x6666827e8f2220ddf718193544889f3b482ed072': 0.0, '0x61d0c37f406d1b19fbf9b5267887d67400849a7f': 0.0}
+2024-02-22T14:02:09.710 (MainProcess::processes:24) [INFO] Using balance threshold: 10.0
+2024-02-22T14:02:09.716 (MainProcess::sentinel.dispatcher:179) [INFO] Active processes: ['ethereum@BalanceMonitor']
+2024-02-22T14:02:09.717 (ethereum@BalanceMonitor::sentinel.processes.transaction:82) [INFO] Starting channel, name: transactions
+2024-02-22T14:02:09.717 (ethereum@BalanceMonitor::sentinel.processes.transaction:82) [INFO] Starting channel, name: events
+2024-02-22T14:02:09.718 (ethereum@BalanceMonitor::sentinel.channels.fs.common:89) [INFO] events -> Starting channel for publishing messages to file channel: events
+2024-02-22T14:02:18.740 (ethereum@BalanceMonitor::processes:33) [INFO] Balance: 0x6666827e8f2220ddf718193544889f3b482ed072: 19765260419364962304.0000
+2024-02-22T14:02:18.801 (ethereum@BalanceMonitor::processes:33) [INFO] Balance: 0x61d0c37f406d1b19fbf9b5267887d67400849a7f: 159887027092833312.0000
+2024-02-22T14:02:18.802 (ethereum@BalanceMonitor::processes:63) [INFO] Block: 19283610
+2024-02-22T14:02:20.263 (ethereum@BalanceMonitor::processes:63) [INFO] Block: 19283611
+2024-02-22T14:02:34.094 (ethereum@BalanceMonitor::processes:63) [INFO] Block: 19283612
+^C2024-02-22T14:02:35.600 (MainProcess::sentinel.dispatcher:189) [WARNING] Interrupting by user
+2024-02-22T14:02:35.601 (MainProcess::sentinel.dispatcher:200) [INFO] Terminating the process: BalanceMonitor
+2024-02-22T14:02:35.601 (MainProcess::sentinel.dispatcher:193) [INFO] Completed
 ```
