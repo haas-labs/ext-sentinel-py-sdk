@@ -62,9 +62,7 @@ class TransactionDetector(mp.Process):
             if channel.name == "events":
                 self.channels["events"] = channel.instance
 
-        self.init(parameters=parameters)
-
-    def init(self, parameters: Dict) -> None:
+    async def init(self) -> None:
         '''
         Detector specific initialization
 
@@ -76,6 +74,8 @@ class TransactionDetector(mp.Process):
         """
         Run Transaction Detector processing
         """
+        await self.init()
+
         try:
             channels = []
             for name, channel in self.channels.items():

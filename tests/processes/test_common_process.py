@@ -1,3 +1,5 @@
+import pytest
+
 from typing import Dict
 from sentinel.processes.common import Process
 
@@ -11,13 +13,14 @@ def test_common_process_init():
     assert isinstance(proc, Process), "Incorrect process type"
 
 
-def test_common_process_custom_init():
+@pytest.mark.asyncio
+async def test_common_process_custom_init():
     '''
     Test | Common Process | Custom Initialization
     '''
     class CustomProcess(Process):
-        def init(self, parameters: Dict) -> None:
-            self.default_balance = parameters.get('default_balance', 10)
+        async def init(self) -> None:
+            self.default_balance = self.parameters.get('default_balance', 10)
 
     proc = CustomProcess(name='TestProccess', 
                         description='Test Process', 
@@ -25,4 +28,5 @@ def test_common_process_custom_init():
                             'default_balance': 100
                         }, 
                         inputs={}, outputs={}, databases={})
+    await proc.init()
     assert proc.default_balance == 100, "Incorrect default balance value"

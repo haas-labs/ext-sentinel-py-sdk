@@ -14,17 +14,19 @@ db_name = "address"
 
 
 class BalanceMonitor(BlockDetector):
-    def init(self, parameters: Dict):
+    async def init(self):
         addresses: list = self.databases[db_name].all()
         self.balances = {value: 0.0 for value in addresses}
         logger.info(f"Initial balance values: f{self.balances}")
-        self.balances_initialized = False
 
-        self.threshold = parameters.get("balance_threshold", 10.0)
+        self.threshold = self.parameters.get("balance_threshold", 10.0)
         logger.info(f"Using balance threshold: {self.threshold}")
 
-        rpc_proxy_node_url = parameters.get("rpc_proxy_node")
+        rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
         self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
+        
+        for addr in self.balances:
+            await self.askBalance(addr)
 
     async def askBalance(self, addr: str) -> int:
         balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
@@ -37,10 +39,6 @@ class BalanceMonitor(BlockDetector):
         return self.balances[addr]
 
     async def on_block(self, transactions: List[Transaction]) -> None:
-        if not self.balances_initialized:
-            for addr in self.balances:
-                await self.askBalance(addr)
-            self.balances_initialized = True
 
         detected = False
         for tx in transactions:
