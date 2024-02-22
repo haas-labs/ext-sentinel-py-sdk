@@ -1,4 +1,5 @@
 import pytest
+import pathlib
 
 from sentinel.channels.fs.common import InboundFileChannel, OutboundFileChannel
 
@@ -9,8 +10,8 @@ def test_fs_channels_init(tmpdir):
     """
     Test File Channels Init
     """
-    inbound_channel_filepath = tmpdir / "source.json"
-    outbound_channel_filepath = tmpdir / "target.json"
+    inbound_channel_filepath = pathlib.Path(tmpdir / "source.json")
+    outbound_channel_filepath = pathlib.Path(tmpdir / "target.json")
 
     inbound_channel = InboundFileChannel(
         name="TestInboundFSChannel",
