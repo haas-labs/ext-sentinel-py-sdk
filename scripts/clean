@@ -27,8 +27,10 @@ fi
 #     rm -r "src/${PACKAGE}.egg-info"
 # fi
 
-find src/*.egg-info -type f -delete
-find src/ -type d -name "*.egg-info" -delete
+rm -rf src/*.egg-info
+
+find examples/ -type f -name "*.py[co]" -delete
+find examples/ -type d -name __pycache__ -delete
 
 find src/${PACKAGE} -type f -name "*.py[co]" -delete
 find src/${PACKAGE} -type d -name __pycache__ -delete
