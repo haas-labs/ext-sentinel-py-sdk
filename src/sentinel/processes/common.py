@@ -42,9 +42,8 @@ class Process(mp.Process):
 
         self.init_databases(databases)
         self.init_channels(inputs, outputs)
-        self.init(parameters=parameters)
 
-    def init(self, parameters: Dict) -> None:
+    async def init(self) -> None:
         '''
         Detector specific initialization
 
@@ -76,6 +75,8 @@ class Process(mp.Process):
         """
         Run Process
         """
+        await self.init()
+        
         try:
             channels = []
             for name, channel in self.channels.items():
