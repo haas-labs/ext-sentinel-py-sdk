@@ -40,9 +40,9 @@ class Process(mp.Process):
         self.channels = dict()
         self.databases = dict()
 
-        self.init(parameters=parameters)
         self.init_databases(databases)
         self.init_channels(inputs, outputs)
+        self.init(parameters=parameters)
 
     def init(self, parameters: Dict) -> None:
         '''

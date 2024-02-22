@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import asyncio
@@ -77,7 +78,8 @@ class OutboundFileChannel(OutboundChannel):
         super().__init__(name, record_type, **kwargs)
 
         self.msg_queue = asyncio.Queue(maxsize=DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE)
-        self.path = path
+        self.path = pathlib.Path(path) if isinstance(path, str) else path
+        os.makedirs(self.path.parent, exist_ok=True)
         self.filemode = "a" if mode == "append" else "w"
 
     async def run(self):

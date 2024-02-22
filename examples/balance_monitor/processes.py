@@ -1,7 +1,9 @@
 import logging
 
-from typing import List
+from typing import List, Dict
+
 from web3 import Web3
+from web3.eth import AsyncEth
 
 from sentinel.processes.block import BlockDetector
 from sentinel.models.event import Event, Blockchain
@@ -10,37 +12,36 @@ from sentinel.models.transaction import Transaction
 logger = logging.getLogger(__name__)
 db_name = "address"
 
-class BalanceMonitor(BlockDetector):
-    
-    def __init__(self,name,description,inputs,outputs,databases,parameters):
-        super().__init__(name,description,inputs,outputs,databases,parameters)
-        
-        addresses:list = self.databases[db_name].all("")
-        self.balances = {value: 0.0 for value in addresses}
-        logger.info(self.balances)
 
-        self.threshold = self.parameters.get('balance_threshold', 10.0)
+class BalanceMonitor(BlockDetector):
+    def init(self, parameters: Dict):
+        addresses: list = self.databases[db_name].all()
+        self.balances = {value: 0.0 for value in addresses}
+        logger.info(f"Initial balance values: f{self.balances}")
+        self.balances_initialized = False
+
+        self.threshold = parameters.get("balance_threshold", 10.0)
         logger.info(f"Using balance threshold: {self.threshold}")
 
-        rpc_proxy_node_url = self.parameters.get('rpc_proxy_node')
-        self.w3 = Web3(Web3.HTTPProvider(rpc_proxy_node_url))
+        rpc_proxy_node_url = parameters.get("rpc_proxy_node")
+        self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
 
-        for addr in self.balances:            
-            self.askBalance(addr)
-
-            
-    def askBalance(self,addr):        
-        balance = self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
-        #balance = 10.0
+    async def askBalance(self, addr: str) -> int:
+        balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
+        # balance = 10.0
         self.balances[addr] = balance
-        logger.info("Balance: %s: %.4f",addr,balance)
+        logger.info("Balance: %s: %.4f", addr, balance)
         return balance
 
-    def getBalance(self,addr):
-        self.balances[addr]
+    def getBalance(self, addr):
+        return self.balances[addr]
 
     async def on_block(self, transactions: List[Transaction]) -> None:
-        
+        if not self.balances_initialized:
+            for addr in self.balances:
+                await self.askBalance(addr)
+            self.balances_initialized = True
+
         detected = False
         for tx in transactions:
             # ignore transactions not to our address
@@ -54,15 +55,14 @@ class BalanceMonitor(BlockDetector):
                 # get current balance
                 balance = self.askBalance(addr)
 
-                if balance <= self.threshold:                    
-                    logger.warn("Balance change: %s: %.4f (block=%s: tx=%s)",addr,balance,tx.block.number,tx.hash)
-                    await self.send_notification(addr,balance,tx)
-        
-        if not detected:
-            logger.info("block: %s",tx.block.number)
+                if balance <= self.threshold:
+                    logger.warn("Balance change: %s: %.4f (block=%s: tx=%s)", addr, balance, tx.block.number, tx.hash)
+                    await self.send_notification(addr, balance, tx)
 
-    async def send_notification(self, addr, balance,transaction: Transaction) -> None:
-        
+        if not detected:
+            logger.info("Block: %s", tx.block.number)
+
+    async def send_notification(self, addr, balance, transaction: Transaction) -> None:
         await self.channels["events"].send(
             Event(
                 did=self.detector_name,
