@@ -54,15 +54,15 @@ class Transaction(BaseModel):
     value: int
     gas: int
     gas_price: int
-    gas_used: int
-    effective_gas_price: int
+    gas_used: int = Field(alias="receipt_gas_used")
+    effective_gas_price: int = Field(alias="receipt_effective_gas_price")
     max_fee_per_gas: Optional[int] = None
     max_priority_fee_per_gas: Optional[int] = None
-    cumulative_gas_used: int
+    cumulative_gas_used: int = Field(alias="receipt_cumulative_gas_used")
     input: str
-    contract_address: Optional[str]
-    root: Optional[str]
-    status: int
+    contract_address: Optional[str] = Field(alias="receipt_contract_address", default=None)
+    root: Optional[str] = Field(alias="receipt_root")
+    status: int = Field(alias="receipt_status")
     transaction_type: int
     logs: List[LogEntry]
     attack_probablity: float = 0.0
