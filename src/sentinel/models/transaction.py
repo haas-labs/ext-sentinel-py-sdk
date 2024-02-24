@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices
 
 
 class Block(BaseModel):
@@ -44,7 +44,6 @@ class Transaction(BaseModel):
     Transaction
     """
 
-    type: Optional[str] = None
     hash: str
     nonce: int
     block: Block
@@ -54,17 +53,26 @@ class Transaction(BaseModel):
     value: int
     gas: int
     gas_price: int
-    gas_used: int
-    effective_gas_price: int
+    gas_used: int = Field(validation_alias=AliasChoices("receipt_gas_used", "gas_used"))
+    effective_gas_price: int = Field(
+        validation_alias=AliasChoices("receipt_effective_gas_price", "effective_gas_price")
+    )
     max_fee_per_gas: Optional[int] = None
     max_priority_fee_per_gas: Optional[int] = None
-    cumulative_gas_used: int
+    cumulative_gas_used: int = Field(
+        validation_alias=AliasChoices("receipt_cumulative_gas_used", "cumulative_gas_used")
+    )
     input: str
-    contract_address: Optional[str]
-    root: Optional[str]
-    status: int
+    contract_address: Optional[str] = Field(
+        validation_alias=AliasChoices("receipt_contract_address", "contract_address"), default=None
+    )
+    root: Optional[str] = Field(validation_alias=AliasChoices("receipt_root", "root"))
+    status: int = Field(validation_alias=AliasChoices("receipt_status", "status"))
     transaction_type: int
     logs: List[LogEntry]
     attack_probablity: float = 0.0
-    item_id: Optional[str] = None
-    item_timestamp: Optional[str] = None
+
+    # TODO remove outdated fields after tests fix
+    # type: Optional[str] = None
+    # item_id: Optional[str] = None
+    # item_timestamp: Optional[str] = None
