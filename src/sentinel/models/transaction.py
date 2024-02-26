@@ -48,8 +48,8 @@ class Transaction(BaseModel):
     nonce: int
     block: Block
     transaction_index: int
-    from_address: Optional[str]
-    to_address: Optional[str]
+    from_address: Optional[str] = None
+    to_address: Optional[str] = None
     value: int
     gas: int
     gas_price: int
