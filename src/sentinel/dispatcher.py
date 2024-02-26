@@ -1,7 +1,6 @@
 import time
 import logging
 
-
 from typing import Any, Dict, List
 
 from sentinel.profile import Profile
