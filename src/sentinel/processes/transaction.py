@@ -1,6 +1,6 @@
 import asyncio
 import logging
-
+import platform
 
 import multiprocessing as mp
 
@@ -30,6 +30,11 @@ class TransactionDetector(mp.Process):
         """
         Transaction Detector Init
         """
+        if platform.system() == "Darwin":
+            # TODO migrate a process to use spawn instead of fork
+            # Current implementation is just workaround to solve issue on MacOS
+            mp.set_start_method("fork", force=True)
+
         super().__init__()
 
         # Process Name
