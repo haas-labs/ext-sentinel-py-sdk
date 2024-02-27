@@ -27,7 +27,7 @@ class AddressStore:
         logger.info(f'Imported {len(self._db)} addresses')
 
     def exists(self, address: str) -> bool:
-        if address in self._db:
+        if address.lower() in self._db:
             return True
         else:
             return False
