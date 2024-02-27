@@ -5,6 +5,7 @@ import argparse
 
 from sentinel.commands.fetch import FetchCommand
 from sentinel.commands.launch import LaunchCommand
+# from sentinel.commands.version import VersionCommand
 from sentinel.commands.abi_signatures import AbiSignaturesCommand
 
 logger = logging.getLogger(__name__)
