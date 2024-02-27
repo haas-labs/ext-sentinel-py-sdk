@@ -1,6 +1,6 @@
 import logging
 
-from typing import List, Dict
+from typing import List
 
 from web3 import Web3
 from web3.eth import AsyncEth
@@ -21,7 +21,7 @@ class BalanceMonitor(BlockDetector):
         self.balances = {value: 0.0 for value in addresses}
         logger.info(f"Initial balance values: f{self.balances}")
 
-        self.threshold = self.parameters.get("balance_threshold", 10.0)
+        self.threshold = self.parameters.get("balance_threshold", 10000000000000000000000.0000)
         logger.info(f"Using balance threshold: {self.threshold}")
 
         rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
@@ -34,30 +34,35 @@ class BalanceMonitor(BlockDetector):
         balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
         # balance = 10.0
         self.balances[addr] = balance
-        logger.info("Balance: %s: %.4f", addr, balance)
+        logger.debug("Balance: %s: %.4f", addr, balance)
         return balance
 
     def getBalance(self, addr):
         return self.balances[addr]
 
+    async def check_addr(self, addr, tx):        
+        balance = await self.askBalance(addr)
+        logger.info(f"Detected: {addr}: {balance}")
+
+        if balance <= self.threshold:
+            logger.warn("Balance change: %s: %.4f (block=%s: tx=%s)", addr, balance, tx.block.number, tx.hash)
+            await self.send_notification(addr, balance, tx)
+
     async def on_block(self, transactions: List[Transaction]) -> None:
+        #logger.info(f"transactions: {transactions}")
 
         detected = False
         for tx in transactions:
-            # ignore transactions not to our address
-            if self.databases[db_name].exists(tx.to_address) or self.databases[db_name].exists(tx.from_address):
-                if self.databases[db_name].exists(tx.to_address):
-                    addr = tx.to_address
-                else:
-                    addr = tx.from_address
+            # ignore transactions not to our address            
 
+            addr_from = self.databases[db_name].exists(tx.from_address)
+            addr_to = self.databases[db_name].exists(tx.to_address)
+            if addr_from:
+                await self.check_addr(tx.from_address,tx)
                 detected = True
-                # get current balance
-                balance = await self.askBalance(addr)
-
-                if balance <= self.threshold:
-                    logger.warn("Balance change: %s: %.4f (block=%s: tx=%s)", addr, balance, tx.block.number, tx.hash)
-                    await self.send_notification(addr, balance, tx)
+            if addr_to:
+                await self.check_addr(tx.to_address,tx)
+                detected = True
 
         if not detected:
             logger.info("Block: %s", tx.block.number)
