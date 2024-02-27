@@ -41,7 +41,7 @@ class BlockDetector(TransactionDetector):
         super().__init__(name, description, inputs, outputs, databases, parameters)
 
         # Blocks stack size
-        self._blocks_stack_size = parameters.get("block_stack_size", 3)
+        self._blocks_stack_size = parameters.get("block_stack_size", 10)
 
         # Block storage
         self._blocks = dict()
@@ -71,6 +71,9 @@ class BlockDetector(TransactionDetector):
         block_number = transaction.block.number
         transaction_count = transaction.block.transaction_count
         tx_index = transaction.transaction_index
+
+        block_stats = {blk_id: len(self._blocks[blk_id].transactions) for blk_id in self._blocks}
+        logger.info(f"Blocks: {block_stats}")
 
         # new block detected
         if block_number not in self._blocks:
