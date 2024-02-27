@@ -136,3 +136,44 @@ docker run -ti --rm --name sentinel-balance-monitor \
 2024-02-22T14:02:35.601 (MainProcess::sentinel.dispatcher:200) [INFO] Terminating the process: BalanceMonitor
 2024-02-22T14:02:35.601 (MainProcess::sentinel.dispatcher:193) [INFO] Completed
 ```
+
+----
+
+## Running local environment
+
+1. Install foundry suite (anvil, cast)
+
+2. Run anvil
+```
+anvil --host 0.0.0.0
+```
+
+3. Export anvil default wallets
+
+```
+source env.anvil
+```
+
+4. Run Websocket proxy
+
+On Linux:
+```
+docker run --rm -p 9300:9300 syspulse/trunk3 -f http://172.17.0.1:8545 -e tx.extractor -o ws:server://0.0.0.0:9300 --format=json --receipt.request=batch --throttle=1000
+```
+
+On Mac:
+```
+docker run --rm -p 9300:9300 syspulse/trunk3 -f http://host.docker.internal:8545 -e tx.extractor -o ws:server://0.0.0.0:9300 --format=json --receipt.request=batch --throttle=1000
+```
+
+5. Start `balance_monitor`
+
+```
+sentinel launch --profile ./profile-ws-anvil.yaml
+```
+
+6. Make transfer transaction
+
+```
+cast send $ADDR1 --private-key=$SK2 --value=10 --gas-price=1gwei --priority-gas-price=1gwei --gas-limit=21000
+```

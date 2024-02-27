@@ -87,3 +87,30 @@ async def test_block_detector_incomplete_blocks_processing():
     for transaction in pathlib.Path("tests/processes/resources/incomplete-blocks.json").open("r").readlines():
         transaction = json.loads(transaction)
         await process.on_transaction(transaction=Transaction(**transaction))
+
+@pytest.mark.asyncio
+async def test_block_detector_single_transaction_block():
+    """
+    Test | Block Detector | Single Transaction Block processing
+    """
+
+    async def on_block_hander(transactions: List[Transaction]) -> None:
+        """
+        Block handler
+        """
+        block_number = transactions[0].block.number
+        match block_number:
+            case 10:
+                assert len(transactions) == 1, f"Incorrect number of transactions for block: {block_number}"
+            case _:
+                assert False, f"Unknown block number: {block_number}"
+
+    process = BlockDetector(
+        name="TestBlockDetector",
+        description="Test Block Detector",
+    )
+    process.on_block = on_block_hander
+
+    for transaction in pathlib.Path("tests/processes/resources/single-tx-block.json").open("r").readlines():
+        transaction = json.loads(transaction)
+        await process.on_transaction(transaction=Transaction(**transaction))
