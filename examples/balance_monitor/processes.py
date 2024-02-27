@@ -15,7 +15,6 @@ db_name = "address"
 
 class BalanceMonitor(BlockDetector):
     async def init(self):
-
         logger.info("User defined init process started")
         addresses: list = self.databases[db_name].all()
         self.balances = {value: 0.0 for value in addresses}
@@ -26,7 +25,7 @@ class BalanceMonitor(BlockDetector):
 
         rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
         self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
-        
+
         for addr in self.balances:
             await self.askBalance(addr)
 
@@ -40,7 +39,7 @@ class BalanceMonitor(BlockDetector):
     def getBalance(self, addr):
         return self.balances[addr]
 
-    async def check_addr(self, addr, tx):        
+    async def check_addr(self, addr, tx):
         balance = await self.askBalance(addr)
         logger.info(f"Detected: {addr}: {balance}")
 
@@ -49,19 +48,18 @@ class BalanceMonitor(BlockDetector):
             await self.send_notification(addr, balance, tx)
 
     async def on_block(self, transactions: List[Transaction]) -> None:
-        #logger.info(f"transactions: {transactions}")
+        # logger.info(f"transactions: {transactions}")
 
         detected = False
         for tx in transactions:
-            # ignore transactions not to our address            
-
+            # ignore transactions not to our address
             addr_from = self.databases[db_name].exists(tx.from_address)
             addr_to = self.databases[db_name].exists(tx.to_address)
             if addr_from:
-                await self.check_addr(tx.from_address,tx)
+                await self.check_addr(tx.from_address, tx)
                 detected = True
             if addr_to:
-                await self.check_addr(tx.to_address,tx)
+                await self.check_addr(tx.to_address, tx)
                 detected = True
 
         if not detected:
