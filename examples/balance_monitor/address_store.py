@@ -20,6 +20,7 @@ class AddressStore:
             for address in source:
                 if not address:
                     continue
+                address = address.lower()
                 if address.startswith('0x'):
                     self._db.append(address.strip())
 
