@@ -21,7 +21,7 @@ class AddressStore:
                 if not address:
                     continue
                 if address.startswith('0x'):
-                    self._db.append(address.strip())
+                    self._db.append(address.strip().lower())
 
         self._db = list(set(self._db))
         logger.info(f'Imported {len(self._db)} addresses')
