@@ -53,7 +53,7 @@ class BalanceMonitor(BlockDetector):
 
                 detected = True
                 # get current balance
-                balance = self.askBalance(addr)
+                balance = await self.askBalance(addr)
 
                 if balance <= self.threshold:
                     logger.warn("Balance change: %s: %.4f (block=%s: tx=%s)", addr, balance, tx.block.number, tx.hash)
