@@ -78,14 +78,12 @@ class BlockDetector(TransactionDetector):
                 transaction_count=transaction_count,
                 transactions={tx_index: transaction},
             )
-            return
-
-        # duplicated transaction detected
-        if tx_index in self._blocks[block_number].transactions:
-            return
-
-        # Add transactions to a block storage
-        self._blocks[block_number].transactions[tx_index] = transaction
+        else:
+            # duplicated transaction detected
+            if tx_index in self._blocks[block_number].transactions:
+                return
+            # Add transactions to a block storage
+            self._blocks[block_number].transactions[tx_index] = transaction
 
         # Check if the block is full
         if len(self._blocks[block_number].transactions) != transaction_count:
