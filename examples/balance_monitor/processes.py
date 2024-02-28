@@ -1,12 +1,11 @@
 import logging
 
-from typing import List, Dict
+from typing import List
 
 from web3 import Web3
 from web3.eth import AsyncEth
 
 from sentinel.processes.block import BlockDetector
-from sentinel.processes.transaction import TransactionDetector
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
 
@@ -16,7 +15,6 @@ db_name = "address"
 
 class BalanceMonitor(BlockDetector):
     async def init(self):
-
         logger.info("User defined init process started")
         addresses: list = self.databases[db_name].all()
         self.balances = {value: 0.0 for value in addresses}
@@ -27,7 +25,7 @@ class BalanceMonitor(BlockDetector):
 
         rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
         self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
-        
+
         for addr in self.balances:
             await self.askBalance(addr)
 
@@ -41,10 +39,7 @@ class BalanceMonitor(BlockDetector):
     def getBalance(self, addr):
         return self.balances[addr]
 
-    # async def on_transaction(self, transactions: Transaction) -> None:
-    #     logger.info(f"transactions: {transactions}")
-
-    async def check_addr(self, addr, tx):        
+    async def check_addr(self, addr, tx):
         balance = await self.askBalance(addr)
         logger.info(f"Detected: {addr}: {balance}")
 
@@ -53,19 +48,18 @@ class BalanceMonitor(BlockDetector):
             await self.send_notification(addr, balance, tx)
 
     async def on_block(self, transactions: List[Transaction]) -> None:
-        #logger.info(f"transactions: {transactions}")
+        # logger.info(f"transactions: {transactions}")
 
         detected = False
         for tx in transactions:
-            # ignore transactions not to our address            
-
+            # ignore transactions not to our address
             addr_from = self.databases[db_name].exists(tx.from_address)
             addr_to = self.databases[db_name].exists(tx.to_address)
             if addr_from:
-                await self.check_addr(tx.from_address,tx)
+                await self.check_addr(tx.from_address, tx)
                 detected = True
             if addr_to:
-                await self.check_addr(tx.to_address,tx)
+                await self.check_addr(tx.to_address, tx)
                 detected = True
 
         if not detected:

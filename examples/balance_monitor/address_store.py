@@ -18,6 +18,7 @@ class AddressStore:
         path = pathlib.Path(path) if isinstance(path, str) else path
         with path.open('r', encoding='utf-8') as source:
             for address in source:
+                address = address.lower().strip()
                 if not address:
                     continue
                 if address.startswith('0x'):
@@ -27,6 +28,8 @@ class AddressStore:
         logger.info(f'Imported {len(self._db)} addresses')
 
     def exists(self, address: str) -> bool:
+        if not address:
+            return False
         if address.lower() in self._db:
             return True
         else:
