@@ -7,8 +7,6 @@ from sentinel.utils import get_sentinel_version
 
 from sentinel.commands.fetch import FetchCommand
 from sentinel.commands.launch import LaunchCommand
-
-# from sentinel.commands.version import VersionCommand
 from sentinel.commands.abi_signatures import AbiSignaturesCommand
 
 
