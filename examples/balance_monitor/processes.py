@@ -73,8 +73,9 @@ class BalanceMonitor(BlockDetector):
             Event(
                 did=self.detector_name,
                 type="balance_change",
-                severity=0.3,
-                ts=transaction.block.timestamp * 1000,
+                severity=0.5,
+                # sid = "ext:sentinel",
+                ts=transaction.block.timestamp,
                 blockchain=Blockchain(
                     network=self.parameters["network"],
                     chain_id=str(self.parameters["chain_id"]),
