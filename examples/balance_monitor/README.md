@@ -17,7 +17,7 @@ sentinel launch --profile ./profile-ws-extractor.yaml --env-vars .local-vars.yam
 In case of using sensitive information in a profile, Sentinel SDK supports placeholders which can be passed to a profile via `--env-vars` parameter. The example of `.local-vars.yaml` file
 
 ```yaml
-ETHEREUM_PROXY_RPC_ENDPOINT: https://...hacken.cloud/api/v1/rpc3/
+EXT_RPC_URL: https://...hacken.cloud/api/v1/rpc3/
 ```
 The profile with placeholders use
 ```yaml
@@ -28,7 +28,7 @@ The profile with placeholders use
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: {{ env['ETHEREUM_PROXY_RPC_ENDPOINT'] }}
+    rpc_proxy_node: {{ env['EXT_RPC_URL'] }}
     balance_threshold: 10.0
 ```
 

@@ -5,7 +5,7 @@
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: {{ env['ETHEREUM_PROXY_RPC_ENDPOINT'] }}
+    rpc_proxy_node: {{ env['EXT_RPC_URL'] }}
     # balance_threshold: 10.0
     balance_threshold: 3013914531335572974709866
 
@@ -19,8 +19,8 @@
   - name: events
     type: sentinel.channels.http.outbound.OutboundEventsChannel
     parameters:
-      endpoint: {{ env["EXTRACTOR_PUBLIC_API_ENDPOINT"] }} 
-      token: {{ env['HACKEN_API_TOKEN'] }}
+      endpoint: {{ env["EXT_HTTP_URL"] }} 
+      token: {{ env['EXT_API_TOKEN'] }}
       chain_id: 1
       network: ethereum
       metadata:

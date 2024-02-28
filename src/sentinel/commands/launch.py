@@ -25,9 +25,6 @@ class LaunchCommand(Command):
         """
         self._parser.add_argument("--profile", type=pathlib.Path, required=True, help="Sentinel Process Profile")
         self._parser.add_argument(
-            "--import-service-tokens", action="store_true", help="Import service tokens before launch"
-        )
-        self._parser.add_argument(
             "--vars",
             type=str,
             action="append",
@@ -55,10 +52,6 @@ class LaunchCommand(Command):
                 ]
             ).items():
                 os.environ[k] = v
-
-        if args.import_service_tokens:
-            logger.info("Importing service account tokens")
-            import_service_tokens()
 
         try:
             profile = LauncherProfile().parse(profile_path=args.profile, extra_vars=extra_vars)

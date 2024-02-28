@@ -1,4 +1,13 @@
+import pathlib
+
 from typing import Any, Dict, List, Tuple
+
+
+def get_sentinel_version():
+    """
+    returns sentinel version
+    """
+    return pathlib.Path(__file__).parent.joinpath("VERSION").read_text()
 
 
 def import_by_classpath(classpath: str) -> Tuple[str, Any]:

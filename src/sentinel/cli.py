@@ -3,13 +3,12 @@ import logging
 import pathlib
 import argparse
 
+from sentinel.utils import get_sentinel_version
+
 from sentinel.commands.fetch import FetchCommand
 from sentinel.commands.launch import LaunchCommand
-# from sentinel.commands.version import VersionCommand
 from sentinel.commands.abi_signatures import AbiSignaturesCommand
 
-# you can use os.path and open() as well
-__version__ = pathlib.Path(__file__).parent.joinpath("VERSION").read_text()
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ def run_cli_instance():
 
     # Common parser
     parser = argparse.ArgumentParser("sentinel")
-    parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument("--version", action="version", version=get_sentinel_version())
     subparsers = parser.add_subparsers(help="Sentinel Commands")
 
     # Commands
