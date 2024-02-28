@@ -8,6 +8,9 @@ from sentinel.commands.launch import LaunchCommand
 # from sentinel.commands.version import VersionCommand
 from sentinel.commands.abi_signatures import AbiSignaturesCommand
 
+# you can use os.path and open() as well
+__version__ = pathlib.Path(__file__).parent.joinpath("VERSION").read_text()
+
 logger = logging.getLogger(__name__)
 
 # Exit codes
@@ -24,6 +27,7 @@ def run_cli_instance():
 
     # Common parser
     parser = argparse.ArgumentParser("sentinel")
+    parser.add_argument('--version', action='version', version=__version__)
     subparsers = parser.add_subparsers(help="Sentinel Commands")
 
     # Commands
