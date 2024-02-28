@@ -15,7 +15,7 @@ SERVICE_ACCOUNT_TOKENS = {
         "client_id": "HAAS_CLIENT_ID",
         "client_secret": "HAAS_CLIENT_SECRET",
     },
-    "HACKEN_API_TOKEN": {
+    "EXT_API_TOKEN": {
         "realm": "HACKEN_REALM",
         "client_id": "HACKEN_CLIENT_ID",
         "client_secret": "HACKEN_CLIENT_SECRET",
@@ -89,3 +89,22 @@ def import_service_tokens():
             os.environ[token_name] = token.access_token
         else:
             raise RuntimeError(f"Cannot import service account token from env: {token_name}")
+
+
+if __name__ == "__main__":
+    import argparse
+
+    from sentinel.profile import load_extra_vars
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--env-vars", type=str, required=True, help="Set environment variables from JSON/YAML file")
+    args = parser.parse_args()
+
+    # Update env var from file
+    for k, v in load_extra_vars([f"@{args.env_vars}"]).items():
+        os.environ[k] = v
+
+    import_service_tokens()
+    for k, v in os.environ.items():
+        if k.endswith("_TOKEN"):
+            print(f"{k}: {v}")
