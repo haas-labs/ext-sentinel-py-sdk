@@ -8,7 +8,7 @@ from sentinel.channels.http.common import OutboundHTTPChannel
 logger = logging.getLogger(__name__)
 
 
-class OutboundEventsHTTPChannel(OutboundHTTPChannel):
+class OutboundEventsChannel(OutboundHTTPChannel):
     """
     Outbound Events HTTP/REST Channel
     """
