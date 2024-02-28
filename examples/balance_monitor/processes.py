@@ -84,7 +84,7 @@ class BalanceMonitor(BlockDetector):
                     "tx_from": transaction.from_address,
                     "tx_to": transaction.to_address,
                     "value": transaction.value,
-                    "addr": addr,
+                    "monitored_contract": addr,
                     "balance": balance,
                     "desc": "Balance Change",
                 },
