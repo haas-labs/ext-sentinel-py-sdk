@@ -2,6 +2,9 @@
 
 source scripts/common
 
+SENTINEL_VERSION=$(setuptools-git-versioning)
+echo ${SENTINEL_VERSION} > src/sentinel/VERSION
+
 ${PREFIX}python3 -m build
 
 # ${PREFIX}python setup.py sdist bdist_wheel
