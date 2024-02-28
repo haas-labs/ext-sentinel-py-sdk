@@ -65,6 +65,11 @@ class OutboundHTTPChannel(OutboundChannel):
                         f"Message publishing error, status code: {response.status_code}, "
                         + f"response: {response.content}, query: {query}"
                     )
+                else:
+                    content = response.json()
+                    if content.get("count", 0) != 1:
+                        logger.error(f"Publishing event failed, status code: {response.status_code}, " \
+                                     + f"response content: {content}")
 
     async def send(self, msg: Union[Dict, BaseModel]) -> None:
         """
