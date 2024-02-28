@@ -17,7 +17,7 @@ class BalanceMonitor(BlockDetector):
     async def init(self):
         logger.info("User defined init process started")
         addresses: list = self.databases[db_name].all()
-        self.balances = {a: 0 for a in addresses}  
+        self.balances = {a: 0 for a in addresses}
 
         self.decimals = 10 ** self.parameters.get("decimals", 18)
         self.threshold = self.parameters.get("balance_threshold", 10000000000000000000000)
@@ -27,13 +27,11 @@ class BalanceMonitor(BlockDetector):
         self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
 
         self.balances = {a: await self.ask_balance(a) for a in addresses}
-        logger.info(f"Initial balance values:")
-        for addr,bal in self.balances.items():
-            logger.info(f"{addr}: {bal} ({bal / self.decimals})")
-        
+        for addr, bal in self.balances.items():
+            logger.info(f"Initial balance value: {addr}: {bal} ({bal / self.decimals})")
 
     async def ask_balance(self, addr: str) -> int:
-        balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))        
+        balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
         # cache
         self.balances[addr] = balance
         logger.debug("Balance: %s: %.4f", addr, balance)
@@ -47,11 +45,17 @@ class BalanceMonitor(BlockDetector):
         logger.info(f"Detected: {addr}: {balance} ({balance / self.decimals})")
 
         if balance <= self.threshold:
-            logger.warn("Balance below threshold: %s: %.4f =< %.4f (block=%s: tx=%s)", addr, balance / self.decimals, self.threshold / self.decimals, tx.block.number, tx.hash)
+            logger.warn(
+                "Balance below threshold: %s: %.4f =< %.4f (block=%s: tx=%s)",
+                addr,
+                balance / self.decimals,
+                self.threshold / self.decimals,
+                tx.block.number,
+                tx.hash,
+            )
             await self.send_notification(addr, balance, tx)
 
     async def on_block(self, transactions: List[Transaction]) -> None:
-        # logger.info(f"transactions: {transactions}")
 
         detected = False
         for tx in transactions:
@@ -74,7 +78,7 @@ class BalanceMonitor(BlockDetector):
                 did=self.detector_name,
                 type="balance_change",
                 severity=0.3,
-                ts=transaction.block.timestamp * 1000,
+                ts=transaction.block.timestamp,
                 blockchain=Blockchain(
                     network=self.parameters["network"],
                     chain_id=str(self.parameters["chain_id"]),
