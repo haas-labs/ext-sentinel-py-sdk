@@ -1,8 +1,8 @@
 # Sentinel Commands
 
 ```sh
-$ sentinel 
-usage: sentinel [-h] {launch,fetch,abi-signatures} ...
+$ sentinel
+usage: sentinel [-h] [--version] {launch,fetch,abi-signatures} ...
 
 positional arguments:
   {launch,fetch,abi-signatures}
@@ -13,4 +13,11 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  --version             show program's version number and exit
 ```
+
+## References
+
+- [Launch Command](/docs/Commands/Launch.md)
+- [Fetch Command](/docs/Commands/Fetch.md)
+- [ABI Signatures Command](/docs/Commands/ABI-Signatures.md)
