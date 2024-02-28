@@ -17,34 +17,37 @@ class BalanceMonitor(BlockDetector):
     async def init(self):
         logger.info("User defined init process started")
         addresses: list = self.databases[db_name].all()
-        self.balances = {value: 0.0 for value in addresses}
-        logger.info(f"Initial balance values: f{self.balances}")
+        self.balances = {a: 0 for a in addresses}  
 
-        self.threshold = self.parameters.get("balance_threshold", 10000000000000000000000.0000)
-        logger.info(f"Using balance threshold: {self.threshold}")
+        self.decimals = 10 ** self.parameters.get("decimals", 18)
+        self.threshold = self.parameters.get("balance_threshold", 10000000000000000000000)
+        logger.info(f"Using balance threshold: {self.threshold} ({self.threshold / self.decimals})")
 
         rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
         self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
 
-        for addr in self.balances:
-            await self.askBalance(addr)
+        self.balances = {a: await self.ask_balance(a) for a in addresses}
+        logger.info(f"Initial balance values:")
+        for addr,bal in self.balances.items():
+            logger.info(f"{addr}: {bal} ({bal / self.decimals})")
+        
 
-    async def askBalance(self, addr: str) -> int:
-        balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
-        # balance = 10.0
+    async def ask_balance(self, addr: str) -> int:
+        balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))        
+        # cache
         self.balances[addr] = balance
         logger.debug("Balance: %s: %.4f", addr, balance)
         return balance
 
-    def getBalance(self, addr):
+    def get_balance(self, addr):
         return self.balances[addr]
 
     async def check_addr(self, addr, tx):
-        balance = await self.askBalance(addr)
-        logger.info(f"Detected: {addr}: {balance}")
+        balance = await self.ask_balance(addr)
+        logger.info(f"Detected: {addr}: {balance} ({balance / self.decimals})")
 
         if balance <= self.threshold:
-            logger.warn("Balance change: %s: %.4f (block=%s: tx=%s)", addr, balance, tx.block.number, tx.hash)
+            logger.warn("Balance below threshold: %s: %.4f =< %.4f (block=%s: tx=%s)", addr, balance / self.decimals, self.threshold / self.decimals, tx.block.number, tx.hash)
             await self.send_notification(addr, balance, tx)
 
     async def on_block(self, transactions: List[Transaction]) -> None:

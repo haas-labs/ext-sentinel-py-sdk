@@ -5,8 +5,9 @@
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: {{ env['ETHEREUM_PROXY_RPC_ENDPOINT'] }}
-    balance_threshold: 1000000000000000000000000000.0000
+    rpc_proxy_node: http://geth.demo.hacken.cloud:8545
+    balance_threshold: 1000000000000000000000000000
+    decimals: 18
 
   inputs:
   - name: transactions
