@@ -41,8 +41,10 @@ sentinel = 'sentinel.cli:run_cli_instance'
 
 [tool.setuptools-git-versioning]
 enabled = true
-starting_version = "0.3.0"
 version_file = "src/sentinel/VERSION"
+count_commits_from_version_file = true
+dev_template = "{tag}dev{ccount}"
+dirty_template = "{tag}dev{ccount}"
 
 [tool.ruff]
 # Allow lines to be as long as 120.
