@@ -5,15 +5,15 @@
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: {{ env['EXT_RPC_URL'] }}
+    rpc_proxy_node: {{ env['ETH_RPC_URL'] }}
     # balance_threshold: 10.0
-    balance_threshold: 3013914531335572974709866
+    balance_threshold: 3015706663806642685197016
 
   inputs:
   - name: transactions
     type: sentinel.channels.ws.transactions.InboundTransactionChannel
     parameters:
-      server_uri: {{ env['DEV_TRANSACTION_WS_URI'] }}
+      server_uri: {{ env['EXT_WS_URI'] }}
 
   outputs:
   - name: events
