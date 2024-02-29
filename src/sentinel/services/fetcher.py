@@ -40,14 +40,14 @@ class JsonRpcRequest:
     JSON RPC Request
     """
 
-    def __init__(self, rpc_endpoint: str, rpc_method: str, params: List):
+    def __init__(self, rpc: str, method: str, params: List):
         """
         JSON RPC Request Init
         """
-        self.url = rpc_endpoint
+        self.url = rpc
         self.data = {
             "jsonrpc": JSONRPC_VERSION,
-            "method": rpc_method,
+            "method": method,
             "params": params,
             "id": 1,
         }
@@ -240,7 +240,7 @@ class Fetcher:
         return self.fetch(
             JsonRpcRequest(
                 self.endpoint,
-                rpc_method="eth_getBlockByNumber",
+                method="eth_getBlockByNumber",
                 params=[block_number, transaction_detail_flag],
             )
         )
@@ -252,7 +252,7 @@ class Fetcher:
         return self.fetch(
             JsonRpcRequest(
                 self.endpoint,
-                rpc_method="eth_getBlockByHash",
+                method="eth_getBlockByHash",
                 params=[block_hash, transaction_detail_flag],
             )
         )
@@ -264,7 +264,7 @@ class Fetcher:
         return self.fetch(
             JsonRpcRequest(
                 self.endpoint,
-                rpc_method="eth_getTransactionByHash",
+                method="eth_getTransactionByHash",
                 params=[transaction_hash],
             )
         )
@@ -276,7 +276,7 @@ class Fetcher:
         return self.fetch(
             JsonRpcRequest(
                 self.endpoint,
-                rpc_method="eth_getTransactionReceipt",
+                method="eth_getTransactionReceipt",
                 params=[transaction_hash],
             )
         )
@@ -285,7 +285,7 @@ class Fetcher:
         """
         returns block trace
         """
-        return self.fetch(JsonRpcRequest(self.endpoint, rpc_method="trace_block", params=[block_number]))
+        return self.fetch(JsonRpcRequest(self.endpoint, method="trace_block", params=[block_number]))
 
     # TODO update the code
     # def get_transaction_trace(self, transaction_hash: str) -> Dict:
@@ -293,7 +293,7 @@ class Fetcher:
     #     returns transaction trace
     #     '''
     #     return self.fetch(JsonRpcRequest(self.endpoint,
-    #                                      rpc_method='trace_transaction',
+    #                                      method='trace_transaction',
     #                                      params=[transaction_hash]))
 
     def get_trace_transaction(self, tx_hash: Union[str, List[str]]) -> Iterator[Dict]:
@@ -305,7 +305,7 @@ class Fetcher:
             return self.fetch(
                 JsonRpcRequest(
                     self.endpoint,
-                    rpc_method="trace_transaction",
+                    method="trace_transaction",
                     params=[
                         tx_hash,
                     ],
@@ -331,7 +331,7 @@ class Fetcher:
             return self.fetch(
                 JsonRpcRequest(
                     self.endpoint,
-                    rpc_method="debug_traceTransaction",
+                    method="debug_traceTransaction",
                     params=[tx_hash, {"tracer": "callTracer"}],
                 )
             )
@@ -352,7 +352,7 @@ class Fetcher:
     #     returns debug transaction trace
     #     '''
     #     return self.fetch(JsonRpcRequest(self.endpoint,
-    #                                      rpc_method='debug_traceCall',
+    #                                      method='debug_traceCall',
     #                                      params=[{"to": to_address }]))
 
     # TODO update the code
@@ -361,5 +361,5 @@ class Fetcher:
     #     returns transaction trace
     #     '''
     #     return self.fetch(JsonRpcRequest(self.endpoint,
-    #                                      rpc_method='trace_call',
+    #                                      method='trace_call',
     #                                      params=[{"to": to_address }]))

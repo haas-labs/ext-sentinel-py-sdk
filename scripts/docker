@@ -59,10 +59,20 @@ remove-images() {
 
 build-base-image() {
 
+    # ./scripts/build
+    
+    sentinel_sdk_tarball=$(ls dist/*.tar.gz)
+    cp $sentinel_sdk_tarball docker/ext_sentinel_py_sdk.tar.gz
+    
     echo "[INFO] Building base image" \
     && docker build \
         -t ext/sentinel/base:v${SENTINEL_DOCKER_VERSION} \
-        -f docker/Dockerfile.base . 
+        -f docker/Dockerfile.base docker/ \
+    && echo -n "[INFO] Installed Sentinel SDK: " \
+    && docker run -ti --rm --name sentinel-console \
+        ext/sentinel/base:v${SENTINEL_DOCKER_VERSION} \
+        sentinel --version \
+    && echo "[INFO] Completed successfully"
 }
 
 build-dev-image() {

@@ -43,6 +43,10 @@ The role of the detector is to identify various events that have occurred in blo
 
 [BlockTx Detector](examples/block_tx/README.md) provides step-by-step guide and information
 
+## Deployment
+
+- [Packaging Sentinel processes in Docker image](docs/Deployment/Packaging-in-Docker-Image.md)
+
 ## The Bundle
 
 The processes bundle allows to run several processes in one docker container.
