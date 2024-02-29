@@ -5,6 +5,8 @@ from typing import List
 from web3 import Web3
 from web3.eth import AsyncEth
 
+import datetime
+
 from sentinel.processes.block import BlockDetector
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
@@ -26,7 +28,7 @@ class BalanceMonitor(BlockDetector):
         rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
         self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
 
-        self.balances = {a: await self.ask_balance(a) for a in addresses}
+        self.balances = {a: await self.check_addr(a,None) for a in addresses}
         for addr, bal in self.balances.items():
             logger.info(f"Initial balance value: {addr}: {bal} ({bal / self.decimals})")
 
@@ -41,8 +43,15 @@ class BalanceMonitor(BlockDetector):
         return self.balances[addr]
 
     async def check_addr(self, addr, tx):
-        balance = await self.ask_balance(addr)
-        logger.info(f"Detected: {addr}: {balance} ({balance / self.decimals})")
+        balance = await self.ask_balance(addr)        
+        logger.info(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
+        
+        if tx is not None: 
+            tx_hash = tx.hash
+            block_number = tx.block.number
+        else:
+            tx_hash = ""
+            block_number = ""
 
         if balance <= self.threshold:
             logger.warn(
@@ -50,10 +59,13 @@ class BalanceMonitor(BlockDetector):
                 addr,
                 balance / self.decimals,
                 self.threshold / self.decimals,
-                tx.block.number,
-                tx.hash,
+                block_number,
+                tx_hash,
             )
             await self.send_notification(addr, balance, tx)
+        
+        # return balance    
+        return balance
 
     async def on_block(self, transactions: List[Transaction]) -> None:
 
@@ -63,35 +75,52 @@ class BalanceMonitor(BlockDetector):
             addr_from = self.databases[db_name].exists(tx.from_address)
             addr_to = self.databases[db_name].exists(tx.to_address)
             if addr_from:
+                logger.info(f"Detected: {addr_from}")
                 await self.check_addr(tx.from_address, tx)
                 detected = True
             if addr_to:
+                logger.info(f"Detected: {addr_to}")
                 await self.check_addr(tx.to_address, tx)
                 detected = True
 
         if not detected:
             logger.info("Block: %s", tx.block.number)
 
-    async def send_notification(self, addr, balance, transaction: Transaction) -> None:
+    async def send_notification(self, addr: str, balance: int, tx: Transaction) -> None:
+        logger.info(f"-------------------------> Event: {addr}, {balance}, {tx}")
+        if tx is not None:
+            tx_ts = tx.block.timestamp
+            tx_hash = tx.hash
+            tx_from = tx.from_address
+            tx_to = tx.to_address
+            tx_value = tx.value
+        else:
+            tx_ts = 1000 #datetime.datetime.timestamp(datetime.datetime.now())*1000
+            tx_hash = ""
+            tx_from = ""
+            tx_to = ""
+            tx_value = ""
+
         await self.channels["events"].send(
             Event(
                 did=self.detector_name,
                 type="balance_change",
                 severity=0.35,
                 # sid = "ext:sentinel",
-                ts=transaction.block.timestamp,
+                ts = tx_ts,
                 blockchain=Blockchain(
                     network=self.parameters["network"],
                     chain_id=str(self.parameters["chain_id"]),
                 ),
                 metadata={
-                    "tx_hash": transaction.hash,
-                    "tx_from": transaction.from_address,
-                    "tx_to": transaction.to_address,
-                    "value": transaction.value,
+                    "tx_hash": tx_hash,
+                    "tx_from": tx_from,
+                    "tx_to": tx_to,
+                    "value": tx_value,
                     "monitored_contract": addr,
                     "balance": balance,
-                    "desc": "Balance Change",
+                    "threshold": self.threshold,
+                    "desc": f"Balance Change below threshold ({balance / self.decimals}, {self.threshold / self.decimals})",
                 },
             )
         )
