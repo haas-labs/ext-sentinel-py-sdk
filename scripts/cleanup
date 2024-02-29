@@ -2,6 +2,8 @@
 
 source scripts/common
 
+echo "[INFO] Cleanup dist and build files"
+
 if [ -d 'dist' ] ; then
     echo "[INFO] Removing dist/ directory"
     rm -r dist

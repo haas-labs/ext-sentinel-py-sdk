@@ -2,6 +2,8 @@
 
 source scripts/common
 
+./scripts/cleanup
+
 SENTINEL_VERSION=$(setuptools-git-versioning)
 echo ${SENTINEL_VERSION} > src/sentinel/VERSION
 
