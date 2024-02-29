@@ -1,5 +1,7 @@
 FROM alpine:edge
 
+COPY ext_sentinel_py_sdk.tar.gz /tmp/
+
 RUN echo "[INFO] Adding Alpine testing repo" \
         && echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
         && cat /etc/apk/repositories \
@@ -25,8 +27,10 @@ RUN echo "[INFO] Adding Alpine testing repo" \
             pydantic==2.6.1 \
             web3==6.15.1 \
             websockets==12.0 \
+    && echo "[INFO] Install Sentinel SDK package" \
+        && pip install --break-system-packages /tmp/ext_sentinel_py_sdk.tar.gz \
     && echo "[INFO] Remove build deps" \
-        && apk del .build-deps \    
+        && apk del .build-deps \  
     && echo "[INFO] Remove cache" \
         && rm -f \
             /tmp/* \
