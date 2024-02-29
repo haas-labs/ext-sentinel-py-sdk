@@ -2,10 +2,10 @@ import os
 import logging
 import pathlib
 
-from sentinel.profile import LauncherProfile, IncorrectProfileFormat, load_extra_vars
 from sentinel.dispatcher import Dispatcher
 from sentinel.commands.common import Command
-from sentinel.services.service_account import import_service_tokens
+from sentinel.utils import get_sentinel_version
+from sentinel.profile import LauncherProfile, IncorrectProfileFormat, load_extra_vars
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +42,7 @@ class LaunchCommand(Command):
         """
         super().handle(args)
 
+        logger.info(f"Sentinel SDK version: {get_sentinel_version()}")
         extra_vars = load_extra_vars(args.vars)
 
         # Update env var from file
