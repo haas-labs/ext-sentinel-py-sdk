@@ -56,7 +56,7 @@ async def test_block_detector_collect_block_transactions():
     )
     process.on_block = on_block_hander
 
-    for transaction in pathlib.Path("tests/processes/resources/transactions.json").open("r").readlines():
+    for transaction in pathlib.Path("tests/processes/forked/resources/transactions.json").open("r").readlines():
         transaction = json.loads(transaction)
         await process.on_transaction(transaction=Transaction(**transaction))
 
@@ -84,7 +84,7 @@ async def test_block_detector_incomplete_blocks_processing():
     )
     process.on_block = on_block_hander
 
-    for transaction in pathlib.Path("tests/processes/resources/incomplete-blocks.json").open("r").readlines():
+    for transaction in pathlib.Path("tests/processes/forked/resources/incomplete-blocks.json").open("r").readlines():
         transaction = json.loads(transaction)
         await process.on_transaction(transaction=Transaction(**transaction))
 
@@ -111,6 +111,6 @@ async def test_block_detector_single_transaction_block():
     )
     process.on_block = on_block_hander
 
-    for transaction in pathlib.Path("tests/processes/resources/single-tx-block.json").open("r").readlines():
+    for transaction in pathlib.Path("tests/processes/forked/resources/single-tx-block.json").open("r").readlines():
         transaction = json.loads(transaction)
         await process.on_transaction(transaction=Transaction(**transaction))
