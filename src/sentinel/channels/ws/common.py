@@ -24,8 +24,6 @@ class WebsocketChannel(Channel):
         """
         super().__init__(name=name, record_type=record_type, **kwargs)
 
-        logger.info(f"{self.name} -> Connecting to Websocket server: {kwargs}")
-
         # Web socket server URI
         self.server_uri = self.config.get("server_uri")
 
@@ -39,11 +37,16 @@ class InboundWebsocketChannel(WebsocketChannel):
         Run Inbound Websocket Channel Processing
         """
         try:
-            async with websockets.connect(self.server_uri) as ws_server:
-                async for msg in ws_server:
-                    json_record = json.loads(msg)
-                    record = self.record_type(**json_record)
-                    await self.on_message(record)
+            async for ws_server in websockets.connect(self.server_uri):
+                logger.info(f"Connecting to websocket, {self.server_uri}")
+                try:
+                    async for msg in ws_server:
+                        json_record = json.loads(msg)
+                        record = self.record_type(**json_record)
+                        await self.on_message(record)
+                except websockets.ConnectionClosed as err:
+                    logger.warning(f"Connection to websocket closed, {err}")
+                    continue
         finally:
             logger.info(f"Closing connection to websocket channel: {self.name}")
 
