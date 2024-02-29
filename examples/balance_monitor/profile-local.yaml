@@ -5,7 +5,7 @@
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: {{ env['ETH_RPC_URL'] }}
+    rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 10.0
 
   inputs:

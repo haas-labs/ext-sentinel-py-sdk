@@ -28,7 +28,7 @@ The profile with placeholders use
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: {{ env['EXT_RPC_URL'] }}
+    rpc: {{ env['EXT_RPC_URL'] }}
     balance_threshold: 10.0
 ```
 

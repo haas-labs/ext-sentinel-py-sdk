@@ -5,7 +5,7 @@
   parameters:
     chain_id: 1
     network: ethereum
-    rpc_proxy_node: http://localhost:8545
+    rpc: http://localhost:8545
     balance_threshold: 10000000000000000000000.0000
 
   inputs:

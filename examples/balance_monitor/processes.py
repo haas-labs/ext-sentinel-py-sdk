@@ -23,8 +23,8 @@ class BalanceMonitor(BlockDetector):
         self.threshold = self.parameters.get("balance_threshold", 10000000000000000000000)
         logger.info(f"Using balance threshold: {self.threshold} ({self.threshold / self.decimals})")
 
-        rpc_proxy_node_url = self.parameters.get("rpc_proxy_node")
-        self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_proxy_node_url), modules={"eth": (AsyncEth,)}, middlewares=[])
+        rpc_url = self.parameters.get("rpc")
+        self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_url), modules={"eth": (AsyncEth,)}, middlewares=[])
 
         self.balances = {a: await self.ask_balance(a) for a in addresses}
         for addr, bal in self.balances.items():
