@@ -6,7 +6,7 @@ from typing import List
 from web3 import Web3
 from web3.eth import AsyncEth
 
-import datetime
+import uuid
 
 from sentinel.processes.block import BlockDetector
 from sentinel.models.event import Event, Blockchain
@@ -31,8 +31,7 @@ class BalanceMonitor(BlockDetector):
 
         self.balances = {a: await self.check_addr(a,None) for a in addresses}
         for addr, bal in self.balances.items():
-            logger.info(f"Initial balance value: {addr}: {bal} ({bal / self.decimals})")
-            await self.send_notification(addr, bal, None)
+            logger.info(f"Initial balance value: {addr}: {bal} ({bal / self.decimals})")            
 
 
     async def ask_balance(self, addr: str) -> int:
@@ -90,7 +89,7 @@ class BalanceMonitor(BlockDetector):
             logger.info("Block: %s", tx.block.number)
 
     async def send_notification(self, addr: str, balance: int, tx: Transaction) -> None:
-        logger.debug(f"--> Event: {addr}, {balance}, {tx}")
+        logger.info(f"--> Event: {addr}, {balance}, {tx}")
         if tx is not None:
             tx_ts = tx.block.timestamp
             tx_hash = tx.hash
@@ -107,8 +106,9 @@ class BalanceMonitor(BlockDetector):
         await self.channels["events"].send(
             Event(
                 did=self.detector_name,
+                eid = uuid.uuid4().hex,
                 type="balance_change",
-                severity=0.35,
+                severity=0.15,
                 sid = "ext:sentinel",
                 ts = tx_ts,               
                 blockchain=Blockchain(
