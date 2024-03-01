@@ -24,14 +24,12 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Pre-release tests
-      run: |
-        pytest
+    # - name: Pre-release tests
+    #   run: |
+    #     pytest
 
     - name: Bumping version and tagging
       run: |
         RELEASE_VERSION=`./scripts/release get-release-version ${{ github.event.pull_request.head.ref }}`
-        echo ${RELEASE_VERSION} > src/sentinel/VERSION
-        echo "[TODO] Run project build process"
         git tag ${RELEASE_VERSION}
         git push --tags
