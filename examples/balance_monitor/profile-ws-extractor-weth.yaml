@@ -5,7 +5,7 @@
   parameters:
     chain_id: 1
     network: ethereum
-    rpc: http://geth.demo.hacken.cloud:8545
+    rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 1000000000000000000000000000
     decimals: 18
 
@@ -13,7 +13,7 @@
   - name: transactions
     type: sentinel.channels.ws.transactions.InboundTransactionChannel
     parameters:
-      server_uri: ws://ethereum-ingest-proxy.dev.hacken.cloud/849dd74c05160b3ebffb2d5547164337a204b7f88d0322d25e18684c0a2d248a
+      server_uri: {{ env['ETH_WS_URL'] }}
 
   outputs:
   - name: events

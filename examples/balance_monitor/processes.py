@@ -23,7 +23,7 @@ class BalanceMonitor(BlockDetector):
         self.balances = {a: 0 for a in addresses}
 
         self.decimals = 10 ** self.parameters.get("decimals", 18)
-        self.threshold = self.parameters.get("balance_threshold", 10000000000000000000000)
+        self.threshold = self.parameters.get("balance_threshold")
         logger.info(f"Using balance threshold: {self.threshold} ({self.threshold / self.decimals})")
 
         rpc_url = self.parameters.get("rpc")
@@ -39,7 +39,7 @@ class BalanceMonitor(BlockDetector):
         balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
         # cache
         self.balances[addr] = balance
-        logger.debug("Balance: %s: %.4f", addr, balance)
+        logger.debug("Balance: %s: %d (%.4f)", addr, balance, balance)
         return balance
 
     def get_balance(self, addr):
@@ -47,7 +47,7 @@ class BalanceMonitor(BlockDetector):
 
     async def check_addr(self, addr, tx):
         balance = await self.ask_balance(addr)        
-        logger.info(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
+        #logger.debug(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
         
         if tx is not None: 
             tx_hash = tx.hash
@@ -58,7 +58,7 @@ class BalanceMonitor(BlockDetector):
 
         if balance <= self.threshold:
             logger.warn(
-                "Balance below threshold: %s: %.4f =< %.4f (block=%s: tx=%s)",
+                "Balance below threshold: %s: %.4f =< %.4f (block=%s, tx=%s)",
                 addr,
                 balance / self.decimals,
                 self.threshold / self.decimals,
@@ -90,7 +90,7 @@ class BalanceMonitor(BlockDetector):
             logger.info("Block: %s", tx.block.number)
 
     async def send_notification(self, addr: str, balance: int, tx: Transaction) -> None:
-        logger.info(f"-------------------------> Event: {addr}, {balance}, {tx}")
+        logger.debug(f"--> Event: {addr}, {balance}, {tx}")
         if tx is not None:
             tx_ts = tx.block.timestamp
             tx_hash = tx.hash
@@ -102,14 +102,14 @@ class BalanceMonitor(BlockDetector):
             tx_hash = ""
             tx_from = ""
             tx_to = ""
-            tx_value = ""
+            tx_value = balance
 
         await self.channels["events"].send(
             Event(
                 did=self.detector_name,
                 type="balance_change",
                 severity=0.35,
-                # sid = "ext:sentinel",
+                sid = "ext:sentinel",
                 ts = tx_ts,               
                 blockchain=Blockchain(
                     network=self.parameters["network"],
