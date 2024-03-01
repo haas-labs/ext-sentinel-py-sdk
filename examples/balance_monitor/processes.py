@@ -1,3 +1,4 @@
+import time
 import logging
 
 from typing import List
@@ -29,6 +30,8 @@ class BalanceMonitor(BlockDetector):
         self.balances = {a: await self.ask_balance(a) for a in addresses}
         for addr, bal in self.balances.items():
             logger.info(f"Initial balance value: {addr}: {bal} ({bal / self.decimals})")
+            await self.send_notification(addr, bal, None)
+
 
     async def ask_balance(self, addr: str) -> int:
         balance = await self.w3.eth.get_balance(self.w3.to_checksum_address(addr))
@@ -79,16 +82,16 @@ class BalanceMonitor(BlockDetector):
                 type="balance_change",
                 severity=0.35,
                 # sid = "ext:sentinel",
-                ts=transaction.block.timestamp,
+                ts=transaction.block.timestamp if transaction else int(time.time() * 1000),
                 blockchain=Blockchain(
                     network=self.parameters["network"],
                     chain_id=str(self.parameters["chain_id"]),
                 ),
                 metadata={
-                    "tx_hash": transaction.hash,
-                    "tx_from": transaction.from_address,
-                    "tx_to": transaction.to_address,
-                    "value": transaction.value,
+                    "tx_hash": transaction.hash if transaction else "",
+                    "tx_from": transaction.from_address if transaction else "",
+                    "tx_to": transaction.to_address if transaction else "",
+                    "value": transaction.value  if transaction else "",
                     "monitored_contract": addr,
                     "balance": balance,
                     "desc": "Balance Change",
