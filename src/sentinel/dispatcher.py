@@ -127,9 +127,9 @@ class Dispatcher:
         proc_type: str,
         proc_descr: str,
         proc_parameters: Dict,
-        inputs: List,
-        outputs: List,
-        databases: List,
+        inputs: Dict,
+        outputs: Dict,
+        databases: Dict,
     ) -> Any:
         """
         Init process
