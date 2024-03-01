@@ -20,6 +20,7 @@ echo "[INFO] Install/Upgrade pip" \
 echo "[INFO] Install development tools and libs" \
     && pip install \
         build \
+        twine \
         setuptools \
         setuptools-git-versioning \
         ruff \
