@@ -7,8 +7,10 @@ source scripts/common
 SENTINEL_VERSION=$(setuptools-git-versioning)
 echo ${SENTINEL_VERSION} > src/sentinel/VERSION
 
-${PREFIX}python3 -m build
+echo "[INFO] Building Sentinel SDK" \
+    && ${PREFIX}python3 -m build \
+&& echo "[INFO] Distribution files check" \
+    && ${PREFIX}twine check dist/*
 
 # ${PREFIX}python setup.py sdist bdist_wheel
-# ${PREFIX}twine check dist/*
 # ${PREFIX}mkdocs build
