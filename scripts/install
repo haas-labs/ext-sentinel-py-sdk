@@ -14,18 +14,41 @@ else
     PIP="pip"
 fi
 
-echo "[INFO] Install/Upgrade pip" \
-    && python -m pip install --upgrade pip
+function deployment-tools() {
 
-echo "[INFO] Install development tools and libs" \
-    && pip install \
-        build \
-        setuptools \
-        setuptools-git-versioning \
-        ruff \
-        pytest \
-        pytest-asyncio \
-        pytest-cov
+    echo "[INFO] Install/Upgrade pip" \
+        && python -m pip install --upgrade pip
 
-echo "[INFO] Install ext-sentinel-py-sdk package" && \
-    pip install -e .
+    echo "[INFO] Install development tools and libs" \
+        && pip install \
+            build \
+            twine \
+            setuptools \
+            setuptools-git-versioning \
+
+}
+
+function dev-tools() {
+
+    echo "[INFO] Install development tools and libs" \
+        && pip install \
+            ruff \
+            pytest \
+            pytest-asyncio \
+            pytest-cov
+}
+
+function sentinel() {
+
+    echo "[INFO] Install ext-sentinel-py-sdk package" && \
+        pip install -e .
+}
+
+function all() {
+
+    deployment-tools \
+    && dev-tools \
+    && sentinel
+}
+
+$@

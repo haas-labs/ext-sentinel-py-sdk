@@ -26,7 +26,7 @@ source .venv/bin/activate.fish  # for fish shell
 
 To install all required packages and tools for local development. Required only first time and after SDK update
 ```sh
-./scripts/install
+./scripts/install all
 ```
 
 ## How to deactivate virtual environment
@@ -35,7 +35,6 @@ To install all required packages and tools for local development. Required only 
 deactivate
 ```
 `(.venv)` will be removed from a command prompt
-
 
 ## References
 

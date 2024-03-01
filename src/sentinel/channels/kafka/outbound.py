@@ -52,6 +52,6 @@ class OutboundKafkaChannel(KafkaChannel):
             msg = self.record_type(**msg)
 
         if isinstance(msg, self.record_type):
-            self.msg_queue.put_nowait(msg.model_dump(exclude_none=True))
+            await self.msg_queue.put(msg.model_dump(exclude_none=True))
         else:
             raise RuntimeError(f"Unknown message type, type: {type(msg)}, " + "supported: Dict or pydantic.BaseModel")

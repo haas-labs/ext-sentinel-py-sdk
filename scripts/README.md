@@ -7,6 +7,10 @@
 - [scripts/docker](/scripts/docker) - Work with dev containers and docker images
 - [scripts/docs](/scripts/docs) - Generate docs
 - [scripts/install](/scripts/install) - Install dependencies in a virtual environment
+  - deployment-tools
+  - dev-tools
+  - sentinel
+  - all (deployment + dev + sentinel)
 - [scripts/lint](/scripts/lint) - Run the code linting
 - [scripts/release](/scripts/release) - Release the latest version to Github
 - [scripts/test](/scripts/test) - Run the test suite
