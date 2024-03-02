@@ -4,7 +4,7 @@ source scripts/common
 
 ./scripts/cleanup
 
-SENTINEL_VERSION=$(setuptools-git-versioning)
+SENTINEL_VERSION=$(${PREFIX}setuptools-git-versioning)
 echo ${SENTINEL_VERSION} > src/sentinel/VERSION
 
 echo "[INFO] Building Sentinel SDK" \

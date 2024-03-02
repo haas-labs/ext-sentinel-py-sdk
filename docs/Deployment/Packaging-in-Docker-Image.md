@@ -2,6 +2,10 @@
 
 Building Sentinel processes into Docker images allows to deploy these processes in Extractor infrastructure.
 
+## Prerequisites
+
+To build docker image, you need to run commands below from virtual environment. How to install/configure it, please follow [this guide](/docs/Install/Virtualenv.md)
+
 ## Sentinel Base Docker image
 
 The Sentinel Base Docker image required to minimize building time and compute resources for final docker image with Sentinel processes.
@@ -17,7 +21,6 @@ ext/sentinel/base   v0.3.0    1c302b5e7fc8   8 seconds ago   145MB
 To check Sentinel SDK version:
 ```sh
 docker run -ti --rm --name sentinel-console ext/sentinel/base:v0.3.0 sentinel --version
-
 ```
 
 If there is no base image, you can create it with `build-base-image` command. This command will compile current Sentinel SDK from source and build base Docker image
@@ -44,7 +47,7 @@ docker build -t ext/sentinel/balance-monitor:v0.1.0 .
 
 as result you should see new/updated docker image 
 ```sh
-scripts/docker list-images
+./scripts/docker list-images
 
 [INFO] Listing docker images
 REPOSITORY                     TAG       IMAGE ID       CREATED          SIZE

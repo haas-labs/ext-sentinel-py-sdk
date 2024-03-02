@@ -59,7 +59,7 @@ remove-images() {
 
 build-base-image() {
 
-    # ./scripts/build
+    ./scripts/build
     
     sentinel_sdk_tarball=$(ls dist/*.tar.gz)
     cp $sentinel_sdk_tarball docker/ext_sentinel_py_sdk.tar.gz
