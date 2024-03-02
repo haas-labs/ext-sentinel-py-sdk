@@ -16,10 +16,7 @@ Sentinel supports all blockchain networks supported by [Extractor](https://extra
 
 ## Installation
 
-- [Installation: common steps](/docs/Install/Install.md)
-- [Python Virtual Environment](/docs/Install/Virt-Environment.md) (Recommended)
-- [Dev Container Setup](/docs/Install/Dev-Container.md) (Optional)
-- [Python Virtual Environment for SDK developers](/docs/Install/Virtualenv-for-SDK-Developers.md)
+- [Installation Guides](/docs/Install/Install.md)
 
 ## How to use Sentinel commands
 
