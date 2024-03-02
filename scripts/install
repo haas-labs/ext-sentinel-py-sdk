@@ -17,10 +17,10 @@ fi
 function deployment-tools() {
 
     echo "[INFO] Install/Upgrade pip" \
-        && python -m pip install --upgrade pip
+        && ${PREFIX}python -m pip install --upgrade pip
 
     echo "[INFO] Install development tools and libs" \
-        && pip install \
+        && ${PREFIX}pip install \
             build \
             twine \
             setuptools \
@@ -31,7 +31,7 @@ function deployment-tools() {
 function dev-tools() {
 
     echo "[INFO] Install development tools and libs" \
-        && pip install \
+        && ${PREFIX}pip install \
             ruff \
             pytest \
             pytest-asyncio \
@@ -41,7 +41,7 @@ function dev-tools() {
 function sentinel() {
 
     echo "[INFO] Install ext-sentinel-py-sdk package" && \
-        pip install -e .
+        ${PREFIX}pip install -e .
 }
 
 function all() {
