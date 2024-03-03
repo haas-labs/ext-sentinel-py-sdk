@@ -12,5 +12,5 @@
   - name: transactions
     type: sentinel.channels.ws.transactions.InboundTransactionChannel
     parameters:
-      server_uri: {{ env["DEV_TRANSACTION_WS_URI"] }}
+      server_uri: {{ env["ETH_WS_URL"] }}
 

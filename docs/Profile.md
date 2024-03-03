@@ -1,3 +1,5 @@
 # Profile
 
-to be added
+## References
+
+- [Profile Settings](/docs/Profile-Settings.md)
