@@ -40,14 +40,14 @@ jobs:
       run: |
         ./scripts/install deployment-tools
 
-    # - name: Setup AWS Code Artifactory access
-    #   run: |
-    #     aws codeartifact login \
-    #       --tool twine \
-    #       --repository sentinel-pypi \
-    #       --domain haas \
-    #       --domain-owner ${{ secrets.AWS_ACCOUNT_ID}} \
-    #       --region eu-west-1
+    - name: Setup AWS Code Artifactory access
+      run: |
+        aws codeartifact login \
+          --tool twine \
+          --repository sentinel-pypi \
+          --domain haas \
+          --domain-owner ${{ secrets.AWS_ACCOUNT_ID}} \
+          --region eu-west-1
 
     - name: Install required packages and tools
       run: |
