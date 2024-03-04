@@ -12,5 +12,5 @@ echo "[INFO] Building Sentinel SDK" \
 && echo "[INFO] Distribution files check" \
     && ${PREFIX}twine check dist/*
 
-# ${PREFIX}python setup.py sdist bdist_wheel
+echo "[INFO] Build Sentinel SDK Documentation [NOT IMPLEMENTED]"
 # ${PREFIX}mkdocs build
