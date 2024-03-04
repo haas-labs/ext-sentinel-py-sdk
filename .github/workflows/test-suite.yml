@@ -61,3 +61,5 @@ jobs:
     - name: Build and deploy to AWS Code Artifact
       run: |
         ./scripts/build
+        cat ~/.pypirc
+        # twine upload --repository codeartifact mypackage-1.0.tgz
