@@ -1,5 +1,32 @@
 # Change Log
 
+## v0.3.7
+
+Fetures:
+
+- Githib integration with AWS Code Artifact
+- Sending events from process init
+- Impovements for balance monitor
+- Dev script `install`: split installation part on deployment, dev-tools, sentinel
+- Disable file channel buffering (by default)
+
+Documentation
+
+- Add settings section
+- Update installation instructions
+- Update deployment instructions
+
+Fix
+
+- Update dev scripts to deploy new dev environment 
+- Handling a connection close issue for websocket channel
+- Timestamp issue during migration to new transaction data source
+
+Refactoring
+
+- Tests refactoring for common process
+- Code changes related to channel, output and database types
+
 ## v0.3.6
 
 Feature
