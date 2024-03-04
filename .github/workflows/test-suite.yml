@@ -57,3 +57,7 @@ jobs:
     - name: Run tests
       run: |
         ./scripts/test ${{ matrix.python-version }}
+
+    - name: Build and deploy to AWS Code Artifact
+      run: |
+        ./scripts/test build
