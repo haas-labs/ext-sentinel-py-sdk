@@ -61,4 +61,4 @@ jobs:
     - name: Build and deploy to AWS Code Artifact
       run: |
         ./scripts/build
-        twine upload --repository codeartifact dist/ext_sentinel_py_sdk*.whl
+        twine upload --verbose --repository codeartifact dist/ext_sentinel_py_sdk*.whl
