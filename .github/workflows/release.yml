@@ -37,9 +37,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
         cache: "pip"
 
-    - name: Install deployment tools
+    - name: Install deployment/dev tools & sentinel sdk
       run: |
-        ./scripts/install deployment-tools
+        ./scripts/install all
 
     - name: Setup AWS Code Artifactory access
       run: |
@@ -49,11 +49,6 @@ jobs:
           --domain haas \
           --domain-owner ${{ secrets.AWS_ACCOUNT_ID}} \
           --region eu-west-1
-
-    - name: Install required packages and tools
-      run: |
-        ./scripts/install dev-tools
-        ./scripts/install sentinel
 
     - name: Run tests
       run: |
