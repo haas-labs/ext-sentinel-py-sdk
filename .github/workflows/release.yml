@@ -24,12 +24,48 @@ jobs:
       with:
         fetch-depth: 0
 
-    # - name: Pre-release tests
-    #   run: |
-    #     pytest
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: "pip"
+
+    - name: Install deployment tools
+      run: |
+        ./scripts/install deployment-tools
+
+    - name: Setup AWS Code Artifactory access
+      run: |
+        aws codeartifact login \
+          --tool twine \
+          --repository sentinel-pypi \
+          --domain haas \
+          --domain-owner ${{ secrets.AWS_ACCOUNT_ID}} \
+          --region eu-west-1
+
+    - name: Install required packages and tools
+      run: |
+        ./scripts/install dev-tools
+        ./scripts/install sentinel
+
+    - name: Run tests
+      run: |
+        ./scripts/test ${{ matrix.python-version }}
 
     - name: Bumping version and tagging
       run: |
         RELEASE_VERSION=`./scripts/release get-release-version ${{ github.event.pull_request.head.ref }}`
         git tag ${RELEASE_VERSION}
         git push --tags
+
+    - name: Build and deploy to AWS Code Artifact
+      run: |
+        ./scripts/build
+        twine upload --repository codeartifact dist/ext_sentinel_py_sdk*.whl
