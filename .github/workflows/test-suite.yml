@@ -60,4 +60,4 @@ jobs:
 
     - name: Build and deploy to AWS Code Artifact
       run: |
-        ./scripts/test build
+        ./scripts/build
