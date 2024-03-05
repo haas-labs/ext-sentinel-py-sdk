@@ -1,5 +1,11 @@
 # Python Virtual Environment for Sentinel SDK Developers
 
+## Install Pre-requisites
+
+```sh
+sudo apt-get install python3.10-venv
+```
+
 Please clone the repository from Github
 ```sh
 git clone --depth 1 git@github.com:haas-labs/ext-sentinel-py-sdk.git
