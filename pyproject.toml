@@ -5,6 +5,11 @@ requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
 
+keywords = [
+    "sentinel", "monitor", "detector",
+    "web3", "ethereum", "arbitrum", "bsc"
+]
+
 dependencies = [
     "rich==13.7.0",
     "httpx==0.26.0",
@@ -26,7 +31,18 @@ build-backend = "hatchling.build"
 path = "src/sentinel/version.py"
 
 [tool.hatch.build.targets.wheel]
+sources = ["src"]
 packages = ["src/sentinel"]
+
+[tool.hatch.build.targets.sdist]
+# include = [
+#   "pkg/*.py",
+#   "/tests",
+# ]
+# exclude = [
+#   "*.json",
+#   "pkg/_compat.py",
+# ]
 
 [project.scripts]
 sentinel = 'sentinel.cli:run_cli_instance'
