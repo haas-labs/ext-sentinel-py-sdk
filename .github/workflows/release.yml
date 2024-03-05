@@ -31,10 +31,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ PYTHON_VERSION }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ PYTHON_VERSION }}
         cache: "pip"
 
     - name: Install deployment/dev tools & sentinel sdk
