@@ -2,10 +2,8 @@ name: dev-merge
 
 on:
   push:
-    branches: [ "main" ]
-
-env:
-  PYTHON_VERSION: "3.11"
+    branches:
+    - main
 
 jobs:
 
@@ -19,10 +17,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set up Python ${{ PYTHON_VERSION }}
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ PYTHON_VERSION }}
+        python-version: 3.11
         cache: "pip"
 
     - name: Install deployment/dev tools & sentinel sdk
