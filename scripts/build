@@ -4,11 +4,8 @@ source scripts/common
 
 ./scripts/cleanup
 
-SENTINEL_VERSION=$(${PREFIX}setuptools-git-versioning)
-echo ${SENTINEL_VERSION} > src/sentinel/VERSION
-
 echo "[INFO] Building Sentinel SDK" \
-    && ${PREFIX}python3 -m build \
+    && ${PREFIX}hatch -v build --clean \
 && echo "[INFO] Distribution files check" \
     && ${PREFIX}twine check dist/*
 
