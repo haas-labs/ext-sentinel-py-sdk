@@ -1,4 +1,4 @@
-name: Release
+name: Release-and-Next-Version
 
 on:
   pull_request:
@@ -63,6 +63,9 @@ jobs:
         twine upload --repository codeartifact dist/ext_sentinel_py_sdk*.whl
 
   Prepare-Next-Version:
+
+    if: ${{ always() }}
+    needs: Release
 
     runs-on: ubuntu-latest
     
