@@ -12,13 +12,15 @@ git clone --depth 1 git@github.com:haas-labs/ext-sentinel-py-sdk.git
 cd ext-sentinel-py-sdk
 ```
 
-## Configuration
+## Creating virtual environment (if not exist)
 
-To configure environment for local development, please run next commands
+Please be sure that you have created virtual environment in `.venv` directory. If not, you can created with
 
 ```sh
-./scripts/venv   # to check if virt env created, if no them configure
+python3 -m venv .venv
 ```
+Please be aware that if your system python version is lower than 3.0, you can use [the instruction](/docs/Install/Virtenv-for-prev-python-versions.md)
+
 
 ## Activation
 
