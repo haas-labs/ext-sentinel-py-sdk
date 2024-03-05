@@ -1,4 +1,4 @@
-name: main
+name: dev-merge
 
 on:
   push:
@@ -8,6 +8,8 @@ env:
   PYTHON_VERSION: "3.11"
 
 jobs:
+
+  dev-merge:
 
     runs-on: ubuntu-latest
     
