@@ -37,14 +37,3 @@ jobs:
     - name: Run tests
       run: |
         ./scripts/test ${{ matrix.python-version }}
-
-    - name: Bumping dev version
-      run: |
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        CURRENT_VERSION=`hatch version`
-        hatch version dev
-        NEXT_VERSION=`hatch version`
-        # git add src/sentinel/version.py
-        # git commit -m "Bump dev version: $CURRENT_VERSION → $NEXT_VERSION"
-        # git push
