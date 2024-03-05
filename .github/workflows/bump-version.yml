@@ -1,0 +1,40 @@
+name: Bump version
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - .github/**
+
+jobs:
+
+  Release:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: "pip"
+
+    - name: Install deployment/dev tools & sentinel sdk
+      run: |
+        ./scripts/install all
+
+    - name: Bumping to dev version
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        CURRENT_VERSION=`hatch version`
+        hatch version fix,dev
+        NEXT_VERSION=`hatch version`
+        git add src/sentinel/version.py
+        git commit -m "Bump next dev version: $CURRENT_VERSION → $NEXT_VERSION"
+        git push

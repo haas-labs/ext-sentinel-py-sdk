@@ -23,8 +23,9 @@ function deployment-tools() {
         && ${PREFIX}pip install \
             build \
             twine \
-            setuptools \
-            setuptools-git-versioning \
+            hatch
+            # setuptools
+            # setuptools-git-versioning \
 
 }
 

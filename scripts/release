@@ -11,8 +11,6 @@ help() {
     echo "./scripts/release <command>"
     echo
     echo "  current-version:        show current version"
-    echo "  bump-release-version:   bump release version"
-    echo "  bump-next-version:      bump next version"
     echo
 }
 
@@ -22,18 +20,9 @@ set-bot-name() {
     git config --local user.email "github-actions[bot]@users.noreply.github.com"
 }
 
-commit-version() {
-
-    CURRENT_VERSION=${1:-}
-    NEXT_VERSION=${2:-}
-
-    git add ${VERSION_FILE}
-    git commit -m "Bump version: ${CURRENT_VERSION} → ${NEXT_VERSION}"
-}
-
 current-version() {
 
-    CURRENT_VERSION=`setuptools-git-versioning`
+    CURRENT_VERSION=`hatch version`
     echo "[INFO] Current version: ${CURRENT_VERSION}"
 }
 
@@ -50,8 +39,5 @@ get-release-version() {
         exit 1
     fi
 }
-# git push
-# git push --tags
-
 
 $@

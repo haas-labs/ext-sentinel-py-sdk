@@ -3,7 +3,7 @@ import logging
 import pathlib
 import argparse
 
-from sentinel.utils import get_sentinel_version
+from sentinel.version import VERSION
 
 from sentinel.commands.fetch import FetchCommand
 from sentinel.commands.launch import LaunchCommand
@@ -26,7 +26,7 @@ def run_cli_instance():
 
     # Common parser
     parser = argparse.ArgumentParser("sentinel")
-    parser.add_argument("--version", action="version", version=get_sentinel_version())
+    parser.add_argument("--version", action="version", version=VERSION)
     subparsers = parser.add_subparsers(help="Sentinel Commands")
 
     # Commands

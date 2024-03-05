@@ -5,6 +5,11 @@ requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
 
+keywords = [
+    "sentinel", "monitor", "detector",
+    "web3", "ethereum", "arbitrum", "bsc"
+]
+
 dependencies = [
     "rich==13.7.0",
     "httpx==0.26.0",
@@ -19,30 +24,28 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["setuptools", "setuptools-git-versioning<2"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-# include = []
-# exclude = []
-# namespaces = false # true by default
+[tool.hatch.version]
+path = "src/sentinel/version.py"
 
-[tool.setuptools.package-data]
-# include VERSION file to a package
-sentinel = ["VERSION"]
+[tool.hatch.build.targets.wheel]
+sources = ["src"]
+packages = ["src/sentinel"]
 
-[tool.setuptools]
-# this package will read some included files in runtime, avoid installing it as .zip
-zip-safe = false
+[tool.hatch.build.targets.sdist]
+# include = [
+#   "pkg/*.py",
+#   "/tests",
+# ]
+# exclude = [
+#   "*.json",
+#   "pkg/_compat.py",
+# ]
 
 [project.scripts]
 sentinel = 'sentinel.cli:run_cli_instance'
-
-[tool.setuptools-git-versioning]
-enabled = true
-version_file = "src/sentinel/VERSION"
-count_commits_from_version_file = true
 
 [tool.ruff]
 # Allow lines to be as long as 120.
