@@ -60,16 +60,20 @@ class OutboundHTTPChannel(OutboundChannel):
 
             async with httpx.AsyncClient(verify=False) as httpx_async_client:
                 response = await httpx_async_client.post(url=endpoint_url, headers=self._headers, json=query)
-                if response.status_code != 200:
-                    logger.error(
-                        f"Publishing HTTP Event failed, status code: {response.status_code}, "
-                        + f"response: {response.content}, query: {query}"
-                    )
-                else:
-                    content = response.json()
-                    if content.get("count", 0) != 1:
-                        logger.error(f"Publishing HTTP event failed, status code: {response.status_code}, " \
-                                     + f"response: {content}, query: {query}")
+                match response.status_code:
+                    case 200:
+                        # The event sent successfully, check the number of accepted events
+                        content = response.json()
+                        if content.get("count", 0) != 1:
+                            logger.error(
+                                f"Publishing HTTP event failed, status code: {response.status_code}, "
+                                + f"response: {content}, query: {query}"
+                            )
+                    case _:
+                        logger.error(
+                            f"Publishing HTTP Event failed, status code: {response.status_code}, "
+                            + f"response: {response.content}, query: {query}"
+                        )
 
     async def send(self, msg: Union[Dict, BaseModel]) -> None:
         """
