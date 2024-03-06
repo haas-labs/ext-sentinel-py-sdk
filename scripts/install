@@ -21,8 +21,6 @@ function deployment-tools() {
             build \
             twine \
             hatch
-            # setuptools
-            # setuptools-git-versioning \
 
 }
 
