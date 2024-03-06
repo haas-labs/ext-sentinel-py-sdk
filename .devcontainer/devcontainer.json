@@ -1,6 +1,6 @@
 {
 	"name": "sentinel-dev-env",
-	"image": "ext/sentinel/dev:v0.3.0",
+	"image": "ext/sentinel/dev:0.3.0",
 	"containerEnv": {
 		"PYTHONPATH": "/workspaces/"
 	},

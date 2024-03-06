@@ -16,11 +16,11 @@ Please be sure than you have Sentinel Base Docker image with required SDK versio
 
 [INFO] Listing docker images
 REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
-ext/sentinel/base   v0.3.0    1c302b5e7fc8   8 seconds ago   145MB
+ext/sentinel/base   0.3.0     1c302b5e7fc8   8 seconds ago   145MB
 ```
 To check Sentinel SDK version:
 ```sh
-docker run -ti --rm --name sentinel-console ext/sentinel/base:v0.3.0 sentinel --version
+docker run -ti --rm --name sentinel-console ext/sentinel/base:0.3.0 sentinel --version
 ```
 
 If there is no base image, you can create it with `build-base-image` command. This command will compile current Sentinel SDK from source and build base Docker image
@@ -42,7 +42,7 @@ The last 2 lines confirm that building based Sentinel SDK docker image completed
 To build a docker image, run the next command from `examples/balance_monitor` directory:
 ```sh
 cd examples/balance_monitor/
-docker build -t ext/sentinel/balance-monitor:v0.1.0 .
+docker build -t ext/sentinel/balance-monitor:0.1.0 .
 ```
 
 as result you should see new/updated docker image 
@@ -51,8 +51,8 @@ as result you should see new/updated docker image
 
 [INFO] Listing docker images
 REPOSITORY                     TAG       IMAGE ID       CREATED          SIZE
-ext/sentinel/balance-monitor   v0.1.0    02ca2bb063cb   49 seconds ago   145MB
-ext/sentinel/base              v0.3.0    1c302b5e7fc8   17 minutes ago   145MB
+ext/sentinel/balance-monitor   0.1.0     02ca2bb063cb   49 seconds ago   145MB
+ext/sentinel/base              0.3.0     1c302b5e7fc8   17 minutes ago   145MB
 ``` 
 
 To run docker container with balance monitor locally (VPN access to Hacken infrastructure is required)
@@ -60,7 +60,7 @@ To run docker container with balance monitor locally (VPN access to Hacken infra
 docker run -ti --rm --name sentinel-balance-monitor \
       -v (pwd)/profile.yaml:/opt/sentinel/profile.yaml \
       -v (pwd)/../../.envs/local.yml:/opt/sentinel/envs.yaml \
-      ext/sentinel/balance-monitor:v0.1.0 \
+      ext/sentinel/balance-monitor:0.1.0 \
       launch \
       --profile profile.yaml \
       --env-vars envs.yaml

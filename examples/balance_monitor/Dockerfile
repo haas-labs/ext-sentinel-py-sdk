@@ -1,4 +1,4 @@
-FROM ext/sentinel/base:v0.3.0
+FROM ext/sentinel/base:0.3.0
 
 
 RUN echo "[INFO] Creating sentinel user" \

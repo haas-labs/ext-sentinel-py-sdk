@@ -66,11 +66,11 @@ build-base-image() {
     
     echo "[INFO] Building base image" \
     && docker build \
-        -t ext/sentinel/base:v${SENTINEL_DOCKER_VERSION} \
+        -t ext/sentinel/base:${SENTINEL_DOCKER_VERSION} \
         -f docker/Dockerfile.base docker/ \
     && echo -n "[INFO] Installed Sentinel SDK: " \
     && docker run -ti --rm --name sentinel-console \
-        ext/sentinel/base:v${SENTINEL_DOCKER_VERSION} \
+        ext/sentinel/base:${SENTINEL_DOCKER_VERSION} \
         sentinel --version \
     && echo "[INFO] Completed successfully"
 }
@@ -79,7 +79,7 @@ build-dev-image() {
 
     echo "[INFO] Building dev image" \
     && docker build \
-        -t ext/sentinel/dev:v${SENTINEL_DOCKER_VERSION} \
+        -t ext/sentinel/dev:${SENTINEL_DOCKER_VERSION} \
         -f docker/Dockerfile.dev . 
 }
 
@@ -87,7 +87,7 @@ build-bundle-image() {
 
     echo "[INFO] Building bundle image" \
     && docker build \
-        -t ext/sentinel/bundle:v${SENTINEL_DOCKER_VERSION} \
+        -t ext/sentinel/bundle:${SENTINEL_DOCKER_VERSION} \
         -f docker/Dockerfile.bundle . 
 }
 
