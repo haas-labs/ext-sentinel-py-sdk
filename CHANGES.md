@@ -1,15 +1,34 @@
 # Change Log
 
+## v0.3.9
+
+Features
+
+- Add import service tokens
+- Updates for debugging and error handling Event HTTP Channel
+
+Refactoring
+
+- Remove unused packages in dev scripts
+
+Fix
+
+- dev scripts for working with virtenv
+
+Documentation
+
+- Update installation intructions for prev python versions (Ubuntu 20.04 LTS)
+
 ## v0.3.8
 
-Features:
+Features
 
 - re-org release and merge pipelines
 - automatic bumping version for release and dev merge
 
 ## v0.3.7
 
-Fetures:
+Fetures
 
 - Githib integration with AWS Code Artifact
 - Sending events from process init
@@ -72,7 +91,7 @@ Documentation
 - update installation instructions
 - add details about local dev setup 
 
-Refactoring:
+Refactoring
 
 - remove unused import
 
