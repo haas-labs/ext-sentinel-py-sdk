@@ -49,7 +49,7 @@ class OutboundHTTPChannel(OutboundChannel):
 
     async def run(self) -> None:
         """
-        Run Inbound HTTP/REST Channel Processing
+        Run Outbound HTTP/REST Channel Processing
         """
         logger.info(f"{self.name} -> Starting channel for publishing messages to events channel: {self.name}")
         endpoint_url = self._endpoint + "/api/v1/event"
@@ -62,14 +62,14 @@ class OutboundHTTPChannel(OutboundChannel):
                 response = await httpx_async_client.post(url=endpoint_url, headers=self._headers, json=query)
                 if response.status_code != 200:
                     logger.error(
-                        f"Message publishing error, status code: {response.status_code}, "
+                        f"Publishing HTTP Event failed, status code: {response.status_code}, "
                         + f"response: {response.content}, query: {query}"
                     )
                 else:
                     content = response.json()
                     if content.get("count", 0) != 1:
-                        logger.error(f"Publishing event failed, status code: {response.status_code}, " \
-                                     + f"response content: {content}")
+                        logger.error(f"Publishing HTTP event failed, status code: {response.status_code}, " \
+                                     + f"response: {content}, query: {query}")
 
     async def send(self, msg: Union[Dict, BaseModel]) -> None:
         """
