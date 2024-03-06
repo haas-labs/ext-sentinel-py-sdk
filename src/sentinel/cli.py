@@ -21,6 +21,7 @@ def run_cli_instance():
     """
     Run CLI instance
     """    
+    
     # Add current directory to python path
     sys.path.append(str(pathlib.Path.cwd()))
 

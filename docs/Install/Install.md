@@ -14,11 +14,14 @@ Since the SDK package available via a private repo, SSH keys for getting an acce
 - [Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 - [Adding a new SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
-The next steps, the installation of Sentinel SDK. Strongly recommended to install Sentinel Python SDK in a dedicated virtual environment on all platforms, to avoid conflicting with your system packages.
+The next steps, the installation of Sentinel SDK.
+
+> IMPORTANT! Strongly recommended to install Sentinel Python SDK in a dedicated virtual environment on all platforms, to avoid conflicting with your system packages.
 
 Virtual environments allow you do not conflict with already-installed Python system packages, which could break some of your system tools and scripts, and still install packages normally with `pip` (without `sudo`).
 
 - [Python Virtual Environment](/docs/Install/Virtualenv.md) (Recommended)
+- [Python Virtual Environment whem system python version is 3.9-](/docs/Install/Virtenv-for-prev-python-versions.md)
 - [Dev Container Setup](/docs/Install/Dev-Container.md) (Optional)
 
 To get more options how to install different SDK version, please follow the guide [How to install specific SDK version](/docs/Install/Howto-Install-Specific-SDK-Version.md)

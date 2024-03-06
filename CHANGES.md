@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.8
+
+Features:
+
+- re-org release and merge pipelines
+- automatic bumping version for release and dev merge
+
 ## v0.3.7
 
 Fetures:

@@ -1,4 +1,4 @@
-name: Release
+name: Release-and-Next-Version
 
 on:
   pull_request:
@@ -6,9 +6,6 @@ on:
     - closed
     branches:
     - main
-
-env:
-  PYTHON_VERSION: "3.11"
 
 jobs:
 
@@ -31,10 +28,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.11
         cache: "pip"
 
     - name: Install deployment/dev tools & sentinel sdk
@@ -65,7 +62,10 @@ jobs:
         ./scripts/build
         twine upload --repository codeartifact dist/ext_sentinel_py_sdk*.whl
 
-  Bump-Version:
+  Prepare-Next-Version:
+
+    if: ${{ always() }}
+    needs: Release
 
     runs-on: ubuntu-latest
     
@@ -75,23 +75,23 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.11
         cache: "pip"
 
     - name: Install deployment/dev tools & sentinel sdk
       run: |
-        ./scripts/install all
+        ./scripts/install deployment-tools
 
-    - name: Bumping to dev version
+    - name: Bumping dev version
       run: |
         git config --local user.name "github-actions[bot]"
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         CURRENT_VERSION=`hatch version`
-        hatch version fix,dev
+        hatch version dev
         NEXT_VERSION=`hatch version`
         git add src/sentinel/version.py
-        git commit -m "Bump next dev version: $CURRENT_VERSION → $NEXT_VERSION"
+        git commit -m "Bump dev version: $CURRENT_VERSION → $NEXT_VERSION"
         git push

@@ -5,11 +5,8 @@ source scripts/common
 # Use the Python executable provided from the `-p` option, or a default.
 [ "$1" = "-p" ] && PYTHON=$2 || PYTHON="python3"
 
-VENV=".venv"
-
 if [ -z "$GITHUB_ACTIONS" ]; then
-    source scripts/venv
-    PIP="$VENV/bin/pip"
+    PIP=".venv/bin/pip"
 else
     PIP="pip"
 fi
@@ -24,8 +21,6 @@ function deployment-tools() {
             build \
             twine \
             hatch
-            # setuptools
-            # setuptools-git-versioning \
 
 }
 
