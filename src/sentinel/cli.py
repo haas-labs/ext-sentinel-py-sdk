@@ -20,7 +20,7 @@ EXITCODE_INTERRUPTED_BY_USER = 2
 def run_cli_instance():
     """
     Run CLI instance
-    """
+    """    
     # Add current directory to python path
     sys.path.append(str(pathlib.Path.cwd()))
 

@@ -88,8 +88,7 @@ class BalanceMonitor(BlockDetector):
         if not detected:
             logger.info("Block: %s", tx.block.number)
 
-    async def send_notification(self, addr: str, balance: int, tx: Transaction) -> None:
-        logger.info(f"--> Event: {addr}, {balance}, {tx}")
+    async def send_notification(self, addr: str, balance: int, tx: Transaction) -> None:        
         if tx is not None:
             tx_ts = tx.block.timestamp
             tx_hash = tx.hash
@@ -103,14 +102,16 @@ class BalanceMonitor(BlockDetector):
             tx_to = ""
             tx_value = balance
 
+        logger.info(f"--> Event: {tx_ts}: {addr}, {balance}, {tx}")
+
         await self.channels["events"].send(
             Event(
                 did=self.detector_name,
                 eid = uuid.uuid4().hex,
-                type="balance_change",
-                severity=0.15,
+                type="balance_threshold",
+                severity=0.20,
                 sid = "ext:sentinel",
-                ts = tx_ts,               
+                ts = tx_ts,
                 blockchain=Blockchain(
                     network=self.parameters["network"],
                     chain_id=str(self.parameters["chain_id"]),

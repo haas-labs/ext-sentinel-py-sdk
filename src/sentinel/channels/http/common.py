@@ -50,14 +50,15 @@ class OutboundHTTPChannel(OutboundChannel):
     async def run(self) -> None:
         """
         Run Inbound HTTP/REST Channel Processing
-        """
+        """        
+
         logger.info(f"{self.name} -> Starting channel for publishing messages to events channel: {self.name}")
         endpoint_url = self._endpoint + "/api/v1/event"
 
         while True:
             msg = await self.msg_queue.get()
             query = {"events": [msg]}
-
+            
             async with httpx.AsyncClient(verify=False) as httpx_async_client:
                 response = await httpx_async_client.post(url=endpoint_url, headers=self._headers, json=query)
                 if response.status_code != 200:
@@ -66,6 +67,8 @@ class OutboundHTTPChannel(OutboundChannel):
                         + f"response: {response.content}, query: {query}"
                     )
                 else:
+                    logger.debug(f"{response}")
+
                     content = response.json()
                     if content.get("count", 0) != 1:
                         logger.error(f"Publishing event failed, status code: {response.status_code}, " \
