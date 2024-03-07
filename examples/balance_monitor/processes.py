@@ -24,6 +24,7 @@ class BalanceMonitor(BlockDetector):
 
         self.decimals = 10 ** self.parameters.get("decimals", 18)
         self.threshold = self.parameters.get("balance_threshold")
+        self.severity = self.parameters.get("severity",0.14)
         logger.info(f"Using balance threshold: {self.threshold} ({self.threshold / self.decimals})")
 
         rpc_url = self.parameters.get("rpc")
@@ -109,7 +110,7 @@ class BalanceMonitor(BlockDetector):
                 did=self.detector_name,
                 eid = uuid.uuid4().hex,
                 type="balance_threshold",
-                severity=0.20,
+                severity=self.severity,
                 sid = "ext:sentinel",
                 ts = tx_ts,
                 blockchain=Blockchain(

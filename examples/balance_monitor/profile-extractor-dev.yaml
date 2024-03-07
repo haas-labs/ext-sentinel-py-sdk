@@ -1,13 +1,13 @@
 - name: BalanceMonitor
   type: processes.BalanceMonitor
   description: >
-    Balance Monitor
+    Balance Monitor for 0x00
   parameters:
     chain_id: 1
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
-    balance_threshold: 100000000000000000000.0000
-    severity: 0.14
+    balance_threshold: 2
+    decimals: 18
 
   inputs:
   - name: transactions
@@ -19,17 +19,19 @@
       topics: 
       - {{ env['KAFKA_INBOUND_TX_TOPIC'] }}
 
+  outputs:
   - name: events
     type: sentinel.channels.kafka.events.OutboundEventsChannel
     parameters:
       bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
       topics: 
       - {{ env['KAFKA_OUTBOUND_EVENT_TOPIC']}}
-
+  
   databases:
   - name: address
     type: address_store.AddressStore
     description: >
       Monitored Addresses
     parameters:
-      path: ./data/address.list 
+      path: ./data/address-0x00.list 
+
