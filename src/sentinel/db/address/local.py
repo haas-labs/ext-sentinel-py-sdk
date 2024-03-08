@@ -25,7 +25,7 @@ class AddressDB:
                     self._db.append(address.strip().lower())
 
         self._db = list(set(self._db))
-        logger.info(f'Imported {len(self._db)} addresses')
+        logger.info('AddressDB: {}'.format({ 'imported_addresses': len(self._db), 'path': self.path }))
 
     def exists(self, address: str) -> bool:
         if not address:
