@@ -19,6 +19,7 @@
       topics: 
       - {{ env['KAFKA_INBOUND_TX_TOPIC'] }}
 
+  outputs:
   - name: events
     type: sentinel.channels.kafka.events.OutboundEventsChannel
     parameters:
@@ -28,7 +29,7 @@
 
   databases:
   - name: address
-    type: address_store.AddressStore
+    type: sentinel.db.address.local.AddressDB
     description: >
       Monitored Addresses
     parameters:
