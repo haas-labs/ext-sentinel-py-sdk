@@ -14,6 +14,14 @@ class InboundKafkaChannel(KafkaChannel):
     Inbound Kafka Channel
     """
 
+    def __init__(self, name: str, record_type: str, **kwargs) -> None:
+        """
+        Inbound Kafka Channel
+        """
+        super().__init__(name, record_type, **kwargs)
+        # Setting default values for auto_offset_reset
+        self.config["auto_offset_reset"] = self.config.get("auto_offset_reset", "latest")
+
     async def run(self):
         """
         Run Inbound Kafka Channel

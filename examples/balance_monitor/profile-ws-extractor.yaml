@@ -24,7 +24,7 @@
 
   databases:
   - name: address
-    type: address_store.AddressStore
+    type: sentinel.db.address.local.AddressDB
     description: >
       Monitored Addresses
     parameters:
