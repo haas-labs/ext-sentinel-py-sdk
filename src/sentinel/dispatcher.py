@@ -1,10 +1,10 @@
 import time
 import logging
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from sentinel.profile import Profile
-from sentinel.utils import import_by_classpath
+from sentinel.utils.imports import import_by_classpath
 
 
 logger = logging.getLogger(__name__)

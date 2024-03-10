@@ -1,19 +1,20 @@
 # Sentinel Commands
 
 ```sh
-$ sentinel
-usage: sentinel [-h] [--version] {launch,fetch,abi-signatures} ...
+Sentinel SDK Version: v0.3.9, Active project: Unknown
 
-positional arguments:
-  {launch,fetch,abi-signatures}
-                        Sentinel Commands
-    launch              Launch sentinel process(-es)
-    fetch               Fetch data via JSON-RPC
-    abi-signatures      ABI Signatures Handler
+Usage:
+  sentinel <command> [options] [args]
 
-options:
-  -h, --help            show this help message and exit
-  --version             show program's version number and exit
+Available commands:
+  abi_signature        ABI Signature fetcher
+  fetch                Fetch data via JSON-RPC
+  launch               Launch sentinel process(-es)
+  version              Print Sentinel version and required libs
+
+More commands available when run from project directory
+
+Use "sentinel <command> -h" to see more info about a command
 ```
 
 ## References

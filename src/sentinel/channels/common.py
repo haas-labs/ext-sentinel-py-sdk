@@ -1,5 +1,5 @@
 from typing import Any
-from sentinel.utils import import_by_classpath
+from sentinel.utils.imports import import_by_classpath
 
 
 class Channel:

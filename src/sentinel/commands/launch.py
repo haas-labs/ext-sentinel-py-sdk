@@ -1,49 +1,37 @@
+from argparse import ArgumentParser, Namespace
 import os
 import logging
 import pathlib
+from typing import List
 
 from sentinel.version import VERSION
 from sentinel.dispatcher import Dispatcher
-from sentinel.commands.common import Command
+from sentinel.commands.common import SentinelCommand
 from sentinel.services.service_account import import_service_tokens
 from sentinel.profile import LauncherProfile, IncorrectProfileFormat, load_extra_vars
 
 logger = logging.getLogger(__name__)
 
 
-class LaunchCommand(Command):
-    """
-    Launch Command
-    """
+class Command(SentinelCommand):
+    def description(self) -> str:
+        return "Launch sentinel process(-es)"
 
-    name = "launch"
-    help = "Launch sentinel process(-es)"
+    def add_options(self, parser: ArgumentParser) -> None:
+        super().add_options(parser)
 
-    def add(self):
-        """
-        Add Launch command and arguments
-        """
-        self._parser.add_argument("--profile", type=pathlib.Path, required=True, help="Sentinel Process Profile")
-        self._parser.add_argument(
+        parser.add_argument("--profile", type=pathlib.Path, required=True, help="Sentinel Process Profile")
+        parser.add_argument(
             "--vars",
             type=str,
             action="append",
             help="Set additional variables as JSON, " + "if filename prepend with @. Support YAML/JSON file",
         )
-        self._parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
-        self._parser.add_argument(
-            "--import-service-tokens", action="store_true", help="Import service tokens before launch"
-        )
+        parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
+        parser.add_argument("--import-service-tokens", action="store_true", help="Import service tokens before launch")
 
-        self._parser.set_defaults(handler=self.handle)
-
-        return self._parser
-
-    def handle(self, args):
-        """
-        Handling Fetch command arguments
-        """
-        super().handle(args)
+    def run(self, opts: List[str], args: Namespace) -> None:
+        super().run(opts, args)
 
         logger.info(f"Sentinel SDK version: {VERSION}")
         extra_vars = load_extra_vars(args.vars)

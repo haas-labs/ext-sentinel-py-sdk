@@ -1,3 +1,4 @@
+from argparse import ArgumentParser, Namespace
 import os
 import csv
 import json
@@ -7,60 +8,47 @@ import pathlib
 
 from typing import List
 
-
-from sentinel.commands.common import Command
-
 from sentinel.profile import load_extra_vars
 from sentinel.db.contract.remote import RemoteContractDB
 from sentinel.services.service_account import import_service_tokens
 
+from sentinel.commands.common import SentinelCommand
 from sentinel.formats.mappings import NETWORKS_BY_ID
 
 
 logger = logging.getLogger(__name__)
 
 
-class AbiSignaturesCommand(Command):
-    """
-    ABI Signatures Command
-    """
+class Command(SentinelCommand):
+    def description(self) -> str:
+        return "ABI Signature fetcher"
 
-    name = "abi-signatures"
-    help = "ABI Signatures Handler"
+    def add_options(self, parser: ArgumentParser) -> None:
+        super().add_options(parser)
 
-    def add(self):
-        """
-        Add ABI Signatures command and arguments
-        """
-        self._parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
-        self._parser.add_argument(
+        parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
+        parser.add_argument(
             "--from",
             dest="contract_list",
             type=pathlib.Path,
             required=True,
             help="The contract list, CSV file with address and network",
         )
-        self._parser.add_argument(
+        parser.add_argument(
             "--to",
             type=pathlib.Path,
             required=True,
             help="Store ABI signatures in the directory",
         )
-        self._parser.add_argument(
+        parser.add_argument(
             "--skip-existing",
             action="store_true",
             help="Skip existing contract(-s)",
         )
 
-        self._parser.set_defaults(handler=self.handle)
+    def run(self, opts: List[str], args: Namespace) -> None:
+        super().run(opts, args)
 
-        return self._parser
-
-    def handle(self, args):
-        """
-        Handling ABI Signatures agruments
-        """
-        super().handle(args)
         # Update env var from file
         if args.env_vars is not None:
             for k, v in load_extra_vars(

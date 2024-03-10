@@ -45,7 +45,7 @@ packages = ["src/sentinel"]
 # ]
 
 [project.scripts]
-sentinel = 'sentinel.cli:run_cli_instance'
+sentinel = 'sentinel.cli:execute'
 
 [tool.ruff]
 # Allow lines to be as long as 120.

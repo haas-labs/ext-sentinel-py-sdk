@@ -3,43 +3,40 @@ import logging
 import pathlib
 import argparse
 
-from sentinel.version import VERSION
+from typing import List, Dict
 
-from sentinel.commands.fetch import FetchCommand
-from sentinel.commands.launch import LaunchCommand
-from sentinel.commands.abi_signatures import AbiSignaturesCommand
 
+from sentinel.settings import get_project_settings
+from sentinel.commands.common import (
+    get_command,
+    get_commands_from_module,
+    print_commands,
+    print_unknown_command,
+)
 
 logger = logging.getLogger(__name__)
 
-# Exit codes
-EXITCODE_MISSED_REQUIRED_ARGUMENTS = 1
-EXITCODE_INTERRUPTED_BY_USER = 2
 
-
-def run_cli_instance():
-    """
-    Run CLI instance
-    """    
-    
+def execute(argv: List[str] = None, settings: Dict = dict()):
     # Add current directory to python path
     sys.path.append(str(pathlib.Path.cwd()))
 
-    # Common parser
-    parser = argparse.ArgumentParser("sentinel")
-    parser.add_argument("--version", action="version", version=VERSION)
-    subparsers = parser.add_subparsers(help="Sentinel Commands")
-
-    # Commands
-    LaunchCommand(subparsers).add()
-    FetchCommand(subparsers).add()
-    AbiSignaturesCommand(subparsers).add()
-
-    # Main
-    args = parser.parse_args()
-
-    if not hasattr(args, "handler"):
-        parser.print_help()
-        return
-
-    args.handler(args)
+    argv = argv or sys.argv
+    settings = settings or get_project_settings()
+    commands = get_commands_from_module()
+    command_name = get_command(argv)
+    if not command_name:
+        print_commands(commands, settings)
+        sys.exit(0)
+    elif command_name not in commands:
+        print_unknown_command(command_name, settings)
+        sys.exit(2)
+    command = commands[command_name]
+    parser = argparse.ArgumentParser(
+        usage=f"sentinel {command_name} {command.syntax()}",
+        conflict_handler="resolve",
+        description=command.description(),
+    )
+    command.add_options(parser)
+    opts, args = parser.parse_known_args(args=argv[1:])
+    command.run(args, opts)
