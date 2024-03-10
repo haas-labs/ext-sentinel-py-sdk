@@ -7,6 +7,7 @@ def test_get_commands_from_module():
         "abi_signature",
         "fetch",
         "launch",
+        "version",
     ], "Incorrect list of sentinel commands"
 
 
