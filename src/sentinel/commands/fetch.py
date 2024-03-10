@@ -1,12 +1,14 @@
+from argparse import ArgumentParser, Namespace
 import sys
 import json
 import logging
 import pathlib
 
 from enum import Enum
+from typing import List
 
-from sentinel.commands.common import Command
 from sentinel.services.fetcher import Fetcher
+from sentinel.commands.common import SentinelCommand
 
 
 logger = logging.getLogger(__name__)
@@ -27,37 +29,39 @@ class DatasetType(Enum):
         return self.value
 
 
-class FetchCommand(Command):
-    """
-    Fetch Command
-    """
+class Command(SentinelCommand):
 
-    name = "fetch"
-    help = "Fetch data via JSON-RPC"
+    def description(self) -> str:
+        return "Fetch data via JSON-RPC"
 
-    def add(self):
-        """
-        Add Fetch command and arguments
-        """
-        self._parser.add_argument("--rpc", type=str, required=True, help="JSON-RPC End-Point")
-        self._parser.add_argument(
+    def add_options(self, parser: ArgumentParser) -> None:
+        super().add_options(parser)
+
+        parser.add_argument(
+            "--rpc", 
+            type=str, 
+            required=True, 
+            help="JSON-RPC End-Point"
+        )
+        parser.add_argument(
             "--dataset",
             type=DatasetType,
             choices=list(DatasetType),
             help="Dataset type for fetching",
         )
-        self._parser.add_argument("--from-file", type=pathlib.Path, required=True, help="Fetch data from list")
-        self._parser.add_argument("--to-file", type=pathlib.Path, help="Store results into file")
+        parser.add_argument(
+            "--from-file", 
+            type=pathlib.Path, 
+            required=True, 
+            help="Fetch data from list")
+        parser.add_argument(
+            "--to-file", 
+            type=pathlib.Path, 
+            help="Store results into file"
+        )
 
-        self._parser.set_defaults(handler=self.handle)
-
-        return self._parser
-
-    def handle(self, args):
-        """
-        Handling Fetch command arguments
-        """
-        super().handle(args)
+    def run(self, opts: List[str], args: Namespace) -> None:
+        super().run(opts, args)
 
         logger.info(f"Fetch {args.dataset} data via JSON-RPC endpont: {args.rpc}")
         fetcher = Fetcher(endpoint=args.rpc)
