@@ -1,0 +1,7 @@
+from sentinel.models.transaction import Transaction
+from sentinel.processes.transaction import TransactionDetector
+
+class $classname(TransactionDetector):
+
+    def on_transaction(self, transaction: Transaction):
+        pass

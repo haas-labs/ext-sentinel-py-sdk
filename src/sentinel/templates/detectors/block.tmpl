@@ -1,0 +1,9 @@
+from typing import List
+
+from sentinel.processes.block import BlockDetector
+from sentinel.models.transaction import Transaction
+
+class $classname(BlockDetector):
+
+    def on_block(self, transactions: List[Transaction]):
+        pass
