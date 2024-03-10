@@ -125,8 +125,9 @@ def get_commands_from_module(module: str = "sentinel.commands") -> Dict[str, Sen
                 commands[obj.__module__.split(".")[-1]] = obj()
     return commands
 
+
 def get_command(args: List[str]) -> str:
-    return next((arg for arg in args[1:] if not arg.startswith("-")), "")
+    return args[1] if (len(args[1:]) > 0 and not args[1].startswith("-")) else ""
 
 
 def print_commands(commands: Dict[str, SentinelCommand], settings: Dict = dict()):
