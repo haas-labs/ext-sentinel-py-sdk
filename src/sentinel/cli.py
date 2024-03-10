@@ -1,5 +1,6 @@
 import sys
 import logging
+import pathlib
 import argparse
 
 from typing import List, Dict
@@ -7,7 +8,7 @@ from typing import List, Dict
 
 from sentinel.settings import get_project_settings
 from sentinel.commands.common import (
-    get_command, 
+    get_command,
     get_commands_from_module,
     print_commands,
     print_unknown_command,
@@ -17,6 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 def execute(argv: List[str] = None, settings: Dict = dict()):
+    # Add current directory to python path
+    sys.path.append(str(pathlib.Path.cwd()))
+
     argv = argv or sys.argv
     settings = settings or get_project_settings()
     commands = get_commands_from_module()
