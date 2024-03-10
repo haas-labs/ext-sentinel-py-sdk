@@ -11,7 +11,7 @@ from sentinel.utils.version import component_versions
 
 class Command(SentinelCommand):
     def syntax(self) -> str:
-        return "[-v]"
+        return "[--all]"
 
     def description(self) -> str:
         return "Print Sentinel version and required libs"
