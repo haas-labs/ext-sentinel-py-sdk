@@ -5,7 +5,7 @@ from rich.progress import Progress
 
 from typing import List, Dict, Iterator, Union
 
-from sentinel.utils import (
+from sentinel.utils.dicts import (
     dicts_merge,
     dict_fields_filter,
     dict_fields_mapping,

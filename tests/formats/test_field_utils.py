@@ -1,8 +1,8 @@
 import json
 
-from sentinel.utils import dicts_merge
-from sentinel.utils import dict_fields_filter
-from sentinel.utils import dict_fields_mapping
+from sentinel.utils.dicts import dicts_merge
+from sentinel.utils.dicts import dict_fields_filter
+from sentinel.utils.dicts import dict_fields_mapping
 
 from sentinel.formats.mappings import (
     JSONRPC_TRANSACTION_FIELD_MAPPINGS,
