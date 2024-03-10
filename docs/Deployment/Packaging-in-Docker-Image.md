@@ -20,7 +20,7 @@ ext/sentinel/base   0.3.0     1c302b5e7fc8   8 seconds ago   145MB
 ```
 To check Sentinel SDK version:
 ```sh
-docker run -ti --rm --name sentinel-console ext/sentinel/base:0.3.0 sentinel --version
+docker run -ti --rm --name sentinel-console ext/sentinel/base:0.3.0 sentinel version
 ```
 
 If there is no base image, you can create it with `build-base-image` command. This command will compile current Sentinel SDK from source and build base Docker image

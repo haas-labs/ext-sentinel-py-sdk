@@ -71,7 +71,7 @@ build-base-image() {
     && echo -n "[INFO] Installed Sentinel SDK: " \
     && docker run -ti --rm --name sentinel-console \
         ext/sentinel/base:${SENTINEL_DOCKER_VERSION} \
-        sentinel --version \
+        sentinel version --all \
     && echo "[INFO] Completed successfully"
 }
 
