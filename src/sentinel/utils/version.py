@@ -13,13 +13,10 @@ import async_lru
 import pydantic
 import websockets
 # import aiofiles
-import sentinel
 
 
 def component_versions() -> List[Tuple[str, str]]:
-
     return {
-        "sentinel-sdk": sentinel.version.VERSION,
         "httpx": httpx.__version__,
         "python": sys.version.replace("\n", "- "),
         "platform": platform.platform(),
@@ -31,5 +28,5 @@ def component_versions() -> List[Tuple[str, str]]:
         "websockets": websockets.__version__,
         # "aiofiles": aiofiles
         # "rich": rich,
-        # "PyYAML": PyYAML 
+        # "PyYAML": PyYAML
     }

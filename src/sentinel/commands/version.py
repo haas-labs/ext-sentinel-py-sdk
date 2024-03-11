@@ -3,6 +3,7 @@ import argparse
 
 from typing import List
 
+import rich
 import sentinel
 
 from sentinel.commands.common import SentinelCommand
@@ -23,10 +24,18 @@ class Command(SentinelCommand):
             action="store_true",
             help="also display python/platform/libs info (useful for bug reporting)",
         )
+        parser.add_argument(
+            "--pretty",
+            dest="pretty",
+            action="store_true",
+            help="Prettify JSON output with version(-s)",
+        )
 
     def run(self, opts: List[str], args: argparse.Namespace) -> None:
+        versions = {"sentinel-sdk": sentinel.version.VERSION}
         if args.all:
-            versions = component_versions()
-            print(json.dumps(versions))
+            versions.update(component_versions())
+        if args.pretty:
+            rich.print_json(json.dumps(versions))
         else:
-            print(json.dumps({"Sentinel": sentinel.version.VERSION}))
+            print(json.dumps(versions))
