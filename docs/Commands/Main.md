@@ -19,6 +19,7 @@ Use "sentinel <command> -h" to see more info about a command
 
 ## References
 
-- [Launch Command](/docs/Commands/Launch.md)
-- [Fetch Command](/docs/Commands/Fetch.md)
 - [ABI Signatures Command](/docs/Commands/ABI-Signatures.md)
+- [Fetch Command](/docs/Commands/Fetch.md)
+- [Launch Command](/docs/Commands/Launch.md)
+- [Version](/docs/Commands/Version.md)
