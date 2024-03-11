@@ -1,1 +1,1 @@
-VERSION="v0.3.9.dev7"
+VERSION="v0.3.9.dev8"
