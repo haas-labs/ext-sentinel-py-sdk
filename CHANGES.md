@@ -1,5 +1,29 @@
 # Change Log
 
+## v0.3.10
+
+Features:
+
+- Migrate to new command line interface for handling commands
+- Add Sentinel version command and update documentation
+- Add profiles for HAI Bridge in the balance monitor 
+- Add local address db details in Sentinel log
+- Add project settings and templates
+- Add detector templates
+- Add handling default Kafka parameters: auto_offset_reset
+- Add local address database as part of Sentinel SDK
+- Add in-memory address db
+
+Refactoring
+
+- Update/refactor balance monitor code
+- Move utils code from different locations to one place utils/
+
+Fix
+
+- Remove auto_offset_reset parameter as it used latest by default + fix event channel definition
+- Group id in examples/balance_monitor
+
 ## v0.3.9
 
 Features
