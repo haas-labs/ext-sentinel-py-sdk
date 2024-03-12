@@ -5,10 +5,6 @@ from pydantic import BaseModel, Field
 
 
 class Blockchain(BaseModel):
-    """
-    Blockchain Model
-    """
-
     network: str
     chain_id: str
 
