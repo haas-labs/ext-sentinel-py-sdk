@@ -17,6 +17,7 @@ def test_block_detector_init():
     process = BlockDetector(
         name="TestBlockDetector",
         description="Test Block Detector",
+        parameters={ "network": "ethereum", }
     )
 
     assert isinstance(process, BlockDetector), "Incorrect type for block detector instance"
@@ -53,6 +54,7 @@ async def test_block_detector_collect_block_transactions():
     process = BlockDetector(
         name="TestBlockDetector",
         description="Test Block Detector",
+        parameters={ "network": "ethereum", }
     )
     process.on_block = on_block_hander
 
@@ -81,6 +83,7 @@ async def test_block_detector_incomplete_blocks_processing():
     process = BlockDetector(
         name="TestBlockDetector",
         description="Test Block Detector",
+        parameters={ "network": "ethereum", }
     )
     process.on_block = on_block_hander
 
@@ -108,6 +111,7 @@ async def test_block_detector_single_transaction_block():
     process = BlockDetector(
         name="TestBlockDetector",
         description="Test Block Detector",
+        parameters={ "network": "ethereum", }
     )
     process.on_block = on_block_hander
 

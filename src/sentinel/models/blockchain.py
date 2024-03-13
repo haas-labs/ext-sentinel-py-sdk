@@ -8,6 +8,6 @@ class Blockchain(BaseModel):
 
     short_name: str
     network: str
-    chain_id: str
+    chain_id: int
     description: str
     currency: str

@@ -4,7 +4,6 @@ import logging
 import pathlib
 from typing import List
 
-from sentinel.version import VERSION
 from sentinel.dispatcher import Dispatcher
 from sentinel.commands.common import SentinelCommand
 from sentinel.services.service_account import import_service_tokens
@@ -33,7 +32,6 @@ class Command(SentinelCommand):
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
 
-        logger.info(f"Sentinel SDK version: {VERSION}")
         extra_vars = load_extra_vars(args.vars)
 
         # Update env var from file

@@ -94,7 +94,7 @@ class SentinelCommand:
         if args.rich_logging:
             logging.basicConfig(
                 level=args.log_level,
-                format="%(asctime)s.%(msecs)03d (%(processName)s::%(name)s:%(lineno)d) %(message)s",
+                format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) %(message)s",
                 # format="%(asctime)s.%(msecs)03d (%(name)s) %(message)s",
                 datefmt="%Y-%m-%dT%H:%M:%S",
                 handlers=[RichHandler(rich_tracebacks=True)],
@@ -102,7 +102,7 @@ class SentinelCommand:
         else:
             logging.basicConfig(
                 level=args.log_level,
-                format="%(asctime)s.%(msecs)03d (%(processName)s::%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
+                format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
                 # format="%(asctime)s.%(msecs)03d (%(name)s) %(message)s",
                 datefmt="%Y-%m-%dT%H:%M:%S",
             )

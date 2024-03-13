@@ -1,8 +1,10 @@
 import time
 import logging
+import multiprocessing as mp
 
 from typing import Any, Dict
 
+from sentinel.version import VERSION
 from sentinel.profile import Profile
 from sentinel.utils.imports import import_by_classpath
 
@@ -35,6 +37,11 @@ class Dispatcher:
         """
         self._profile = profile
         self._processes = dict()
+
+        dispatcher_process = mp.current_process()
+        dispatcher_process.name = "root://Dispatcher"
+
+        logger.info(f"Sentinel SDK version: {VERSION}")
 
     @property
     def processes(self):
