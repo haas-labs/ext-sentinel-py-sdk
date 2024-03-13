@@ -38,7 +38,12 @@ The role of the detector is to identify various events that have occurred in blo
 
 ## Tutorials
 
-[BlockTx Detector](examples/block_tx/README.md) provides step-by-step guide and information
+- Profiles and templates
+- How to fetch transaction data for development and testing
+
+## Examples
+
+- [BlockTx Detector](examples/block_tx/README.md) provides step-by-step guide and information
 
 ## Deployment
 
