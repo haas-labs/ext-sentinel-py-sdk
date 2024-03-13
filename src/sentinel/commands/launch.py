@@ -27,6 +27,11 @@ class Command(SentinelCommand):
             help="Set additional variables as JSON, " + "if filename prepend with @. Support YAML/JSON file",
         )
         parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            help="Run in dry-run mode w/o real processing, just profile validation",
+        )
         parser.add_argument("--import-service-tokens", action="store_true", help="Import service tokens before launch")
 
     def run(self, opts: List[str], args: Namespace) -> None:
@@ -50,6 +55,7 @@ class Command(SentinelCommand):
         try:
             profile = LauncherProfile().parse(profile_path=args.profile, extra_vars=extra_vars)
             dispatcher = Dispatcher(profile=profile)
-            dispatcher.run()
+            if not args.dry_run:
+                dispatcher.run()
         except IncorrectProfileFormat as err:
             logger.error(err)
