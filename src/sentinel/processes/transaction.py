@@ -7,8 +7,8 @@ import multiprocessing as mp
 from typing import Dict
 from collections import Counter
 
+from sentinel.definitions import BLOCKCHAIN
 from sentinel.models.transaction import Transaction
-
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +38,11 @@ class TransactionDetector(mp.Process):
         super().__init__()
 
         # Process Name
-        network = parameters.get("network", "")
-        self.name = "@".join([network, name]) if network != "" else name
+        network = parameters.get("network")
+        assert network is not None, f"Unknown network, {network}"
+        
+        detector_prefix = BLOCKCHAIN.get(network).short_name
+        self.name = "://".join([detector_prefix, name]) if network != "" else name
 
         # Detector Name
         self.detector_name = name
@@ -68,11 +71,11 @@ class TransactionDetector(mp.Process):
                 self.channels["events"] = channel.instance
 
     async def init(self) -> None:
-        '''
+        """
         Detector specific initialization
 
         User can add custom init logic here
-        '''
+        """
         pass
 
     async def _run(self) -> None:
