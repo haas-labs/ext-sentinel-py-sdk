@@ -1,5 +1,17 @@
 # Change Log
 
+## v0.3.11
+
+Feature
+
+- Add detector name as URI in logs
+- Add blockchain definitions as part of SDK
+
+Fix
+
+- Release pipeline bump release version automatically
+- Fix chain_id in balance monitor
+
 ## v0.3.10
 
 Features:
