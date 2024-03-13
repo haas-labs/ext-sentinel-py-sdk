@@ -80,7 +80,7 @@ jobs:
   Next-Dev-Version:
 
     needs: Release
-    if: ${{ always() && needs.Release.status == 'skipped' }}
+    if: needs.Release.status == 'skipped'
 
     runs-on: ubuntu-latest
     
