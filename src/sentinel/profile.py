@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import yaml
 import jinja2
@@ -8,6 +9,8 @@ import pathlib
 from typing import Dict, List
 
 from pydantic import BaseModel
+
+from jinja2.ext import Extension as JinjaExtension
 
 from sentinel.models.process import Process
 
@@ -68,16 +71,20 @@ def load_extra_vars(extra_vars: List[str] = list()) -> Dict:
     return extra_vars_result
 
 
+class YAMLCleaner(JinjaExtension):
+    def preprocess(self, source: str, name: str | None, filename: str | None = None) -> str:
+        # Regular expression to match YAML comments
+        pattern = r"^\s*#.*$"
+        # Remove comments
+        source = re.sub(pattern, "", source, flags=re.MULTILINE)
+        return source
+
+
+
 class LauncherProfile:
     """
     Launcher Profile
     """
-
-    def __init__(self) -> None:
-        """
-        Detector Profile Init
-        """
-        self._processes = list()
 
     def parse(self, profile_path: pathlib.Path, extra_vars: Dict = dict()) -> Profile:
         """
@@ -102,11 +109,14 @@ class LauncherProfile:
         """
         Apply extra vars to topology file
         """
+        logger.info(f"Loading profile template from {profile_path}")
         try:
-            template = jinja2.Environment(
-                loader=jinja2.FileSystemLoader(profile_path.parent), undefined=jinja2.StrictUndefined
-            ).get_template(profile_path.name)
-
+            template_env = jinja2.Environment(
+                loader=jinja2.FileSystemLoader(profile_path.parent),
+                undefined=jinja2.StrictUndefined,
+                extensions=['sentinel.profile.YAMLCleaner']
+            )
+            template = template_env.get_template(profile_path.name)
             output = template.render(**extra_vars, env=os.environ.copy())
         except jinja2.exceptions.TemplateNotFound as err:
             raise ProfileNotFound(f"Profile or bundle not found, {err}")
