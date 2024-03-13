@@ -39,7 +39,7 @@ class Dispatcher:
         self._processes = dict()
 
         dispatcher_process = mp.current_process()
-        dispatcher_process.name = "root://Dispatcher"
+        dispatcher_process.name = "Dispatcher"
 
         logger.info(f"Sentinel SDK version: {VERSION}")
 
