@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.12
+
+Maintanance release to test Github pipelines, no changes in code
+
 ## v0.3.11
 
 Feature
