@@ -1,10 +1,6 @@
 # Change Log
 
-## v0.3.12..14
-
-Maintanance releases to test Github pipelines, no changes in code
-
-## v0.3.11
+## v0.3.14
 
 Feature
 
