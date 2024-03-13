@@ -33,7 +33,7 @@
     parameters:
       endpoint: {{ env["EXTRACTOR_PUBLIC_API_ENDPOINT"] }} 
       token: {{ env['HACKEN_API_TOKEN'] }}
-      chain_id: 1
+      chain_id: 56
       network: bsc
       metadata:
         origin: simulation
