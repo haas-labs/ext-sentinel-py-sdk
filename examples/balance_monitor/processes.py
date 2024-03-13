@@ -33,7 +33,7 @@ class BalanceMonitor(BlockDetector):
         self.threshold = self.parameters.get("balance_threshold")        
         self.erc20_addr = self.parameters.get("erc20_addr").lower()
         self.erc20_decimals = 10 ** self.parameters.get("erc20_decimals", 18)
-        self.erc20_balance_threshold = self.parameters.get("erc20_balance_threshold")
+        self.erc20_balance_threshold = self.parameters.get("erc20_balance_threshold",0)
         self.severity = self.parameters.get("severity",0.14)
 
         self.erc20_contract = self.w3.eth.contract(address=self.w3.to_checksum_address(self.erc20_addr), abi=erc20_abi)
@@ -190,7 +190,7 @@ class BalanceMonitor(BlockDetector):
                     "monitored_contract": addr,
                     "balance": balance,
                     "threshold": self.threshold,
-                    "desc": f"Balance {token} Change below threshold ({balance / self.decimals}, {self.threshold / self.decimals})",
+                    "desc": f"Balance {token} below threshold ({balance / self.decimals}, {self.threshold / self.decimals})",
                 },
             )
         )

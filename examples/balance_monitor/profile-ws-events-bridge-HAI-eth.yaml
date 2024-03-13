@@ -6,15 +6,15 @@
     chain_id: 1
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
+    native: ETH
     balance_threshold: 100000000000000000
     decimals: 18
     severity: 0.5
+    erc20_addr: '0x05Fb86775Fd5c16290f1E838F5caaa7342bD9a63'
+    erc20_balance_threshold: 300000000000
+    erc20_decimals: 8
 
   inputs:
-  # - name: transactions
-  #   type: sentinel.channels.ws.transactions.InboundTransactionChannel
-  #   parameters:
-  #     server_uri: {{ env['ETH_WS_URL'] }}
   - name: transactions
     type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
     parameters:
@@ -25,15 +25,6 @@
       - {{ env['KAFKA_INBOUND_TX_TOPIC_ETH'] }}
 
   outputs:
-  # - name: events
-  #   type: sentinel.channels.http.outbound.OutboundEventsChannel
-  #   parameters:
-  #     endpoint: {{ env["EXTRACTOR_PUBLIC_API_ENDPOINT"] }} 
-  #     token: {{ env['HACKEN_API_TOKEN'] }}
-  #     chain_id: 1
-  #     network: ethereum
-  #     metadata:
-  #       origin: simulation
   - name: events
     type: sentinel.channels.kafka.events.OutboundEventsChannel
     parameters:
