@@ -49,7 +49,7 @@ jobs:
       run: |
         ./scripts/test ${{ matrix.python-version }}
 
-    - name: Bumping version and tagging
+    - name: Bumping release version and tagging
       run: |
         RELEASE_VERSION=`./scripts/release get-release-version ${{ github.event.pull_request.head.ref }}`
         git config --local user.name "github-actions[bot]"
@@ -63,17 +63,19 @@ jobs:
         git tag ${RELEASE_VERSION}
         git push --tags
 
+    - name: Build and deploy to AWS Code Artifact
+      run: |
+        ./scripts/build
+        twine upload --repository codeartifact dist/ext_sentinel_py_sdk*.whl
+
+    - name: Bumping next dev version
+      run: |
         CURRENT_VERSION=`hatch version`
         hatch version dev
         NEXT_VERSION=`hatch version`
         git add src/sentinel/version.py
         git commit -m "bump: $CURRENT_VERSION → $NEXT_VERSION"
         git push
-
-    - name: Build and deploy to AWS Code Artifact
-      run: |
-        ./scripts/build
-        twine upload --repository codeartifact dist/ext_sentinel_py_sdk*.whl
 
   Next-Dev-Version:
 
