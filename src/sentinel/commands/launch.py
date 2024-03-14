@@ -1,8 +1,11 @@
-from argparse import ArgumentParser, Namespace
 import os
 import logging
 import pathlib
+
 from typing import List
+from argparse import ArgumentParser, Namespace
+
+import rich
 
 from sentinel.dispatcher import Dispatcher
 from sentinel.commands.common import SentinelCommand
@@ -30,7 +33,7 @@ class Command(SentinelCommand):
         parser.add_argument(
             "--dry-run",
             action="store_true",
-            help="Run in dry-run mode w/o real processing, just profile validation",
+            help="Run in dry-run mode w/o real processing, just profile validation and printing out",
         )
         parser.add_argument("--import-service-tokens", action="store_true", help="Import service tokens before launch")
 
@@ -57,5 +60,7 @@ class Command(SentinelCommand):
             dispatcher = Dispatcher(profile=profile)
             if not args.dry_run:
                 dispatcher.run()
+            else:
+                rich.print_json(profile.model_dump_json())
         except IncorrectProfileFormat as err:
             logger.error(err)
