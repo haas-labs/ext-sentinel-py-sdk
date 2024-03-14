@@ -1,5 +1,26 @@
 # Change Log
 
+## v0.3.15
+
+Feature
+
+- Add core sentry process
+- Add async core sentry process
+- Remove prefix for main process
+- Handle comments in profiles
+- Add dry-run option for launch command
+- Update balance monitor for eth/bsc
+- Add ERC20 for balance monitor
+
+Documentation
+
+- Add article how to get transaction data
+
+Fix
+
+- Handling empty lines in fetch commands (#143)
+- Next dev version Github pipeline
+
 ## v0.3.14
 
 Feature
@@ -14,7 +35,7 @@ Fix
 
 ## v0.3.10
 
-Features:
+Feature
 
 - Migrate to new command line interface for handling commands
 - Add Sentinel version command and update documentation
@@ -38,7 +59,7 @@ Fix
 
 ## v0.3.9
 
-Features
+Feature
 
 - Add import service tokens
 - Updates for debugging and error handling Event HTTP Channel
@@ -57,14 +78,14 @@ Documentation
 
 ## v0.3.8
 
-Features
+Feature
 
 - re-org release and merge pipelines
 - automatic bumping version for release and dev merge
 
 ## v0.3.7
 
-Fetures
+Feature
 
 - Githib integration with AWS Code Artifact
 - Sending events from process init
