@@ -38,8 +38,10 @@ The role of the detector is to identify various events that have occurred in blo
 
 ## Tutorials
 
-- Profiles and templates
-- How to fetch transaction data for development and testing
+- [Profile](/docs/Tutorials/Profile.md)
+- [Template](/docs/Tutorials/Template.md)
+- [Bundle](/docs/Tutorials/Bundle.md)
+- [How to work with transaction data locally](/docs/Tutorials/How-to-work-with-transaction-data-locally.md)
 
 ## Examples
 
