@@ -40,7 +40,7 @@ global options:
 To fetch transaction data 
 ```sh
 $ sentinel fetch \
-    --rpc https://rpc3-bsc-mainnet.hacken.cloud/api/v1/rpc3/849dd74c05160b3ebffb2d5547164337a204b7f88d0322d25e18684c0a2d248a \
+    --rpc <JSONRPC-URL> \
     --dataset transaction \
     --from-file tx.hashes \
     --to-file transactions.json
