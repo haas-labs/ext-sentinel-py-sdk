@@ -118,7 +118,7 @@ class Command(SentinelCommand):
         Handle fetch transactions
         """
         with source_path.open("r") as source:
-            tx_hashes = [tx.strip() for tx in source.readlines() if tx != ""]
+            tx_hashes = [tx.strip() for tx in source.readlines() if tx.strip() != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
                 for transaction in fetcher.get_transactions(tx_hashes):
