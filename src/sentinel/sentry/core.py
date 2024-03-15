@@ -36,7 +36,7 @@ class CoreSentry(multiprocessing.Process):
 
         super().__init__(name=name)
         self.description = description
-        self.paramters = parameters
+        self.parameters = parameters
 
     def run(self) -> None:
         """
