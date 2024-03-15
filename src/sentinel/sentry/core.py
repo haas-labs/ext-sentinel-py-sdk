@@ -2,7 +2,7 @@ import asyncio
 import logging
 import multiprocessing
 
-from typing import Any, Iterable, Mapping
+from typing import Dict
 
 
 logger = logging.getLogger(__name__)
@@ -13,8 +13,7 @@ class CoreSentry(multiprocessing.Process):
         self,
         name: str,
         description: str,
-        args: Iterable[Any] = list(),
-        kwargs: Mapping[str, Any] = dict(),
+        parameters: Dict = dict(),
     ) -> None:
         """
         - `name` is the sentry name. By default, a unique name is constructed of
@@ -26,9 +25,6 @@ class CoreSentry(multiprocessing.Process):
         - `kwargs` is a dictionary of keyword arguments for the target invocation.
           Defaults to {}.
         """
-        super().__init__(name=name, args=args, kwargs=kwargs)
-
-        self.description = description
 
         """
         The parent process starts a fresh Python interpreter process. The child process will 
@@ -37,6 +33,10 @@ class CoreSentry(multiprocessing.Process):
         not be inherited
         """
         multiprocessing.set_start_method("spawn", force=True)
+
+        super().__init__(name=name)
+        self.description = description
+        self.paramters = parameters
 
     def run(self) -> None:
         """
