@@ -94,7 +94,7 @@ def import_service_tokens():
 if __name__ == "__main__":
     import argparse
 
-    from sentinel.profile import load_extra_vars
+    from sentinel.utils.vars import load_extra_vars
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--env-vars", type=str, required=True, help="Set environment variables from JSON/YAML file")
