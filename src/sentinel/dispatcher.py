@@ -6,6 +6,7 @@ from typing import Any, Dict
 
 from sentinel.version import VERSION
 from sentinel.profile import Profile
+from sentinel.project import ProjectSettings
 from sentinel.utils.imports import import_by_classpath
 
 
@@ -24,6 +25,7 @@ def process_init(process_classpath: str, **kwargs) -> Any:
 # Constants
 
 PROCESS_STATE_CHECK_TIME_INTERVAL = 30
+STATE_CHECK_TIME_INTERVAL = 30
 
 
 class Dispatcher:
@@ -205,3 +207,101 @@ class Dispatcher:
         for process_name, process_settings in self._processes.items():
             logger.info(f"Terminating the process: {process_name}")
             process_settings.instance.terminate()
+
+
+class SentryDispatcher:
+    def __init__(self, project: ProjectSettings) -> None:
+        mp.set_start_method("spawn", force=True)
+
+        self._project = project
+
+        # Change dispatcher name for logging
+        dispatcher = mp.current_process()
+        dispatcher.name = "Dispatcher"
+
+        logger.info(f"Sentinel SDK version: {VERSION}")
+        self._sentries = dict()
+        # self._log_queue = mp.Queue()
+
+    @property
+    def sentries(self, active: bool = False):
+        return self._sentries
+
+    @property
+    def active_sentries(self):
+        return [s for s in self._sentries.values() if s.is_alive()]
+
+    def init(self):
+        # self._project.settings["LOG_QUEUE"] = self._log_queue
+        logger.info(f"Initializing project with settings: {self._project.settings}")
+        try:
+            for sentry in self._project.sentries:
+                sentry_params = self._project.settings.copy()
+                sentry_params.update(sentry.parameters)
+                self._sentries[sentry.name] = self.init_sentry(
+                    sentry_name=sentry.name,
+                    sentry_type=sentry.type,
+                    sentry_params=sentry_params,
+                )
+        except RuntimeError as err:
+            logger.error(f"Project initialization failed, {err}")
+            return False
+        return True
+
+    def init_sentry(
+        self,
+        sentry_name: str,
+        sentry_type: str,
+        sentry_params: Dict = dict(),
+    ) -> Any:
+        sentry_instance = None
+
+        try:
+            logger.info(f"Initializing sentry: {sentry_type}")
+            _, sentry_class = import_by_classpath(sentry_type)
+            params = sentry_params if sentry_params is not None else {}
+            sentry_instance = sentry_class(name=sentry_name, params=params)
+        except RuntimeError as err:
+            logger.error(f"{sentry_type} initialization issue, {err}")
+            return None
+
+        return sentry_instance
+
+    def run(self) -> None:
+        # Init sentry before start
+        if not self.init():
+            logger.error("Project initialization failed")
+            return
+
+        for _, sentry in self._sentries.items():
+            sentry.start()
+
+        try:
+            logger.info("Processing started")
+            # Main loop
+            while True:
+                for name, sentry in self._sentries.items():
+                    if not sentry.is_alive() and sentry.restart:
+                        logger.warning(f"Detected inactive sentry ({name}), restarting...")
+                        sentry.start()
+
+                time.sleep(STATE_CHECK_TIME_INTERVAL)
+
+                if len(self.active_sentries) == 0:
+                    logger.info("No active sentries")
+                    break
+                logger.info(f"Active sentries: {[s.name for s in self.active_sentries]}")
+
+        except KeyboardInterrupt:
+            logger.warning("Interrupting by user")
+        finally:
+            self.stop()
+
+        logger.info("Processing completed")
+
+    def stop(self):
+        # Terminate the rest of sentries
+        for name, sentry in self._sentries.items():
+            if sentry.is_alive():
+                logger.info(f"Terminating the sentry: {name}")
+                sentry.terminate()
