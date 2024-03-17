@@ -1,0 +1,8 @@
+project:
+  name: Project A
+  description: Testing project settings structure on Project A example
+
+sentries:
+- sentinel.sentry.core.CoreSentry
+- sentinel.sentry.core.AsyncCoreSentry
+
