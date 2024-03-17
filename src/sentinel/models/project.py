@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Dict, Any
 from pydantic import BaseModel, Field
 
+from sentinel.models.sentry import Sentry
 
 class Project(BaseModel):
     name: str
@@ -11,7 +12,7 @@ class ProjectSettings(BaseModel):
 
     project: Project
 
-    sentries: List[str] = Field(default_factory=list)
+    sentries: List[Sentry] = Field(default_factory=list)
 
     # the first settings in the list is default one
-    settings: List[str] = Field(default_factory=list)
+    settings: Dict[str, Any] = Field(default_factory=dict)
