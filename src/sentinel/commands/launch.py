@@ -7,10 +7,14 @@ from argparse import ArgumentParser, Namespace
 
 import rich
 
-from sentinel.dispatcher import Dispatcher
+from sentinel.profile import LauncherProfile
+from sentinel.project import SentinelProject
+from sentinel.utils.vars import load_extra_vars
+from sentinel.utils.settings import IncorrectFileFormat
 from sentinel.commands.common import SentinelCommand
+from sentinel.dispatcher import Dispatcher, SentryDispatcher
 from sentinel.services.service_account import import_service_tokens
-from sentinel.profile import LauncherProfile, IncorrectProfileFormat, load_extra_vars
+
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +40,7 @@ class Command(SentinelCommand):
             help="Run in dry-run mode w/o real processing, just profile validation and printing out",
         )
         parser.add_argument("--import-service-tokens", action="store_true", help="Import service tokens before launch")
+        parser.add_argument("--sentry", action="store_true", help="Use sentry dispatcher")
 
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
@@ -56,11 +61,16 @@ class Command(SentinelCommand):
             import_service_tokens()
 
         try:
-            profile = LauncherProfile().parse(profile_path=args.profile, extra_vars=extra_vars)
-            dispatcher = Dispatcher(profile=profile)
-            if not args.dry_run:
-                dispatcher.run()
+            if args.sentry:
+                project = SentinelProject().parse(path=args.profile, settings=extra_vars)
+                dispatcher = SentryDispatcher(project)
+                if args.dry_run:
+                    rich.print_json(project.model_dump_json())
             else:
-                rich.print_json(profile.model_dump_json())
-        except IncorrectProfileFormat as err:
+                profile = LauncherProfile().parse(path=args.profile, settings=extra_vars)
+                dispatcher = Dispatcher(profile=profile)
+                if args.dry_run:
+                    rich.print_json(profile.model_dump_json())
+            dispatcher.run()
+        except IncorrectFileFormat as err:
             logger.error(err)

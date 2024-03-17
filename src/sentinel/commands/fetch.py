@@ -1,8 +1,9 @@
-from argparse import ArgumentParser, Namespace
 import sys
 import json
 import logging
 import pathlib
+
+from argparse import ArgumentParser, Namespace
 
 from enum import Enum
 from typing import List
@@ -30,35 +31,21 @@ class DatasetType(Enum):
 
 
 class Command(SentinelCommand):
-
     def description(self) -> str:
         return "Fetch data via JSON-RPC"
 
     def add_options(self, parser: ArgumentParser) -> None:
         super().add_options(parser)
 
-        parser.add_argument(
-            "--rpc", 
-            type=str, 
-            required=True, 
-            help="JSON-RPC End-Point"
-        )
+        parser.add_argument("--rpc", type=str, required=True, help="JSON-RPC End-Point")
         parser.add_argument(
             "--dataset",
             type=DatasetType,
             choices=list(DatasetType),
             help="Dataset type for fetching",
         )
-        parser.add_argument(
-            "--from-file", 
-            type=pathlib.Path, 
-            required=True, 
-            help="Fetch data from list")
-        parser.add_argument(
-            "--to-file", 
-            type=pathlib.Path, 
-            help="Store results into file"
-        )
+        parser.add_argument("--from-file", type=pathlib.Path, required=True, help="Fetch data from list")
+        parser.add_argument("--to-file", type=pathlib.Path, help="Store results into file")
 
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
