@@ -1,0 +1,26 @@
+
+- name: Simple Detector
+  type: sentinel.processes.common.Detector
+  parameters:
+
+  inputs:
+  - name: transactions
+    type: sentinel.channels.fs.FileChannel
+
+  outputs:
+  - name: events
+    type: sentinel.channels.fs.FileChannel
+
+  - name: alerts
+    type: sentinel.channels.fs.FileChannel
+  
+  databases:
+  - name: accounts
+    type: sentinel.databases.local.Accounts
+
+  - name: mixers
+    type: sentinel.databases.local.Mixers
+
+  - name: contracts
+    type: sentinel.databases.local.Contracts
+
