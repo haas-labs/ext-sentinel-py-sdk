@@ -2,50 +2,60 @@ import asyncio
 import logging
 import multiprocessing
 
-from typing import Dict
+from typing import Dict, List
 
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class CoreSentry(multiprocessing.Process):
-    def __init__(
-        self,
-        name: str,
-        description: str,
-        parameters: Dict = dict(),
-    ) -> None:
-        """
-        - `name` is the sentry name. By default, a unique name is constructed of
-          the form “Sentry-N” where N is a small decimal number
-        - `description` is the sentry descritpion. By default, short description to help
-          understand sentry's purpose
-        - `args` is a list or tuple of arguments for the target invocation.
-          Defaults to ()
-        - `kwargs` is a dictionary of keyword arguments for the target invocation.
-          Defaults to {}.
-        """
+    """
+    Core Sentry is main processing unit in Sentinel.
+    Used for building new type of sentries or as one run processing
+    """
 
+    # `name` is the sentry name. By default, a unique name is constructed of
+    # the form “Sentry-N” where N is a small decimal number
+    name: str = "CoreSentry"
+
+    # `description` is the sentry descritpion. By default, short description to help
+    # understand sentry's purpose
+    description: str = "Core Sentry"
+
+    # Sentry dependencies. It could be channels (inbound and/or outbound), databases
+    dependencies: List = []
+
+    # Restart policy
+    restart: bool = False
+
+    def __init__(self, name: str = None, description: str = None, params: Dict = dict()) -> None:
         """
-        The parent process starts a fresh Python interpreter process. The child process will 
-        only inherit those resources necessary to run the process object’s run() method. 
-        In particular, unnecessary file descriptors and handles from the parent process will 
+        The parent process starts a fresh Python interpreter process. The child process will
+        only inherit those resources necessary to run the process object’s run() method.
+        In particular, unnecessary file descriptors and handles from the parent process will
         not be inherited
         """
-        multiprocessing.set_start_method("spawn", force=True)
-
-        super().__init__(name=name)
-        self.description = description
-        self.parameters = parameters
+        super().__init__()
+        self.name = name if name is not None else self.name
+        self.description = description if description is not None else self.description
+        self.parameters = params.copy()
 
     def run(self) -> None:
         """
         Method representing sentry's activity
         """
-        raise NotImplementedError()
+        self.logger = get_logger(name=self.name, log_level=self.parameters.get("LOG_LEVEL", logging.INFO))
+        self.on_init()
+        self.on_run()
+
+    def on_init(self) -> None: ...
+
+    def on_run(self) -> None: ...
 
 
 class AsyncCoreSentry(CoreSentry):
+    name = "AsyncCoreSentry"
+    description = "Async Core Sentry"
+
     async def init(self) -> None:
         """
         Sentry specific initialization. User can add custom init logic here. The logic which
@@ -60,15 +70,19 @@ class AsyncCoreSentry(CoreSentry):
         await self.init()
 
         try:
-            logger.info(f"Starting sentry process, {self.name}")
+            self.logger.info(f"Starting sentry process, {self.name}")
 
             # TODO extend this method with required async activities
             # await asyncio.gather(*activities)
         finally:
-            logger.info("Processor completed")
+            self.logger.info("Processor completed")
 
     def run(self) -> None:
         """
         Method representing async sentry's activity
         """
         asyncio.run(self._run())
+
+    async def on_init(self) -> None: ...
+
+    async def on_run(self) -> None: ...
