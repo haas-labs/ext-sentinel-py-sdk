@@ -1,4 +1,3 @@
-from argparse import ArgumentParser, Namespace
 import os
 import csv
 import json
@@ -6,15 +5,15 @@ import asyncio
 import logging
 import pathlib
 
+from argparse import ArgumentParser, Namespace
 from typing import List
 
-from sentinel.profile import load_extra_vars
+from sentinel.utils.vars import load_extra_vars
 from sentinel.db.contract.remote import RemoteContractDB
 from sentinel.services.service_account import import_service_tokens
 
 from sentinel.commands.common import SentinelCommand
 from sentinel.formats.mappings import NETWORKS_BY_ID
-
 
 logger = logging.getLogger(__name__)
 

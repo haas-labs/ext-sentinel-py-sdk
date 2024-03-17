@@ -6,7 +6,7 @@ import argparse
 from typing import List, Dict
 
 
-from sentinel.settings import get_project_settings
+from sentinel.utils.settings import get_project_settings
 from sentinel.commands.common import (
     get_command,
     get_commands_from_module,
