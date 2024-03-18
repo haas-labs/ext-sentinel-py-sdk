@@ -19,4 +19,3 @@ def import_by_classpath(classpath: str) -> Tuple[str, Any]:
     _class = getattr(module, class_name)
 
     return module_name, _class
-
