@@ -6,9 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class LocalBlacklistDB:
-    """
-    Local Blacklist Database
-    """
+    name = "blacklist"
 
     def __init__(self, path: pathlib.Path) -> None:
         """

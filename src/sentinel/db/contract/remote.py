@@ -25,9 +25,7 @@ DEFAULT_HEADERS = {
 
 
 class RemoteContractDB(CommonContractDB):
-    """
-    Remote Contract DB
-    """
+    name = "contract"
 
     def __init__(
         self,

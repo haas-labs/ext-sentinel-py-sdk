@@ -17,9 +17,7 @@ DEFAULT_HEADERS = {
 
 
 class MonitoredContractsDB:
-    """
-    Monitored Contracts Database
-    """
+    name = "monitored_contract"
 
     def __init__(
         self,

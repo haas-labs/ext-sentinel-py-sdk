@@ -6,9 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class CommonTraceDB:
-    """
-    Common Trace DB
-    """
+    name = "trace"
 
     async def get(self, tx_hash: str) -> Dict:
         """

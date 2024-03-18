@@ -13,10 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class MonitoredContractsDB:
-    """
-    Local Monitored Contracts Database
-
-    """
+    name = "monitored_contract"
 
     def __init__(self, path: pathlib.Path, network: str, update_interval: int = 300) -> None:
         """

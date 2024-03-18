@@ -17,9 +17,7 @@ class LabelDBRecord(BaseModel):
 
 
 class CommonLabelDB:
-    """
-    Common Label DB
-    """
+    name = "label"
 
     def __init__(self, update_tags: List[str] = list(), update_interval: int = 120):
         """

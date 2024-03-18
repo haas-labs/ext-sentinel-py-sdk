@@ -18,9 +18,7 @@ class MixerRecord(BaseModel):
 
 
 class Mixers:
-    """
-    Mixers
-    """
+    name = "mixer"
 
     def __init__(self, path: pathlib.Path, allowed_chain_id: int) -> None:
         """
