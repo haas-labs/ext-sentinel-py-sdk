@@ -3,9 +3,7 @@ from sentinel.models.contract import Contract
 
 
 class ContractDB:
-    """
-    Contract DB
-    """
+    name = "contract"
 
     def __init__(self) -> None:
         """

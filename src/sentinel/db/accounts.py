@@ -1,7 +1,5 @@
 class SuspiciousAccountDB:
-    """
-    Account DB
-    """
+    name = "suspicious_account"
 
     def __init__(self) -> None:
         """

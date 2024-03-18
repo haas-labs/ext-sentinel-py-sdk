@@ -23,9 +23,7 @@ def touch(path: pathlib.Path) -> None:
 
 
 class LabelDB(CommonLabelDB):
-    """
-    Label DB
-    """
+    name = "label"
 
     def __init__(
         self,

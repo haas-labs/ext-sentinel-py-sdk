@@ -7,9 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class CommonContractDB:
-    """
-    Common Contract DB
-    """
+    name = "contract"
 
     def __init__(self, network: str, chain_id: int) -> None:
         """

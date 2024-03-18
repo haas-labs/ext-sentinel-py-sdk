@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class RemoteTraceDB(CommonTraceDB):
-    """
-    Remote Trace DB
-    """
+    name = "trace"
 
     def __init__(self, endpoint_url: str, network: str, timeout: int = 60) -> None:
         """

@@ -16,9 +16,7 @@ DEFAULT_HEADERS = {
 
 
 class LabelDB(CommonLabelDB):
-    """
-    Label DB
-    """
+    name = "label"
 
     def __init__(
         self,

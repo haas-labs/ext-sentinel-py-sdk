@@ -14,6 +14,10 @@ OUTPUT_SETTINGS = {
                 ],
             },
         },
+        {
+            "alias": "failed",
+            "type": "sentinel.channels.ws.transaction",
+        },
     ]
 }
 
@@ -21,12 +25,13 @@ OUTPUT_SETTINGS = {
 def test_sentry_channel_outputs_success_import():
     outputs = SentryOutputs(aliases=["kafka_events"], settings=OUTPUT_SETTINGS)
     assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Inputs type"
+    assert outputs.channels == ["events"], "Incorrect channel list"
     assert hasattr(outputs, "events"), "Missed event's channel"
     assert isinstance(outputs.events, KafkaOutboundEventsChannel), "Incorrect events channel type"
 
 
 def test_sentry_channel_outputs_failed_import():
-    outputs = SentryOutputs(aliases=["kafka_events"], settings=OUTPUT_SETTINGS)
+    outputs = SentryOutputs(aliases=["kafka_transactions"], settings=OUTPUT_SETTINGS)
     assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Outputs type"
     assert outputs.channels == [], "Imported incorrect channel(-s)"
 

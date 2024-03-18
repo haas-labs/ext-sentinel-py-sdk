@@ -5,6 +5,8 @@ import pathlib
 logger = logging.getLogger(__name__)
 
 class AddressDB:
+    name = "address"
+
     def __init__(self, path: pathlib.Path) -> None:
         if isinstance(path, str):
             self.path = pathlib.Path(path)

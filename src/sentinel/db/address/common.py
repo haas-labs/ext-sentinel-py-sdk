@@ -2,9 +2,7 @@ from sentinel.models.address import AddressType
 
 
 class CommonAddressDB:
-    """
-    Common Address DB
-    """
+    name = "address"
 
     def __init__(self) -> None:
         """
