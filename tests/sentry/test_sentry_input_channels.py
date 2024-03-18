@@ -43,16 +43,19 @@ INPUT_SETTINGS = {
 def test_sentry_channel_inputs_success_import():
     inputs = SentryInputs(aliases=["kafka_transactions"], settings=INPUT_SETTINGS)
     assert isinstance(inputs, SentryInputs), "Incorrect Sentry Inputs type"
+    assert inputs.channels == ["transactions"], "Incorrect channel list"
     assert hasattr(inputs, "transactions"), "Missed transaction's channel"
     assert isinstance(inputs.transactions, KafkaInboundTransactionsChannel), "Incorrect transaction channel type"
 
     inputs = SentryInputs(aliases=["fs_transactions"], settings=INPUT_SETTINGS)
     assert isinstance(inputs, SentryInputs), "Incorrect Sentry Inputs type"
+    assert inputs.channels == ["transactions"], "Incorrect channel list"
     assert hasattr(inputs, "transactions"), "Missed transaction's channel"
     assert isinstance(inputs.transactions, FSInboundTransactionsChannel), "Incorrect transaction channel type"
 
     inputs = SentryInputs(aliases=["ws_transactions"], settings=INPUT_SETTINGS)
     assert isinstance(inputs, SentryInputs), "Incorrect Sentry Inputs type"
+    assert inputs.channels == ["transactions"], "Incorrect channel list"
     assert hasattr(inputs, "transactions"), "Missed transaction's channel"
     assert isinstance(inputs.transactions, WSInboundTransactionChannel), "Incorrect transaction channel type"
 

@@ -14,9 +14,7 @@ DEFAULT_HEADERS = {
 
 
 class RemoteAddressDB(CommonAddressDB):
-    """
-    Remote Address DB
-    """
+    name = "address"
 
     def __init__(
         self,

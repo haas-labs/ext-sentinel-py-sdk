@@ -13,6 +13,8 @@ def to_bytes(addr: Union[str, bytes]) -> bytes:
 
 
 class InMemoryAddressDB:
+    name = "address"
+
     def __init__(self, metadata_type: Metadata):
         self.db: Dict[Address, metadata_type] = {}
 
