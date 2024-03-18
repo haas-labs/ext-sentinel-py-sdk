@@ -1,0 +1,9 @@
+project:
+  name: Project with imports
+  description: Project with imports
+
+imports:
+- config/sentries.yaml
+- config/inputs.yaml
+- config/outputs.yaml
+- config/databases.yaml

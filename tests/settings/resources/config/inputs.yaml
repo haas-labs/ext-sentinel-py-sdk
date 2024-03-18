@@ -1,0 +1,6 @@
+inputs:
+
+- alias: FSTransactions
+  type: sentinel.channels.fs.transactions.InboundTransactionsChannel
+  parameters:
+    path: ./data/transactions.json

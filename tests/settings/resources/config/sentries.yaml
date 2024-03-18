@@ -1,0 +1,12 @@
+sentries:
+
+- name: eth://UserLoggerSentry
+  type: sentry.logger.UserLoggerSentry
+  parameters:
+    network: ethereum
+  inputs:
+  - FSTransactions
+  outputs:
+  - FSEvents
+  databases:
+  - AddressDBList
