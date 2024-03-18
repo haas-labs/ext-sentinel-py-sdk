@@ -1,4 +1,5 @@
-# Sentry Introduction
+# Sentry Overview
+
 
 ## The list of Sentry types
 

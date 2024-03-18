@@ -6,6 +6,7 @@ on:
     - "docker/**"
     - "docs/**"
     - "examples/**"
+    - "README.md"
 
 jobs:
 

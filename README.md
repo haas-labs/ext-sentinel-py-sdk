@@ -27,6 +27,12 @@ Sentinel Python SDK includes command line interface for launching processes. Aft
 - [Fetch Command](docs/Commands//Fetch.md) to fetch different datasets via RPC and store them locally as files
 - [ABI Signatures Command](docs/Commands/ABI-Signatures.md) to git ABI signatures for contract
 
+## Sentinel Components
+
+- [Sentry](/docs/Sentry/Overview.md)
+- [Channel](/docs/Channels/Overview.md)
+- [Database](/docs/Databases/Overview.md)
+
 ## Detectors
 
 The role of the detector is to identify various events that have occurred in blockchain's transactions
