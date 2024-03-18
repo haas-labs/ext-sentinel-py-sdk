@@ -7,14 +7,9 @@ from sentinel.channels.fs.common import InboundFileChannel
 
 
 class InboundTransactionsChannel(InboundFileChannel):
-    """
-    Inbound Transactions File Channel
-    """
+    name = "transactions"
 
     def __init__(self, name: str, path: Path, use_current_time: bool = False, **kwargs) -> None:
-        """
-        Inbound Transaction File Channel Init
-        """
         super().__init__(name, "sentinel.models.transaction.Transaction", path, **kwargs)
         self.use_current_time = use_current_time
 
@@ -28,8 +23,4 @@ class InboundTransactionsChannel(InboundFileChannel):
 
         # TODO add handling of transactions batch
 
-    async def on_transaction(self, transaction: Transaction) -> None:
-        """
-        Handle Transaction
-        """
-        pass
+    async def on_transaction(self, transaction: Transaction) -> None: ...

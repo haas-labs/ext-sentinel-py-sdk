@@ -6,9 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class KafkaChannel(Channel):
-    """
-    Kafka Channel
-    """
+    name = "kafka_channel"
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
         """

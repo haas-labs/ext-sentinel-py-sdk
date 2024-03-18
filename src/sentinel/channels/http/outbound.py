@@ -9,9 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class OutboundEventsChannel(OutboundHTTPChannel):
-    """
-    Outbound Events HTTP/REST Channel
-    """
+    name = "events"
+    
     def __init__(self, name: str, metadata: Dict = dict(), **kwargs) -> None:
         """
         Event Kafka Channel

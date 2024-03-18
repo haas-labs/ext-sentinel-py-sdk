@@ -10,14 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 class InboundKafkaChannel(KafkaChannel):
-    """
-    Inbound Kafka Channel
-    """
+    name = "inbound_kafka_channel"
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
-        """
-        Inbound Kafka Channel
-        """
         super().__init__(name, record_type, **kwargs)
         # Setting default values for auto_offset_reset
         self.config["auto_offset_reset"] = self.config.get("auto_offset_reset", "latest")
@@ -37,8 +32,4 @@ class InboundKafkaChannel(KafkaChannel):
         finally:
             await self.consumer.stop()
 
-    async def on_message(self, message: ConsumerRecord) -> None:
-        """
-        Handle consumer message
-        """
-        pass
+    async def on_message(self, message: ConsumerRecord) -> None: ...

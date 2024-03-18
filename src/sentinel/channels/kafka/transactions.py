@@ -3,21 +3,14 @@ from typing import List
 from aiokafka.structs import ConsumerRecord
 
 from sentinel.transform import json_deserializer
-
 from sentinel.models.transaction import Transaction
-
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 
 
 class InboundTransactionsChannel(InboundKafkaChannel):
-    """
-    Inbound Transactions Channel
-    """
+    name = "transactions"
 
     def __init__(self, name: str, **kwargs) -> None:
-        """
-        Inbound Transactions Kafka Channel
-        """
         super().__init__(name, record_type="sentinel.models.transaction.Transaction", **kwargs)
 
         self.config["value_deserializer"] = json_deserializer
@@ -35,14 +28,6 @@ class InboundTransactionsChannel(InboundKafkaChannel):
 
         # TODO add handling of transactions batch
 
-    async def on_transaction(self, transaction: Transaction) -> None:
-        """
-        Handle Transaction
-        """
-        pass
+    async def on_transaction(self, transaction: Transaction) -> None: ...
 
-    async def on_transactions_batch(self, transactions: List[Transaction]) -> None:
-        """
-        Handle Transaction
-        """
-        pass
+    async def on_transactions_batch(self, transactions: List[Transaction]) -> None: ...

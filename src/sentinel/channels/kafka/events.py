@@ -11,14 +11,9 @@ from sentinel.channels.kafka.outbound import OutboundKafkaChannel
 
 
 class InboundEventsChannel(InboundKafkaChannel):
-    """
-    Inbound Events Channel
-    """
+    name = "events"
 
     def __init__(self, name: str, **kwargs) -> None:
-        """
-        Inbound Events Kafka Channel
-        """
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
 
         self.config["value_deserializer"] = json_deserializer
@@ -38,17 +33,11 @@ class InboundEventsChannel(InboundKafkaChannel):
 
         # TODO add handling of events batch
 
-    async def on_event(self, event: Event) -> None:
-        """
-        Handle Event
-        """
-        pass
+    async def on_event(self, event: Event) -> None: ...
 
 
 class OutboundEventsChannel(OutboundKafkaChannel):
-    """
-    Outbound Events Channel
-    """
+    name = "events"
 
     def __init__(self, name: str, metadata: Dict = dict(), **kwargs) -> None:
         """

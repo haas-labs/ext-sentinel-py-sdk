@@ -10,14 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class LocalChannel:
-    """
-    Local Channel
-    """
-
     def __init__(self, name: str, **kwargs) -> None:
-        """
-        Local Channel Init
-        """
         self.name = name
         logger.info(f"Channel: {self.name}, parameters: {kwargs}")
         self._settings = kwargs
