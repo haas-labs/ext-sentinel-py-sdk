@@ -18,9 +18,7 @@ DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
 
 
 class OutboundKafkaChannel(KafkaChannel):
-    """
-    Outbound Kafka Channel
-    """
+    name = "outbound_kafka_channel"
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
         super().__init__(name, record_type, **kwargs)

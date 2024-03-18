@@ -18,9 +18,7 @@ DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
 
 
 class InboundFileChannel(InboundChannel):
-    """
-    Inbound File Channel
-    """
+    name = "inbound_file_channel"
 
     def __init__(
         self,
@@ -31,8 +29,6 @@ class InboundFileChannel(InboundChannel):
         **kwargs,
     ) -> None:
         """
-        Inbound File Channel Init
-
         @param time_interval: int - the time interface between
                                     messages in seconfs, default: 0
         """
@@ -42,7 +38,7 @@ class InboundFileChannel(InboundChannel):
 
     async def run(self):
         """
-        Run Inbound File Channel Processing
+        Run Channel Processing
         """
         async with aiofiles.open(self.path, mode="r") as source:
             async for raw_record in source:
@@ -55,14 +51,11 @@ class InboundFileChannel(InboundChannel):
                 if self.time_interval > 0:
                     time.sleep(self.time_interval)
 
-    async def on_message(self, message: Any) -> None:
-        pass
+    async def on_message(self, message: Any) -> None: ...
 
 
 class OutboundFileChannel(OutboundChannel):
-    """
-    Outbound File Channel
-    """
+    name = "outbound_file_channel"
 
     def __init__(
         self,
@@ -73,9 +66,6 @@ class OutboundFileChannel(OutboundChannel):
         buffering: bool = False,
         **kwargs,
     ) -> None:
-        """
-        Outbound File Channel Init
-        """
         super().__init__(name, record_type, **kwargs)
 
         self.buffering = buffering
@@ -86,7 +76,7 @@ class OutboundFileChannel(OutboundChannel):
 
     async def run(self):
         """
-        Run Inbound File Channel Processing
+        Run Channel Processing
         """
         buffering = -1 if self.buffering else 1
         logger.info(

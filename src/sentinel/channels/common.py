@@ -3,9 +3,7 @@ from sentinel.utils.imports import import_by_classpath
 
 
 class Channel:
-    """
-    Channel
-    """
+    name: str = "unspecified"
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
         """
@@ -15,7 +13,7 @@ class Channel:
         _, self.record_type = import_by_classpath(record_type)
         self.config = kwargs.copy()
 
-    async def run(self):
+    async def run(self) -> None:
         """
         Run Channel processing
         """
@@ -23,24 +21,14 @@ class Channel:
 
 
 class InboundChannel(Channel):
-    """
-    Inbound Channel
-    """
+    name = "inbound_channel"
 
-    async def on_message(self, message: Any) -> None:
-        """
-        Handle inbound message
-        """
-        pass
+    # Handle inbound message
+    async def on_message(self, message: Any) -> None: ...
 
 
 class OutboundChannel(Channel):
-    """
-    Outbound Channel
-    """
+    name = "outbound_channel"
 
-    async def send(self, message: Any) -> None:
-        """
-        Sending a message to a channel
-        """
-        pass
+    # Sending a message to a channel
+    async def send(self, message: Any) -> None: ...

@@ -14,14 +14,9 @@ DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
 
 
 class WebsocketChannel(Channel):
-    """
-    Websocket Channel
-    """
+    name = "websocket_channel"
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
-        """
-        Kafka Channel Init
-        """
         super().__init__(name=name, record_type=record_type, **kwargs)
 
         # Web socket server URI
@@ -29,9 +24,8 @@ class WebsocketChannel(Channel):
 
 
 class InboundWebsocketChannel(WebsocketChannel):
-    """
-    Inbound Websocket Channel
-    """
+    name = "inbound_websocket_channel"
+
     async def run(self):
         """
         Run Inbound Websocket Channel Processing
@@ -50,5 +44,4 @@ class InboundWebsocketChannel(WebsocketChannel):
         finally:
             logger.info(f"Closing connection to websocket channel: {self.name}")
 
-    async def on_message(self, message: Any) -> None:
-        pass
+    async def on_message(self, message: Any) -> None: ...

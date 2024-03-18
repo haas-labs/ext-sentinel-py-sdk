@@ -19,9 +19,7 @@ DEFAULT_HEADERS = {
 
 
 class OutboundHTTPChannel(OutboundChannel):
-    """
-    Outbound HTTP/REST Channel
-    """
+    name = "outbound_http_channel"
 
     def __init__(
         self,
@@ -33,9 +31,6 @@ class OutboundHTTPChannel(OutboundChannel):
         network: str,
         **kwargs,
     ) -> None:
-        """
-        Outbound HTTP/REST Channel Init
-        """
         super().__init__(name, record_type, **kwargs)
         self._endpoint = endpoint
         self._token = token
@@ -49,8 +44,8 @@ class OutboundHTTPChannel(OutboundChannel):
 
     async def run(self) -> None:
         """
-        Run Inbound HTTP/REST Channel Processing
-        """        
+        Run Channel Processing
+        """
 
         logger.info(f"{self.name} -> Starting channel for publishing messages to events channel: {self.name}")
         endpoint_url = self._endpoint + "/api/v1/event"
@@ -58,7 +53,7 @@ class OutboundHTTPChannel(OutboundChannel):
         while True:
             msg = await self.msg_queue.get()
             query = {"events": [msg]}
-            
+
             async with httpx.AsyncClient(verify=False) as httpx_async_client:
                 response = await httpx_async_client.post(url=endpoint_url, headers=self._headers, json=query)
                 match response.status_code:
