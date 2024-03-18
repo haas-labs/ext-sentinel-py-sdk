@@ -7,8 +7,9 @@ class Database(BaseModel):
     Database
     """
 
-    name: str
     type: str
+    name: Optional[str] = None
+    alias: Optional[str] = None
     description: str = Field(default="")
     parameters: Optional[Dict] = Field(default_factory=dict)
     instance: Any = Field(default=None)
