@@ -11,11 +11,12 @@ import uuid
 from sentinel.processes.block import BlockDetector
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
+from sentinel.db.contract.abi.erc20 import ERC20 as ERC20_ABI
+
 
 logger = logging.getLogger(__name__)
 db_name = "address"
 
-erc20_abi = """[{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}]"""
 
 class BalanceMonitor(BlockDetector):
     async def init(self):
@@ -23,36 +24,36 @@ class BalanceMonitor(BlockDetector):
         addresses: list = self.databases[db_name].all()
 
         rpc_url = self.parameters.get("rpc")
-        self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_url), modules={"eth": (AsyncEth,)}, middlewares=[])        
-        
-        self.native = self.parameters.get("native", 'ETH')
+        self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_url), modules={"eth": (AsyncEth,)}, middlewares=[])
+
+        self.native = self.parameters.get("native", "ETH")
         self.balances = {a: 0 for a in addresses}
         self.erc20_balances = {a: 0 for a in addresses}
 
         self.decimals = 10 ** self.parameters.get("decimals", 18)
-        self.threshold = self.parameters.get("balance_threshold")        
+        self.threshold = self.parameters.get("balance_threshold")
         self.erc20_addr = self.parameters.get("erc20_addr").lower()
         self.erc20_decimals = 10 ** self.parameters.get("erc20_decimals", 18)
-        self.erc20_balance_threshold = self.parameters.get("erc20_balance_threshold",0)
-        self.severity = self.parameters.get("severity",0.14)
+        self.erc20_balance_threshold = self.parameters.get("erc20_balance_threshold", 0)
+        self.severity = self.parameters.get("severity", 0.14)
 
-        self.erc20_contract = self.w3.eth.contract(address=self.w3.to_checksum_address(self.erc20_addr), abi=erc20_abi)
+        self.erc20_contract = self.w3.eth.contract(address=self.w3.to_checksum_address(self.erc20_addr), abi=ERC20_ABI)
 
-        self.erc20_token = await self.erc20_contract.functions.symbol().call()        
-        
+        self.erc20_token = await self.erc20_contract.functions.symbol().call()
+
         logger.info(f"Native ({self.native}) balance threshold: {self.threshold} ({self.threshold / self.decimals})")
-        logger.info(f"ERC20 ({self.erc20_token}/{self.erc20_addr}): balance threshold: {self.erc20_balance_threshold} ({self.erc20_balance_threshold / self.erc20_decimals})")
-                
+        logger.info(
+            f"ERC20 ({self.erc20_token}/{self.erc20_addr}): balance threshold: {self.erc20_balance_threshold} ({self.erc20_balance_threshold / self.erc20_decimals})"
+        )
 
-        self.balances = {a: await self.check_addr(a,None) for a in addresses}
-        self.erc20_balances = {a: await self.check_erc20_addr(a,None) for a in addresses}
+        self.balances = {a: await self.check_addr(a, None) for a in addresses}
+        self.erc20_balances = {a: await self.check_erc20_addr(a, None) for a in addresses}
 
         for addr, bal in self.balances.items():
             logger.info(f"Initial Native ({self.native}) balance: {addr}: {bal} ({bal / self.decimals})")
 
         for addr, bal in self.erc20_balances.items():
-            logger.info(f"Initial ERC20 ({self.erc20_token}) balance: {addr}: {bal} ({bal / self.erc20_decimals})")            
-
+            logger.info(f"Initial ERC20 ({self.erc20_token}) balance: {addr}: {bal} ({bal / self.erc20_decimals})")
 
     # Native -------------------------------------------------------------------------------------
     async def ask_balance(self, addr: str) -> int:
@@ -66,10 +67,10 @@ class BalanceMonitor(BlockDetector):
         return self.balances[addr]
 
     async def check_addr(self, addr, tx):
-        balance = await self.ask_balance(addr)        
-        #logger.debug(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
-        
-        if tx is not None: 
+        balance = await self.ask_balance(addr)
+        # logger.debug(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
+
+        if tx is not None:
             tx_hash = tx.hash
             block_number = tx.block.number
         else:
@@ -87,13 +88,13 @@ class BalanceMonitor(BlockDetector):
                 tx_hash,
             )
             await self.send_notification(addr, self.native, balance, tx)
-        
-        # return balance    
+
+        # return balance
         return balance
 
     # ERC20 -------------------------------------------------------------------------------------
     async def ask_erc20_balance(self, addr: str, token_addr: str, token: str) -> int:
-        balance = await self.erc20_contract.functions.balanceOf(self.w3.to_checksum_address(addr)).call()        
+        balance = await self.erc20_contract.functions.balanceOf(self.w3.to_checksum_address(addr)).call()
         # cache
         self.erc20_balances[addr] = balance
         logger.debug("ERC20 Balance: %s: %s=%d (%.4f)", addr, token, balance, balance)
@@ -107,9 +108,9 @@ class BalanceMonitor(BlockDetector):
         token = self.erc20_token
 
         balance = await self.ask_erc20_balance(addr, token_addr, token)
-        #logger.debug(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
-        
-        if tx is not None: 
+        # logger.debug(f"BALANCE: {addr}: {balance} ({balance / self.decimals})")
+
+        if tx is not None:
             tx_hash = tx.hash
             block_number = tx.block.number
         else:
@@ -128,12 +129,11 @@ class BalanceMonitor(BlockDetector):
                 tx_hash,
             )
             await self.send_notification(addr, token, balance, tx)
-        
-        # return balance    
+
+        # return balance
         return balance
 
     async def on_block(self, transactions: List[Transaction]) -> None:
-
         detected = False
         for tx in transactions:
             # ignore transactions not to our address
@@ -153,7 +153,7 @@ class BalanceMonitor(BlockDetector):
         if not detected:
             logger.info("Block: %s", tx.block.number)
 
-    async def send_notification(self, addr: str, token:str, balance: int, tx: Transaction) -> None:        
+    async def send_notification(self, addr: str, token: str, balance: int, tx: Transaction) -> None:
         if tx is not None:
             tx_ts = tx.block.timestamp
             tx_hash = tx.hash
@@ -172,11 +172,11 @@ class BalanceMonitor(BlockDetector):
         await self.channels["events"].send(
             Event(
                 did=f"{self.detector_name}-{token}",
-                eid = uuid.uuid4().hex,
+                eid=uuid.uuid4().hex,
                 type="balance_threshold",
                 severity=self.severity,
-                sid = "ext:sentinel",
-                ts = tx_ts,
+                sid="ext:sentinel",
+                ts=tx_ts,
                 blockchain=Blockchain(
                     network=self.parameters["network"],
                     chain_id=str(self.parameters["chain_id"]),
