@@ -9,7 +9,7 @@ import rich
 
 from sentinel.profile import LauncherProfile
 from sentinel.project import SentinelProject
-from sentinel.utils.vars import load_extra_vars
+from sentinel.utils.settings import load_extra_vars
 from sentinel.utils.settings import IncorrectFileFormat
 from sentinel.commands.common import SentinelCommand
 from sentinel.dispatcher import Dispatcher, SentryDispatcher
