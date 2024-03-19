@@ -8,7 +8,7 @@ import pathlib
 from argparse import ArgumentParser, Namespace
 from typing import List
 
-from sentinel.utils.vars import load_extra_vars
+from sentinel.utils.settings import load_extra_vars
 from sentinel.db.contract.remote import RemoteContractDB
 from sentinel.services.service_account import import_service_tokens
 

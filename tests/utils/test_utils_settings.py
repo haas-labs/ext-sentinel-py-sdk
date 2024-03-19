@@ -1,6 +1,6 @@
 import json
 
-from sentinel.utils.vars import load_extra_vars
+from sentinel.utils.settings import load_extra_vars
 
 
 def test_load_extra_vars():
