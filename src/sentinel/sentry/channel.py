@@ -1,40 +1,40 @@
 import logging
 
-from typing import List, Dict
+from typing import List
+from sentinel.models.channel import Channel
 from sentinel.utils.imports import import_by_classpath
 
 logger = logging.getLogger(__name__)
 
 
 class SentryChannels:
-    def __init__(self, channel_type: str, aliases: List[str], settings: Dict) -> None:
+    def __init__(self, channel_type: str, ids: List[str], channels: List[Channel]) -> None:
         self._channels: List[str] = []
-        for channel in settings.get(channel_type, []):
-            if channel.get("alias") in aliases:
+        for channel in channels:
+            if channel.id in ids:
                 self._load_channel(channel)
 
     @property
     def channels(self):
         return self._channels
 
-    def _load_channel(self, channel: Dict) -> None:
-        ch_alias = channel.get("alias")
+    def _load_channel(self, channel: Channel) -> None:
         try:
-            ch_type = channel.get("type")
-            ch_parameters = channel.get("parameters")
-            logger.info(f"Initializing channel: {ch_alias}, type: {ch_type}")
-            _, ch_class = import_by_classpath(ch_type)
+            ch_parameters = channel.parameters
+            logger.info(f"Initializing channel: channel id: {channel.id}, type: {channel.type}")
+            _, ch_class = import_by_classpath(channel.type)
             ch_instance = ch_class(name=ch_class.name, **ch_parameters)
             setattr(self, ch_instance.name, ch_instance)
             self._channels.append(ch_instance.name)
         except AttributeError as err:
-            logger.error(f"{ch_alias} -> Channel initialization issue, {err}")
+            logger.error(f"Channel initialization issue, channel: {channel.id}, error: {err}")
 
 
 class SentryInputs(SentryChannels):
-    def __init__(self, aliases: List[str], settings: Dict) -> None:
-        super().__init__("inputs", aliases, settings)
+    def __init__(self, ids: List[str], channels: List[Channel]) -> None:
+        super().__init__("inputs", ids, channels)
+
 
 class SentryOutputs(SentryChannels):
-    def __init__(self, aliases: List[str], settings: Dict) -> None:
-        super().__init__("outputs", aliases, settings)
+    def __init__(self, ids: List[str], channels: List[Channel]) -> None:
+        super().__init__("outputs", ids, channels)
