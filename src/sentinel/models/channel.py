@@ -9,7 +9,7 @@ class Channel(BaseModel):
 
     type: str
     name: Optional[str] = None
-    alias: Optional[str] = None
+    id: Optional[str] = None
     description: Optional[str] = None
     parameters: Optional[Dict] = Field(default_factory=dict)
     instance: Optional[Any] = None
