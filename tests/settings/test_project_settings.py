@@ -26,7 +26,7 @@ def test_project_settings_load_plain():
 
     # Inputs
     assert len(settings.inputs) == 1, "Incorrect number of inputs"
-    assert settings.inputs[0].alias == "FSTransactions", "Incorrect input alias name"
+    assert settings.inputs[0].id == "FSTransactions", "Incorrect input id"
     assert (
         settings.inputs[0].type == "sentinel.channels.fs.transactions.InboundTransactionsChannel"
     ), "Incorrect input type"
@@ -36,7 +36,7 @@ def test_project_settings_load_plain():
 
     # Outputs
     assert len(settings.outputs) == 1, "Incorrect number of outputs"
-    assert settings.outputs[0].alias == "FSEvents", "Incorrect output alias name"
+    assert settings.outputs[0].id == "FSEvents", "Incorrect output id"
     assert settings.outputs[0].type == "sentinel.channels.fs.common.OutboundFileChannel", "Incorrect output type"
     assert settings.outputs[0].parameters == {
         "record_type": "sentinel.models.event.Event",
@@ -46,7 +46,7 @@ def test_project_settings_load_plain():
 
     # Databases
     assert len(settings.databases) == 1, "Incorrect number of databases"
-    assert settings.databases[0].alias == "AddressDBList", "Incorrect database alias name"
+    assert settings.databases[0].id == "AddressDBList", "Incorrect database id"
     assert settings.databases[0].type == "sentinel.db.address.local.AddressDB", "Incorrect database type"
     assert settings.databases[0].parameters == {
         "path": "./data/address.list",
@@ -64,7 +64,7 @@ def test_project_settings_import_partially():
     # Databases
     settings = load_project_settings(pathlib.Path("tests/settings/resources/config/databases.yaml"))
     assert len(settings.databases) == 1, "Incorrect number of databases"
-    assert settings.databases[0].alias == "AddressDBList", "Incorrect database alias name"
+    assert settings.databases[0].id == "AddressDBList", "Incorrect database id"
     assert settings.databases[0].type == "sentinel.db.address.local.AddressDB", "Incorrect database type"
     assert settings.databases[0].parameters == {
         "path": "./data/address.list",
@@ -73,7 +73,7 @@ def test_project_settings_import_partially():
     # Inputs
     settings = load_project_settings(pathlib.Path("tests/settings/resources/config/inputs.yaml"))
     assert len(settings.inputs) == 1, "Incorrect number of inputs"
-    assert settings.inputs[0].alias == "FSTransactions", "Incorrect input alias name"
+    assert settings.inputs[0].id == "FSTransactions", "Incorrect input id"
     assert (
         settings.inputs[0].type == "sentinel.channels.fs.transactions.InboundTransactionsChannel"
     ), "Incorrect input type"
@@ -84,7 +84,7 @@ def test_project_settings_import_partially():
     # Outputs
     settings = load_project_settings(pathlib.Path("tests/settings/resources/config/outputs.yaml"))
     assert len(settings.outputs) == 1, "Incorrect number of outputs"
-    assert settings.outputs[0].alias == "FSEvents", "Incorrect output alias name"
+    assert settings.outputs[0].id == "FSEvents", "Incorrect output id"
     assert settings.outputs[0].type == "sentinel.channels.fs.common.OutboundFileChannel", "Incorrect output type"
     assert settings.outputs[0].parameters == {
         "record_type": "sentinel.models.event.Event",
@@ -102,10 +102,10 @@ def test_project_settings_handling_imports():
     assert settings.sentries[0].name == "eth://UserLoggerSentry", "Incorrect sentry name"
 
     assert len(settings.inputs) == 1, "Incorrect number of inputs"
-    assert settings.inputs[0].alias == "FSTransactions", "Incorrect input alias name"
+    assert settings.inputs[0].id == "FSTransactions", "Incorrect input id"
 
     assert len(settings.outputs) == 1, "Incorrect number of outputs"
-    assert settings.outputs[0].alias == "FSEvents", "Incorrect output alias name"
+    assert settings.outputs[0].id == "FSEvents", "Incorrect output id"
 
     assert len(settings.databases) == 1, "Incorrect number of databases"
-    assert settings.databases[0].alias == "AddressDBList", "Incorrect database alias name"
+    assert settings.databases[0].id == "AddressDBList", "Incorrect database id"

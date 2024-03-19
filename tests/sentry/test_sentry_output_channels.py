@@ -1,29 +1,28 @@
+from sentinel.models.channel import Channel
 from sentinel.sentry.channel import SentryOutputs
 from sentinel.channels.kafka.events import OutboundEventsChannel as KafkaOutboundEventsChannel
 
-OUTPUT_SETTINGS = {
-    "outputs": [
-        {
-            "alias": "kafka_events",
-            "type": "sentinel.channels.kafka.events.OutboundEventsChannel",
-            "parameters": {
-                "bootstrap_servers": "localhost:9092",
-                "group_id": "sentinel.events",
-                "topics": [
-                    "sentinel.events",
-                ],
-            },
+OUTPUTS = [
+    Channel(
+        id="kafka_events",
+        type="sentinel.channels.kafka.events.OutboundEventsChannel",
+        parameters={
+            "bootstrap_servers": "localhost:9092",
+            "group_id": "sentinel.events",
+            "topics": [
+                "sentinel.events",
+            ],
         },
-        {
-            "alias": "failed",
-            "type": "sentinel.channels.ws.transaction",
-        },
-    ]
-}
+    ),
+    Channel(
+        id="failed",
+        type="sentinel.channels.ws.transaction",
+    ),
+]
 
 
 def test_sentry_channel_outputs_success_import():
-    outputs = SentryOutputs(aliases=["kafka_events"], settings=OUTPUT_SETTINGS)
+    outputs = SentryOutputs(ids=["kafka_events"], channels=OUTPUTS)
     assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Inputs type"
     assert outputs.channels == ["events"], "Incorrect channel list"
     assert hasattr(outputs, "events"), "Missed event's channel"
@@ -31,10 +30,10 @@ def test_sentry_channel_outputs_success_import():
 
 
 def test_sentry_channel_outputs_failed_import():
-    outputs = SentryOutputs(aliases=["kafka_transactions"], settings=OUTPUT_SETTINGS)
+    outputs = SentryOutputs(ids=["kafka_transactions"], channels=OUTPUTS)
     assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Outputs type"
     assert outputs.channels == [], "Imported incorrect channel(-s)"
 
-    outputs = SentryOutputs(aliases=["failed"], settings=OUTPUT_SETTINGS)
+    outputs = SentryOutputs(ids=["failed"], channels=OUTPUTS)
     assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Outputs type"
     assert outputs.channels == [], "Imported incorrect channel(-s)"
