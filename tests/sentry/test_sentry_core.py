@@ -3,9 +3,7 @@ from sentinel.sentry.core import CoreSentry, AsyncCoreSentry
 
 def test_sentry_core_init():
     monitored_contracts = ["0x1111", "0x2222", "0x3333"]
-    sentry = CoreSentry(
-        params={"network": "ethereum", "monitored_contracts": monitored_contracts},
-    )
+    sentry = CoreSentry(parameters={"network": "ethereum", "monitored_contracts": monitored_contracts})
     assert isinstance(sentry, CoreSentry), "Incorrect core sentry type"
     assert sentry.name == "CoreSentry", "Incorrect sentry name"
     assert sentry.description == "Core Sentry", "Incorrect sentry description"

@@ -7,8 +7,8 @@ from typing import Any, Dict
 from sentinel.version import VERSION
 from sentinel.profile import Profile
 from sentinel.project import ProjectSettings
+from sentinel.models.sentry import Sentry
 from sentinel.utils.imports import import_by_classpath
-
 
 logger = logging.getLogger(__name__)
 
@@ -210,10 +210,10 @@ class Dispatcher:
 
 
 class SentryDispatcher:
-    def __init__(self, project: ProjectSettings) -> None:
+    def __init__(self, settings: ProjectSettings) -> None:
         mp.set_start_method("spawn", force=True)
 
-        self._project = project
+        self.settings = settings
 
         # Change dispatcher name for logging
         dispatcher = mp.current_process()
@@ -233,36 +233,39 @@ class SentryDispatcher:
 
     def init(self):
         # self._project.settings["LOG_QUEUE"] = self._log_queue
-        logger.info(f"Initializing project with settings: {self._project.settings}")
+        logger.info(
+            "Initializing project: {}".format(
+                {
+                    "name": self.settings.project.name,
+                    "description": self.settings.project.description,
+                }
+            )
+        )
         try:
-            for sentry in self._project.sentries:
-                sentry_params = self._project.settings.copy()
-                sentry_params.update(sentry.parameters)
-                self._sentries[sentry.name] = self.init_sentry(
-                    sentry_name=sentry.name,
-                    sentry_type=sentry.type,
-                    sentry_params=sentry_params,
-                )
+            for sentry in self.settings.sentries:
+                self._sentries[sentry.name] = self.init_sentry(sentry)
         except RuntimeError as err:
             logger.error(f"Project initialization failed, {err}")
             return False
         return True
 
-    def init_sentry(
-        self,
-        sentry_name: str,
-        sentry_type: str,
-        sentry_params: Dict = dict(),
-    ) -> Any:
+    def init_sentry(self, sentry: Sentry) -> Any:
         sentry_instance = None
 
         try:
-            logger.info(f"Initializing sentry: {sentry_type}")
-            _, sentry_class = import_by_classpath(sentry_type)
-            params = sentry_params if sentry_params is not None else {}
-            sentry_instance = sentry_class(name=sentry_name, params=params)
+            logger.info(f"Initializing sentry: {sentry.name}<{sentry.type}>")
+            _, sentry_class = import_by_classpath(sentry.type)
+            sentry_instance = sentry_class(
+                name=sentry.name,
+                description=sentry.description,
+                parameters=sentry.parameters,
+                inputs=sentry.inputs,
+                outputs=sentry.outputs,
+                databases=sentry.databases,
+                settings=self.settings,
+            )
         except RuntimeError as err:
-            logger.error(f"{sentry_type} initialization issue, {err}")
+            logger.error(f"{sentry.type} initialization issue, {err}")
             return None
 
         return sentry_instance

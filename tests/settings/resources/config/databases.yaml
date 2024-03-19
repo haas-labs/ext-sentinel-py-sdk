@@ -1,6 +1,6 @@
 databases:
 
-- alias: AddressDBList
+- id: AddressDBList
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses

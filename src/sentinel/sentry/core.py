@@ -6,6 +6,11 @@ from typing import Dict, List
 
 from sentinel.utils.logger import get_logger
 
+from sentinel.models.project import ProjectSettings
+
+from sentinel.sentry.db import SentryDatabases
+from sentinel.sentry.channel import SentryInputs, SentryOutputs
+
 
 class CoreSentry(multiprocessing.Process):
     """
@@ -21,13 +26,19 @@ class CoreSentry(multiprocessing.Process):
     # understand sentry's purpose
     description: str = "Core Sentry"
 
-    # Sentry dependencies. It could be channels (inbound and/or outbound), databases
-    dependencies: List = []
-
     # Restart policy
     restart: bool = False
 
-    def __init__(self, name: str = None, description: str = None, params: Dict = dict()) -> None:
+    def __init__(
+        self,
+        name: str = None,
+        description: str = None,
+        parameters: Dict = dict(),
+        inputs: List[str] = list(),
+        outputs: List[str] = list(),
+        databases: List[str] = list(),
+        settings: ProjectSettings = None,
+    ) -> None:
         """
         The parent process starts a fresh Python interpreter process. The child process will
         only inherit those resources necessary to run the process object’s run() method.
@@ -37,13 +48,19 @@ class CoreSentry(multiprocessing.Process):
         super().__init__()
         self.name = name if name is not None else self.name
         self.description = description if description is not None else self.description
-        self.parameters = params.copy()
+        self.parameters = parameters.copy()
+        self.settings = settings
+        self.inputs = SentryInputs(ids=inputs, channels=settings.inputs if hasattr(settings, "inputs") else [])
+        self.outputs = SentryOutputs(ids=outputs, channels=settings.outputs if hasattr(settings, "outputs") else [])
+        self.databases = SentryDatabases(
+            ids=databases, databases=settings.databases if hasattr(settings, "databases") else []
+        )
 
     def run(self) -> None:
         """
         Method representing sentry's activity
         """
-        self.logger = get_logger(name=self.name, log_level=self.parameters.get("LOG_LEVEL", logging.INFO))
+        self.logger = get_logger(name=self.name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
         self.on_init()
         self.on_run()
 
@@ -67,7 +84,7 @@ class AsyncCoreSentry(CoreSentry):
         """
         Sentry processing itself
         """
-        await self.init()
+        await self.on_init()
 
         try:
             self.logger.info(f"Starting sentry process, {self.name}")
@@ -75,12 +92,13 @@ class AsyncCoreSentry(CoreSentry):
             # TODO extend this method with required async activities
             # await asyncio.gather(*activities)
         finally:
-            self.logger.info("Processor completed")
+            self.logger.info("Processing completed")
 
     def run(self) -> None:
         """
         Method representing async sentry's activity
         """
+        self.logger = get_logger(name=self.name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
         asyncio.run(self._run())
 
     async def on_init(self) -> None: ...

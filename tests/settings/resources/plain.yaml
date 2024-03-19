@@ -1,6 +1,7 @@
 project:
   name: Plain Project Configuration
 
+
 sentries:
 
 - name: eth://UserLoggerSentry
@@ -13,17 +14,21 @@ sentries:
   - FSEvents
   databases:
   - AddressDBList
+  schedule:
+  - kubernetes
+
+# Sentry Input Definitions
 
 inputs:
 
-- alias: FSTransactions
+- id: FSTransactions
   type: sentinel.channels.fs.transactions.InboundTransactionsChannel
   parameters:
     path: ./data/transactions.json
 
 outputs:
 
-- alias: FSEvents
+- id: FSEvents
   type: sentinel.channels.fs.common.OutboundFileChannel
   parameters:
     record_type: sentinel.models.event.Event
@@ -32,7 +37,7 @@ outputs:
 
 databases:
 
-- alias: AddressDBList
+- id: AddressDBList
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
