@@ -62,10 +62,10 @@ class Command(SentinelCommand):
 
         try:
             if args.sentry:
-                project = SentinelProject().parse(path=args.profile, extra_vars=extra_vars)
-                dispatcher = SentryDispatcher(project)
+                settings = SentinelProject().parse(path=args.profile, extra_vars=extra_vars)
+                dispatcher = SentryDispatcher(settings)
                 if args.dry_run:
-                    rich.print_json(project.model_dump_json())
+                    rich.print_json(settings.model_dump_json())
             else:
                 profile = LauncherProfile().parse(path=args.profile, settings=extra_vars)
                 dispatcher = Dispatcher(profile=profile)
