@@ -99,7 +99,10 @@ class AsyncCoreSentry(CoreSentry):
         Method representing async sentry's activity
         """
         self.logger = get_logger(name=self.name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
-        asyncio.run(self._run())
+        try:
+            asyncio.run(self._run())
+        except KeyboardInterrupt:
+            self.logger.warning("Interrupted by user")
 
     async def on_init(self) -> None: ...
 
