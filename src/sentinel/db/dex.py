@@ -44,3 +44,9 @@ class LocalDEXAddresses:
             return True
         else:
             return False
+
+    def all(self):
+        '''
+        returns all DEX addresses in local storage
+        '''
+        return self._db
