@@ -73,12 +73,7 @@ class AsyncCoreSentry(CoreSentry):
     name = "AsyncCoreSentry"
     description = "Async Core Sentry"
 
-    async def init(self) -> None:
-        """
-        Sentry specific initialization. User can add custom init logic here. The logic which
-        need to be applied before processing start
-        """
-        pass
+    async def init(self) -> None: ...
 
     async def _run(self) -> None:
         """

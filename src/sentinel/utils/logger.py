@@ -14,9 +14,9 @@ def get_logger(name: str, log_level: Union[str, int], rich: bool = False) -> log
 
     handlers = [logging.StreamHandler()]
 
-    format = "%(asctime)s.%(msecs)03d (%(name)s/%(module)s:%(lineno)d) [%(levelname)s] %(message)s"
+    format = "%(asctime)s.%(msecs)03d [%(levelname)s] (%(name)s/%(module)s:%(lineno)d) %(message)s"
     if rich:
-        format = "%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) %(message)s"
+        format = "%(asctime)s.%(msecs)03d (%(name)s/%(module)s:%(lineno)d) %(message)s"
         handlers.append(RichHandler(rich_tracebacks=True))
 
     for handler in handlers:

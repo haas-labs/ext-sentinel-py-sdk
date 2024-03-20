@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class LocalDEXAddresses:
-    name = "dex"
+    name = "dex_address"
 
     def __init__(self, path: pathlib.Path) -> None:
         """
@@ -44,3 +44,9 @@ class LocalDEXAddresses:
             return True
         else:
             return False
+
+    def all(self):
+        """
+        returns all DEX addresses in local db
+        """
+        return self._db

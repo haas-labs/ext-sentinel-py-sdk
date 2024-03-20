@@ -1,19 +1,17 @@
-import logging
-
 from typing import List
 
 from collections import defaultdict
 
-from sentinel.sentry.block import BlockDetector
+from sentinel.sentry.block_tx import BlockTxDetector
 
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
 
 
-logger = logging.getLogger(__name__)
+class BlockDetector(BlockTxDetector):
+    name = "Block Detector"
+    description = "The detector checks block transactions towards DEX ..."
 
-
-class BlockTxDetector(BlockDetector):
     async def on_block(self, transactions: List[Transaction]) -> None:
         """
         Handle block transactions
@@ -22,7 +20,7 @@ class BlockTxDetector(BlockDetector):
         to_from_pairs = defaultdict(list)
 
         for tx in transactions:
-            if not self.databases["dex_addresses"].exists(tx.to_address):
+            if not self.databases.dex_address.exists(tx.to_address):
                 continue
             selected_transactions[tx.hash] = tx
             to_from_pairs[tx.to_address, tx.from_address].append({"hash": tx.hash, "gas_price": tx.gas_price})
@@ -36,8 +34,8 @@ class BlockTxDetector(BlockDetector):
         """
         Send notification about potential block_tx transaction
         """
-        logger.warning(f"Detected block_tx transaction: {transaction.hash}")
-        await self.channels["events"].send(
+        self.logger.warning(f"Detected block_tx transaction: {transaction.hash}")
+        await self.channels.events.send(
             Event(
                 did=self.detector_name,
                 type="potential_block_tx_tx_detected",
