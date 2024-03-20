@@ -16,7 +16,7 @@ class Block(BaseModel):
     txs: Dict[int, Transaction]
 
 
-class BlockTxDetector(TransactionDetector):
+class BlockDetector(TransactionDetector):
     name = "BlockTxDetector"
     description = """
         The base block tx detector which can be used for mointoring activities 
@@ -28,16 +28,16 @@ class BlockTxDetector(TransactionDetector):
         self,
         name: str = None,
         description: str = None,
-        parameters: Dict = ...,
-        inputs: List[str] = ...,
-        outputs: List[str] = ...,
-        databases: List[str] = ...,
+        parameters: Dict = dict(),
+        inputs: List[str] = list(),
+        outputs: List[str] = list(),
+        databases: List[str] = list(),
         settings: ProjectSettings = None,
     ) -> None:
         super().__init__(name, description, parameters, inputs, outputs, databases, settings)
 
         # Blocks stack size
-        self._blocks_stack_size = self.parameters.get("block_stack_size", 3)
+        self._blocks_stack_size = parameters.get("block_stack_size", 3)
 
         # Block storage
         self._blocks = dict()

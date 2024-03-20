@@ -101,7 +101,7 @@ class SentinelCommand:
         else:
             logging.basicConfig(
                 level=args.log_level,
-                format="%(asctime)s.%(msecs)03d [%(levelname)s] (%(processName)s/%(name)s:%(lineno)d) %(message)s",
+                format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
                 datefmt="%Y-%m-%dT%H:%M:%S",
             )
 
