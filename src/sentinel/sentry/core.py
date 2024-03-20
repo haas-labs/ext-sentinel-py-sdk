@@ -47,7 +47,7 @@ class CoreSentry(multiprocessing.Process):
         """
         super().__init__()
         self.name = name if name is not None else self.name
-        self.description = description if description is not None else self.description
+        self.description = description.strip() if description is not None else " ".join(self.description.split()).strip()
         self.parameters = parameters.copy()
         self.settings = settings
         self.inputs = SentryInputs(ids=inputs, channels=settings.inputs if hasattr(settings, "inputs") else [])
