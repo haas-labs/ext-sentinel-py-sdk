@@ -16,7 +16,7 @@ class Block(BaseModel):
     txs: Dict[int, Transaction]
 
 
-class BlockDetector(TransactionDetector):
+class BlockTxDetector(TransactionDetector):
     name = "BlockTxDetector"
     description = """
         The base block tx detector which can be used for mointoring activities 
