@@ -4,7 +4,7 @@ from typing import List
 
 from collections import defaultdict
 
-from sentinel.processes.block import BlockDetector
+from sentinel.sentry.block import BlockDetector
 
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
