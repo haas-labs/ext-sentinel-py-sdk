@@ -1,0 +1,55 @@
+project:
+  name: Balance Monitor (HAI Bridges for Ethereum and BSC chains)
+  description: >
+    Monitors Account/Contract balance (native token)
+
+imports:
+- config/databases.yaml
+- config/inputs.yaml
+- config/outputs.yaml
+
+sentries:
+
+- name: ethBalanceMonitor
+  type: examples.balance_monitor.sentry.BalanceMonitor
+  description: >
+    HAI Bridge Balance Monitor (ETH)
+  parameters:
+    chain_id: 1
+    network: ethereum
+    rpc: {{ env['ETH_RPC_URL'] }}
+    native: ETH
+    balance_threshold: 100000000000000000
+    decimals: 18
+    severity: 0.5
+    erc20_addr: '0x05Fb86775Fd5c16290f1E838F5caaa7342bD9a63'
+    erc20_balance_threshold: 300000000000
+    erc20_decimals: 8
+  inputs:
+  - kafka_eth_transactions
+  outputs:
+  - kafka_events
+  databases:
+  - local_bridge_address_hai_eth
+
+- name: bscBalanceMonitor
+  type: examples.balance_monitor.sentry.BalanceMonitor
+  description: >
+    HAI Bridge Balance Monitor (BSC)
+  parameters:
+    chain_id: 56
+    network: bsc
+    rpc: {{ env['BSC_RPC_URL'] }}
+    native: BSC
+    balance_threshold: 100000000000000000
+    decimals: 18
+    severity: 0.5
+    erc20_addr: '0xaA9E582e5751d703F85912903bacADdFed26484C'
+    erc20_balance_threshold: 300000000000
+    erc20_decimals: 8
+  inputs:
+  - kafka_bsc_transactions
+  outputs:
+  - kafka_events
+  databases:
+  - local_bridge_address_hai_bsc
