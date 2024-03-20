@@ -14,6 +14,7 @@ def test_sentry_db_success_import():
     assert dbs.names == ["address"], "Incorrect database list"
     assert hasattr(dbs, "address"), "Missed addresses database"
     assert isinstance(dbs.address, InMemoryAddressDB), "Incorrect address db type"
+    assert dbs.address is not None, "Address database shouldn't be None"
 
 
 def test_sentry_db_failed_import():
