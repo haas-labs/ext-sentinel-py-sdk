@@ -15,7 +15,7 @@ class SentryDatabases:
                 self._load_db(db)
 
     @property
-    def databases(self):
+    def names(self):
         return self._databases
 
     def _load_db(self, db: Database) -> None:

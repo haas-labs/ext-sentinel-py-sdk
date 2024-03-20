@@ -27,7 +27,7 @@ def test_sentry_channel_outputs_success_import():
     assert outputs.channels == ["events"], "Incorrect channel list"
     assert hasattr(outputs, "events"), "Missed event's channel"
     assert isinstance(outputs.events, KafkaOutboundEventsChannel), "Incorrect events channel type"
-
+    assert outputs.events is not None, "Events channel shouldn't be None"
 
 def test_sentry_channel_outputs_failed_import():
     outputs = SentryOutputs(ids=["kafka_transactions"], channels=OUTPUTS)

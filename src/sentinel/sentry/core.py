@@ -47,7 +47,7 @@ class CoreSentry(multiprocessing.Process):
         """
         super().__init__()
         self.name = name if name is not None else self.name
-        self.description = description if description is not None else self.description
+        self.description = description.strip() if description is not None else " ".join(self.description.split()).strip()
         self.parameters = parameters.copy()
         self.settings = settings
         self.inputs = SentryInputs(ids=inputs, channels=settings.inputs if hasattr(settings, "inputs") else [])
@@ -99,7 +99,10 @@ class AsyncCoreSentry(CoreSentry):
         Method representing async sentry's activity
         """
         self.logger = get_logger(name=self.name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
-        asyncio.run(self._run())
+        try:
+            asyncio.run(self._run())
+        except KeyboardInterrupt:
+            self.logger.warning("Interrupted by user")
 
     async def on_init(self) -> None: ...
 
