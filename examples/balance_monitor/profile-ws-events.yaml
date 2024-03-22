@@ -1,5 +1,17 @@
+project:
+  name: Balance Monitor (WS Events)
+  description: >
+    Monitors Account/Contract balance (native token)
+
+imports:
+- config/databases.yaml
+- config/inputs.yaml
+- config/outputs.yaml
+
+sentries:
+
 - name: BalanceMonitor
-  type: processes.BalanceMonitor
+  type: examples.balance_monitor.sentry.BalanceMonitor
   description: >
     Balance Monitor
   parameters:
@@ -8,28 +20,9 @@
     rpc: {{ env['ETH_RPC_URL'] }}
     # balance_threshold: 10.0
     balance_threshold: 3015706663806642685197016
-
   inputs:
-  - name: transactions
-    type: sentinel.channels.ws.transactions.InboundTransactionChannel
-    parameters:
-      server_uri: {{ env['ETH_WS_URL'] }}
-
+  - ws_eth_transactions
   outputs:
-  - name: events
-    type: sentinel.channels.http.outbound.OutboundEventsChannel
-    parameters:
-      endpoint: {{ env["EXT_HTTP_URL"] }} 
-      token: {{ env['EXT_API_TOKEN'] }}
-      chain_id: 1
-      network: ethereum
-      metadata:
-        origin: simulation
-
+  - http_events
   databases:
-  - name: address
-    type: sentinel.db.address.local.AddressDB
-    description: >
-      Monitored Addresses
-    parameters:
-      path: ./data/address.list 
+  - local_address

@@ -1,31 +1,25 @@
-- name: BalanceMonitor
-  type: processes.BalanceMonitor
+project:
+  name: Balance Monitor (WS Extractor)
   description: >
-    Balance Monitor
+    Monitors Account/Contract balance (native token)
+
+imports:
+- config/databases.yaml
+- config/inputs.yaml
+- config/outputs.yaml
+
+sentries:
+
+- name: BalanceMonitor
+  type: examples.balance_monitor.sentry.BalanceMonitor
   parameters:
     chain_id: 1
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 10.0
-
   inputs:
-  - name: transactions
-    type: sentinel.channels.ws.transactions.InboundTransactionChannel
-    parameters:
-      server_uri: {{ env['ETH_WS_URL'] }}
-
+  - ws_eth_transactions
   outputs:
-  - name: events
-    type: sentinel.channels.fs.common.OutboundFileChannel
-    parameters:
-      record_type: sentinel.models.event.Event
-      path: ./events/EVENTS.json
-      mode: overwrite
-
+  - fs_events
   databases:
-  - name: address
-    type: sentinel.db.address.local.AddressDB
-    description: >
-      Monitored Addresses
-    parameters:
-      path: ./data/address.list 
+  - local_address

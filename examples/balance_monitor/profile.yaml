@@ -1,35 +1,27 @@
-- name: BalanceMonitor
-  type: processes.BalanceMonitor
+project:
+  name: Balance Monitor
   description: >
-    Balance Monitor
+    Monitors Account/Contract balance (native token)
+
+imports:
+- config/databases.yaml
+- config/inputs.yaml
+- config/outputs.yaml
+
+sentries:
+
+- name: balanceMonitor
+  type: examples.balance_monitor.sentry.BalanceMonitor
   parameters:
-    chain_id: 1
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 100000000000000000000.0000
     severity: 0.14
-
+    decimals: 18
   inputs:
-  - name: transactions
-    type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
-    parameters:
-      bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
-      group_id: sentinel.balance-monitor.tx
-      topics: 
-      - {{ env['KAFKA_INBOUND_TX_TOPIC'] }}
-
+  - kafka_transactions
   outputs:
-  - name: events
-    type: sentinel.channels.kafka.events.OutboundEventsChannel
-    parameters:
-      bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
-      topics: 
-      - {{ env['KAFKA_OUTBOUND_EVENT_TOPIC']}}
-
+  - kafka_events
   databases:
-  - name: address
-    type: sentinel.db.address.local.AddressDB
-    description: >
-      Monitored Addresses
-    parameters:
-      path: ./data/address.list 
+  - address
+
