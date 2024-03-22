@@ -1,5 +1,20 @@
 # Change Log
 
+## v0.3.16
+
+Feature
+
+- Migrate balance monitor to sentry
+- Migrate block detector to sentry
+- Migrate transaction detector to sentry
+- Migrate examples to new configuration
+- Implement new Sentry core + new configuration
+- Add dry-run option for launch command
+
+Documentation
+
+- Update docs according to latest changes
+
 ## v0.3.15
 
 Feature
