@@ -100,7 +100,7 @@ Inputs and Outputs must point to Kafka:
 
 ```
   inputs:
-  - name: transactions
+  - id: transactions
     type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
     parameters:
       bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
@@ -110,7 +110,7 @@ Inputs and Outputs must point to Kafka:
       - {{ env['KAFKA_INBOUND_TX_TOPIC'] }}
 
   outputs:
-  - name: events
+  - id: events
     type: sentinel.channels.kafka.events.OutboundEventsChannel
     parameters:
       bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}

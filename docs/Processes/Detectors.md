@@ -11,7 +11,7 @@ The detector listens input transaction stream and invoke `on_transaction()` meth
 
 ```python
 from sentinel.models.transaction import Transaction
-from sentinel.processes.transaction import TransactionDetector
+from sentinel.sentry.transaction import TransactionDetector
 
 class TxDetector(TransactionDetector):
     async def on_transaction(self, transaction: Transaction) -> None:
@@ -23,8 +23,8 @@ class TxDetector(TransactionDetector):
 The detector listens input transaction stream, collects transactios per block, and when all transactions per block collected, invokes `on_block()` method. All transactions in a block ordered by transaction id
 
 ```python
-from sentinel.processes.block import BlockDetector
 from sentinel.models.transaction import Transaction
+from sentinel.sentry.block_tx import BlockTxDetector
 
 class BlockTxDetector(BlockDetector):
     async def on_block(self, transactions: List[Transaction]) -> None:
