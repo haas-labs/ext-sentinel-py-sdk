@@ -11,7 +11,7 @@ The detector should
 
 There are several required files to run the detector locally:
 - `profile-<source>.yaml`: contains a detector configuration
-- `processes.py`: python code with BlockTx detection logic
+- `sentry.py`: python code with BlockTx detection logic
 - `data/transactions.json`: the file contains sample transactions (only for testing)
 - `data/dex.list`: the file contains details about DEX addesses (Decentralized Exchanges)
 
@@ -19,14 +19,14 @@ There are several required files to run the detector locally:
 ## General code structure of detector
 
 ```python
-from sentinel.processes.block import BlockDetector
+from sentinel.sentry.block_tx import BlockTxDetector
 
 from sentinel.models.event import Event
 from sentinel.models.transaction import Transaction
 
 logger = logging.getLogger(__name__)
 
-class BlockTxDetector(BlockDetector):
+class BlockDetector(BlockTxDetector):
     async def on_block(self, transactions: List[Transactions]) -> None:
         '''
         Handle block transactions
@@ -47,25 +47,27 @@ The detector code structure helps concentrate more on business logic of detectio
 The sample of profile structure
 ```yaml
 
-- name: BlockTxDetector
-  type: processes.BlockTxDetector
+- name: BlockDetector
+  type: processes.BlockDetector
   description: >
     Simple Block/Tx Detector
+  inputs:
+  - transactions
+  outputs:
+  - events
+  databases:
+  - dex_addresses
   ...
 
   inputs:
-
-  - name: transactions
+  - id: transactions
     ...
 
   outputs:
-
-  - name: events
+  - id: events
     ...
-
   databases:
-
-  - name: dex_addresses
+  - id: dex_addresses
     ...
 ```
 
@@ -94,7 +96,6 @@ The content of `blocks.list`
 0x1238cfe
 0x1238cff
 ```
-
 
 Example of transactions file:
 
@@ -175,7 +176,6 @@ The command output
 2024-02-01T19:58:21.917 (BlockTxDetector::sentinel.channels.fs.aio:85) [INFO] events -> Starting channel for publishing messages to file channel: events
 2024-02-01T19:58:21.919 (BlockTxDetector::samples.block_tx.processes:47) [WARNING] Detected block_tx transaction: 0x9756341d
 2024-02-01T19:58:21.919 (BlockTxDetector::samples.block_tx.processes:47) [WARNING] Detected block_tx transaction: 0x9756341e
-
 ...
 ```
 
