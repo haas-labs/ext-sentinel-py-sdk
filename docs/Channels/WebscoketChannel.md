@@ -3,7 +3,7 @@
 ## Inbound Websocket Channel
 
 ```yaml
-  - name: transactions
+  - id: ws_transactions
     type: sentinel.channels.ws.transactions.InboundTransactionChannel
     parameters:
       server: websocket.local
