@@ -29,14 +29,14 @@ inputs:
   parameters:
     server_uri: {{ env['ETH_WS_URL'] }}
 
-- name: ws_transactions_localhost
+- id: ws_transactions_localhost
   type: sentinel.channels.ws.transactions.InboundTransactionChannel
   parameters:
     server_uri: ws://localhost:9300
 
 # Local filesystem transactions
 
-- name: fs_transactions
+- id: fs_transactions
   type: sentinel.channels.fs.transactions.InboundTransactionsChannel
   parameters:
     path: ./data/transactions.json
