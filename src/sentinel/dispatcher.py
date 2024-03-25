@@ -236,8 +236,8 @@ class SentryDispatcher:
         logger.info(
             "Initializing project: {}".format(
                 {
-                    "name": self.settings.project.name,
-                    "description": self.settings.project.description,
+                    "name": self.settings.project.name if self.settings.project else "Unknown",
+                    "description": self.settings.project.description if self.settings.project else "",
                 }
             )
         )

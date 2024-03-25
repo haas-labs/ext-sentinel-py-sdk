@@ -8,7 +8,10 @@ from sentinel.utils.settings import load_project_settings
 
 class SentinelProject:
     def parse(self, path: pathlib.Path, extra_vars: Dict = dict()) -> ProjectSettings:
-        settings = load_project_settings(pathlib.Path().cwd() / "sentinel.yaml")
+        try:
+            settings = load_project_settings(pathlib.Path().cwd() / "sentinel.yaml")
+        except OSError:
+            settings = ProjectSettings()
         profile_settings = load_project_settings(path=path, extra_vars=extra_vars)
         settings.imports.extend(profile_settings.imports)
         settings.sentries.extend(profile_settings.sentries)
