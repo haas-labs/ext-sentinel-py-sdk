@@ -104,8 +104,6 @@ Inputs and Outputs must point to Kafka:
     type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
     parameters:
       bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
-      group_id: sentinel-public.transactions
-      auto_offset_reset: latest
       topics: 
       - {{ env['KAFKA_INBOUND_TX_TOPIC'] }}
 
