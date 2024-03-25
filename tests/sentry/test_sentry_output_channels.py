@@ -8,7 +8,6 @@ OUTPUTS = [
         type="sentinel.channels.kafka.events.OutboundEventsChannel",
         parameters={
             "bootstrap_servers": "localhost:9092",
-            "group_id": "sentinel.events",
             "topics": [
                 "sentinel.events",
             ],
