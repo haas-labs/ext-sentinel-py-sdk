@@ -1,5 +1,6 @@
 """The CLI Common Command"""
 
+import os
 import inspect
 import logging
 
@@ -14,6 +15,7 @@ from rich.logging import RichHandler
 
 from sentinel.version import VERSION
 from sentinel.models.project import ProjectSettings
+from sentinel.utils.settings import load_extra_vars
 
 
 logger = logging.getLogger(__name__)
@@ -50,6 +52,12 @@ class SentinelCommand:
             metavar="LEVEL",
             default=logging.INFO,
             help=f"log level (default: {self.settings.get('LOG_LEVEL', 'INFO')})",
+        )
+        group.add_argument(
+            "--vars",
+            type=str,
+            action="append",
+            help="Set additional variables as JSON, " + "if filename prepend with @. Support YAML/JSON file",
         )
         group.add_argument(
             "--env", type=str, default="local", help="Environment, possible values: local, demo, cloud. Default: local"
@@ -109,6 +117,17 @@ class SentinelCommand:
                 format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
                 datefmt="%Y-%m-%dT%H:%M:%S",
             )
+
+        self.extra_vars = load_extra_vars(args.vars)
+
+        # Update env var from file
+        if args.env_vars is not None:
+            for k, v in load_extra_vars(
+                [
+                    f"@{args.env_vars}",
+                ]
+            ).items():
+                os.environ[k] = v
 
 
 def get_commands_from_module(module: str = "sentinel.commands") -> Dict[str, SentinelCommand]:
