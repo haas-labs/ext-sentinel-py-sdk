@@ -1,0 +1,13 @@
+project:
+  name: SentinelExamples
+  description: >
+    The collection of examples how to use Sentinel SDK
+    - Balance Monitor
+    - Block Tx
+    - Transaction
+
+envs:
+  local: ../.envs/local.yaml
+  demo: ../.envs/demo.yaml
+  cloud: ../.envs/cloud.yaml
+

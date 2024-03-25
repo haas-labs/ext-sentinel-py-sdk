@@ -2,7 +2,7 @@ inputs:
 
 # Kafka Transactions
 
-- id: kafka_eth_transactions
+- id: hacken/cloud/kafka/transaction/ethereum
   type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
   parameters:
     bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
@@ -12,7 +12,7 @@ inputs:
     topics: 
     - {{ env['KAFKA_INBOUND_ETH_TX_TOPIC'] }}
 
-- id: kafka_bsc_transactions
+- id: hacken/cloud/kafka/transaction/bsc
   type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
   parameters:
     bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
@@ -24,19 +24,12 @@ inputs:
 
 # Websocket Transactions
 
-- id: ws_eth_transactions
+- id: hacken/cloud/ws/transaction/ethereum
   type: sentinel.channels.ws.transactions.InboundTransactionChannel
   parameters:
-    server_uri: {{ env['ETH_WS_URL'] }}
+    server_uri: {{ env["ETH_WS_URL"] }}
 
-- id: ws_transactions_localhost
+- id: local/ws/transaction
   type: sentinel.channels.ws.transactions.InboundTransactionChannel
   parameters:
     server_uri: ws://localhost:9300
-
-# Local filesystem transactions
-
-- id: fs_transactions
-  type: sentinel.channels.fs.transactions.InboundTransactionsChannel
-  parameters:
-    path: ./data/transactions.json

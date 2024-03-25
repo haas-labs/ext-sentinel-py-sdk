@@ -1,16 +1,13 @@
 import os
 import logging
-import pathlib
 
 from typing import List
 from argparse import ArgumentParser, Namespace
 
 from sentinel.inventory import Inventory
-from sentinel.project import load_project_settings
+from sentinel.models.project import ComponentType
 from sentinel.commands.common import SentinelCommand
 from sentinel.utils.settings import load_extra_vars
-from sentinel.models.component import ComponentType
-
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +19,6 @@ class Command(SentinelCommand):
     def add_options(self, parser: ArgumentParser) -> None:
         super().add_options(parser)
 
-        parser.add_argument(
-            "--scan", type=pathlib.Path, metavar="PATH", dest="scan_path", help="Search components in the path"
-        )
-
         component_types = [str(ct) for ct in list(ComponentType)]
         parser.add_argument(
             "--type",
@@ -35,10 +28,12 @@ class Command(SentinelCommand):
             help=f"Component type, supported: {', '.join(component_types)}",
         )
 
-        parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
-
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
+
+        if args.settings.project is None or not args.settings.project.path.exists():
+            logger.error("Cannot detect project directory, missed sentinel.yalm file")
+            return
 
         # Update env var from file
         if args.env_vars is not None:
@@ -48,18 +43,8 @@ class Command(SentinelCommand):
                 ]
             ).items():
                 os.environ[k] = v
+                
+        if args.type:
+            inventory = Inventory(settings=args.settings)
+            inventory.scan(ctype=args.type)
 
-        if args.scan_path:
-            logger.info(f"Scanning sentinel components in {args.scan_path}")
-            self.scan(args.scan_path, ctype=args.type)
-
-    def scan(self, path: pathlib.Path, ctype: ComponentType) -> None:
-        """
-        Scan components in the path
-        """
-        if ctype is None:
-            logger.error("Missed --type parameter")
-            return
-
-        inventory = Inventory()
-        inventory.scan(path, ctype=ctype)

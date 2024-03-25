@@ -1,0 +1,8 @@
+inputs:
+
+# Local filesystem transactions
+
+- id: balance_monitor/local/fs/transaction/ethereum
+  type: sentinel.channels.fs.transactions.InboundTransactionsChannel
+  parameters:
+    path: ./data/transactions.json

@@ -1,43 +1,43 @@
 databases:
 
-- id: local_address
+- id: balance_monitor/local/address
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
   parameters:
-    path: ./examples/balance_monitor/data/address.list 
+    path: balance_monitor/data/address.list 
 
-- id: local_address_0x00
+- id: balance_monitor/local/address/0x00
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
   parameters:
-    path: ./examples/balance_monitor/data/address-0x00.list 
+    path: balance_monitor/data/address-0x00.list 
 
-- id: local_address_anvil
+- id: balance_monitor/local/address/anvil
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
   parameters:
-    path: ./examples/balance_monitor/data/address-anvil.list 
+    path: balance_monitor/data/address-anvil.list 
 
-- id: local_bridge_address_hai_eth
+- id: balance_monitor/local/address/eth/bridge_hai
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
   parameters:
-    path: ./examples/balance_monitor/data/address-bridge-HAI-eth.list 
+    path: balance_monitor/data/address-bridge-HAI-eth.list 
 
-- id: local_bridge_address_hai_bsc
+- id: balance_monitor/local/address/bsc/bridge_hai
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
   parameters:
-    path: ./examples/balance_monitor/data/address-bridge-HAI-bsc.list 
+    path: balance_monitor/data/address-bridge-HAI-bsc.list 
 
-- id: address_weth
+- id: balance_monitor/local/address/weth
   type: sentinel.db.address.local.AddressDB
   description: >
     Monitored Addresses
   parameters:
-    path: ./examples/balance_monitor/data/address-weth.list 
+    path: balance_monitor/data/address-weth.list 

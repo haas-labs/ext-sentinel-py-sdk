@@ -1,25 +1,25 @@
+---
 outputs:
 
-- id: kafka_events
+- id: hacken/cloud/kafka/event
   type: sentinel.channels.kafka.events.OutboundEventsChannel
   parameters:
     bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
     topics: 
     - {{ env['KAFKA_OUTBOUND_EVENT_TOPIC']}}
 
-- id: fs_events
-  type: sentinel.channels.fs.common.OutboundFileChannel
-  parameters:
-    record_type: sentinel.models.event.Event
-    path: ./events/EVENTS.json
-    mode: overwrite
-
-- id: http_events
+- id: hacken/cloud/http/event
   type: sentinel.channels.http.outbound.OutboundEventsChannel
   parameters:
     endpoint: {{ env["EXT_HTTP_URL"] }} 
     token: {{ env['EXT_API_TOKEN'] }}
-    chain_id: 1
+    network: ethereum
+
+- id: hacken/cloud/http/event/simulation
+  type: sentinel.channels.http.outbound.OutboundEventsChannel
+  parameters:
+    endpoint: {{ env["EXT_HTTP_URL"] }} 
+    token: {{ env['EXT_API_TOKEN'] }}
     network: ethereum
     metadata:
       origin: simulation

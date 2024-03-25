@@ -7,17 +7,17 @@ from web3.eth import AsyncEth
 
 import uuid
 
+from sentinel.definitions import BLOCKCHAIN
 from sentinel.sentry.block_tx import BlockTxDetector
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
 from sentinel.db.contract.abi.erc20 import ERC20 as ERC20_ABI
 
-
 class BalanceMonitor(BlockTxDetector):
     name = "BalanceMonitor"
     description = "Monitors Account/Contract balance (native token)"
 
-    async def init(self):
+    async def on_init(self):
         self.logger.info("init")
         addresses: list = self.databases.address.all()
 
@@ -169,9 +169,9 @@ class BalanceMonitor(BlockTxDetector):
 
         self.logger.info(f"--> Event: {tx_ts}: {addr}, {balance}, {tx}")
 
-        await self.channels["events"].send(
+        await self.outputs.events.send(
             Event(
-                did=f"{self.detector_name}-{token}",
+                did=f"{self.name}-{token}",
                 eid=uuid.uuid4().hex,
                 type="balance_threshold",
                 severity=self.severity,
@@ -179,7 +179,7 @@ class BalanceMonitor(BlockTxDetector):
                 ts=tx_ts,
                 blockchain=Blockchain(
                     network=self.parameters["network"],
-                    chain_id=str(self.parameters["chain_id"]),
+                    chain_id=str(BLOCKCHAIN.get(self.parameters["network"]).chain_id),
                 ),
                 metadata={
                     "tx_hash": tx_hash,

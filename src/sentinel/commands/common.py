@@ -13,6 +13,7 @@ from argparse import ArgumentParser, Namespace
 from rich.logging import RichHandler
 
 from sentinel.version import VERSION
+from sentinel.models.project import ProjectSettings
 
 
 logger = logging.getLogger(__name__)
@@ -50,6 +51,10 @@ class SentinelCommand:
             default=logging.INFO,
             help=f"log level (default: {self.settings.get('LOG_LEVEL', 'INFO')})",
         )
+        group.add_argument(
+            "--env", type=str, default="local", help="Environment, possible values: local, demo, cloud. Default: local"
+        )
+        group.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
         group.add_argument("--rich-logging", action="store_true", help="Activate rich logging")
 
         # group.add_argument(
@@ -128,8 +133,9 @@ def get_command(args: List[str]) -> str:
     return args[1] if (len(args[1:]) > 0 and not args[1].startswith("-")) else ""
 
 
-def print_commands(commands: Dict[str, SentinelCommand], settings: Dict = dict()):
-    print(f"Sentinel SDK Version: {VERSION}, Active project: {settings.get('BOT_NAME', 'Unknown')}\n")
+def print_commands(commands: Dict[str, SentinelCommand], settings: ProjectSettings = None):
+    project_details = f", Active project: {settings.project.name}" if settings.project is not None else ""
+    print(f"Sentinel SDK Version: {VERSION}{project_details}\n")
 
     print("Usage:\n  sentinel <command> [options] [args]\n\nAvailable commands:")
 
