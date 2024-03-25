@@ -3,10 +3,11 @@ import logging
 import pathlib
 import argparse
 
-from typing import List, Dict
+from typing import List
 
+from sentinel.utils.settings import load_project_settings
+from sentinel.models.project import ProjectSettings
 
-from sentinel.utils.settings import get_project_settings
 from sentinel.commands.common import (
     get_command,
     get_commands_from_module,
@@ -17,12 +18,18 @@ from sentinel.commands.common import (
 logger = logging.getLogger(__name__)
 
 
-def execute(argv: List[str] = None, settings: Dict = dict()):
+def execute(argv: List[str] = None):
     # Add current directory to python path
-    sys.path.append(str(pathlib.Path.cwd()))
+    current_path = pathlib.Path.cwd()
+    sys.path.append(str())
+
+    sentinel_settings_path = current_path / "sentinel.yaml"
+    settings = ProjectSettings()
+    if sentinel_settings_path.exists():
+        settings = load_project_settings(sentinel_settings_path)
+        settings.project.path = sentinel_settings_path.parent
 
     argv = argv or sys.argv
-    settings = settings or get_project_settings()
     commands = get_commands_from_module()
     command_name = get_command(argv)
     if not command_name:
@@ -39,4 +46,5 @@ def execute(argv: List[str] = None, settings: Dict = dict()):
     )
     command.add_options(parser)
     opts, args = parser.parse_known_args(args=argv[1:])
+    opts.settings = settings
     command.run(args, opts)
