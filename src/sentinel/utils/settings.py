@@ -31,10 +31,6 @@ class YAMLCleaner(JinjaExtension):
         return source
 
 
-def get_project_settings() -> Dict:
-    return {}
-
-
 def load_extra_vars(extra_vars: List[str] = list()) -> Dict:
     """reused from https://github.com/ansible/ansible/blob/devel/lib/ansible/utils/vars.py
     and modified according to sentinel requirements
@@ -84,7 +80,14 @@ def load_settings(content: str) -> Dict:
     return settings if settings is not None else {}
 
 
-def load_project_settings(path: pathlib.Path, extra_vars: Dict = dict()) -> ProjectSettings:
+def load_env_vars(self, env_name: str = None):
+    """
+    Load environment vairables from SENTINEL_ENV. If not specified returns "local"
+    """
+    if env_name is None:
+        env_name = os.environ.get("SENTINEL_ENV") or "local"
+
+def load_project_settings(path: pathlib.Path, env: str = "local", extra_vars: Dict = dict()) -> ProjectSettings:
     """
     Load project settings from a path
     """
@@ -95,7 +98,8 @@ def load_project_settings(path: pathlib.Path, extra_vars: Dict = dict()) -> Proj
 
     logger.info(f"Loading settings from {path}")
     settings = load_settings(settings_content)
-    for config in settings.pop("imports", []):
+
+    for config in settings.get("imports", []):
         config_path = config_dir / pathlib.Path(config)
         if not config_path.exists():
             raise IOError(f"The import path does not exist, {config_path}")
