@@ -36,7 +36,7 @@ class BlockDetector(BlockTxDetector):
         Send notification about potential block_tx transaction
         """
         self.logger.warning(f"Detected block_tx transaction: {transaction.hash}")
-        await self.channels["events"].send(
+        await self.outputs.events.send(
             Event(
                 did=self.detector_name,
                 type="potential_block_tx_tx_detected",
