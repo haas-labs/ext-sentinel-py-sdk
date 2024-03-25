@@ -11,3 +11,4 @@ class Sentry(BaseModel):
     inputs: Optional[List[str]] = Field(default_factory=list)
     outputs: Optional[List[str]] = Field(default_factory=list)
     databases: Optional[List[str]] = Field(default_factory=list)
+    label: Optional[Dict[str, str]] = Field(default_factory=dict)

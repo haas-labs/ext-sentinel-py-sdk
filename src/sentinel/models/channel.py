@@ -13,3 +13,4 @@ class Channel(BaseModel):
     description: Optional[str] = None
     parameters: Optional[Dict] = Field(default_factory=dict)
     instance: Optional[Any] = None
+    label: Optional[Dict[str,str]] = Field(default_factory=dict)

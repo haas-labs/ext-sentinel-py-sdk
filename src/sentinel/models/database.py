@@ -8,8 +8,10 @@ class Database(BaseModel):
     """
 
     type: str
+    instance: Any = Field(default=None)
+    description: Optional[str] = Field(default="")
     name: Optional[str] = None
     id: Optional[str] = None
-    description: str = Field(default="")
     parameters: Optional[Dict] = Field(default_factory=dict)
-    instance: Any = Field(default=None)
+    label: Optional[Dict[str,str]] = Field(default_factory=dict)
+
