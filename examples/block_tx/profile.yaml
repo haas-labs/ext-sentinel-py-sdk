@@ -1,36 +1,33 @@
-project:
-  name: BlockTxDetector
-  description: >
-    Simple Block TX Detector for detecting mulitple transactions towards DEX inside of one block
+imports:
+- ../profiles/inputs.yaml
 
 sentries:
+
 - name: BlockTxDetector
-  type: examples.block_tx.sentry.BlockDetector
+  type: block_tx.sentry.BlockDetector
+  description: >
+        Simple Block TX Detector for detecting mulitple transactions 
+        towards DEX inside of one block
   parameters:
     network: ethereum
   inputs:
   # - fs_transactions
-  - ws_transactions
+  - hacken/cloud/ws/transaction/ethereum
   outputs:
-  - events
+  - block_tx/local/fs/event
   databases:
-  - dex_address
+  - block_tx/local/address/dex
 
 inputs:
 
-- id: fs_transactions
+- id: block_tx/local/fs/transaction
   type: sentinel.channels.fs.transactions.InboundTransactionsChannel
   parameters:
     path: ./examples/block_tx/data/transactions.json
 
-- id: ws_transactions
-  type: sentinel.channels.ws.transactions.InboundTransactionChannel
-  parameters:
-    server_uri: ws://ethereum-ingest-proxy.dev.hacken.cloud/849dd74c05160b3ebffb2d5547164337a204b7f88d0322d25e18684c0a2d248a
-
 outputs:
 
-- id: events
+- id: block_tx/local/fs/event
   type: sentinel.channels.fs.common.OutboundFileChannel
   parameters:
     record_type: sentinel.models.event.Event
@@ -39,7 +36,7 @@ outputs:
 
 databases:
 
-- id: dex_address
+- id: block_tx/local/address/dex
   type: sentinel.db.dex.LocalDEXAddresses
   description: >
     Simple local database for DEX addresses

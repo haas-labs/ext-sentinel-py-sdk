@@ -1,27 +1,23 @@
-project:
-  name: Balance Monitor (Local)
-  description: >
-    Monitors Account/Contract balance (native token)
-
 imports:
-- config/databases.yaml
-- config/inputs.yaml
-- config/outputs.yaml
+- profiles/databases.yaml
+- profiles/inputs.yaml
+- profiles/outputs.yaml
 
 sentries:
 
 - name: BalanceMonitor
-  type: examples.balance_monitor.sentry.BalanceMonitor
+  type: balance_monitor.sentry.BalanceMonitor
+  description: >
+    Balance Monitor (Local). Monitors Account/Contract balance (native token)
   parameters:
-    chain_id: 1
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 10.0
     severity: 0.14
   inputs:
-  - fs_transactions
+  - balance_monitor/local/fs/transaction/ethereum
   outputs:
-  - fs_events
+  - balance_monitor/local/fs/event
   databases:
-  - local_address
+  - balance_monitor/local/address
 

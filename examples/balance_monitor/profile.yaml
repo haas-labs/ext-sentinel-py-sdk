@@ -1,27 +1,28 @@
-project:
-  name: Balance Monitor
-  description: >
-    Monitors Account/Contract balance (native token)
 
 imports:
-- config/databases.yaml
-- config/inputs.yaml
-- config/outputs.yaml
+- ../profiles/inputs.yaml
+- ../profiles/outputs.yaml
+- profiles/databases.yaml
 
 sentries:
 
 - name: balanceMonitor
-  type: examples.balance_monitor.sentry.BalanceMonitor
+  type: balance_monitor.sentry.BalanceMonitor
+  description: >
+    Balance Monitor. Monitors Account/Contract balance (native token)
   parameters:
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
+    erc20_addr: '0x05Fb86775Fd5c16290f1E838F5caaa7342bD9a63'
+    erc20_balance_threshold: 300000000000
+    erc20_decimals: 8
     balance_threshold: 100000000000000000000.0000
     severity: 0.14
     decimals: 18
   inputs:
-  - kafka_transactions
+  - hacken/cloud/kafka/transaction/ethereum
   outputs:
-  - kafka_events
+  - hacken/cloud/kafka/event
   databases:
-  - address
+  - balance_monitor/local/address
 

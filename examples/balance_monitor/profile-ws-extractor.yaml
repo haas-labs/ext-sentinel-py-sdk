@@ -1,25 +1,21 @@
-project:
-  name: Balance Monitor (WS Extractor)
-  description: >
-    Monitors Account/Contract balance (native token)
-
 imports:
-- config/databases.yaml
-- config/inputs.yaml
-- config/outputs.yaml
+- ../profiles/inputs.yaml
+- profiles/outputs.yaml
+- profiles/databases.yaml
 
 sentries:
 
 - name: BalanceMonitor
-  type: examples.balance_monitor.sentry.BalanceMonitor
+  type: balance_monitor.sentry.BalanceMonitor
+  description: >
+    Balance Monitor (WS Extractor). Monitors Account/Contract balance (native token)
   parameters:
-    chain_id: 1
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 10.0
   inputs:
-  - ws_eth_transactions
+  - hacken/cloud/ws/transaction/ethereum
   outputs:
-  - fs_events
+  - balance_monitor/local/fs/event
   databases:
-  - local_address
+  - balance_monitor/local/address

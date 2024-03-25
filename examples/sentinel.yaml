@@ -6,7 +6,8 @@ project:
     - Block Tx
     - Transaction
 
-imports:
-- profiles/inputs.yaml
-- profiles/outputs.yaml
-- profiles/databases.yaml
+envs:
+  local: ../.envs/local.yaml
+  demo: ../.envs/demo.yaml
+  cloud: ../.envs/cloud.yaml
+

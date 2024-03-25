@@ -1,17 +1,14 @@
-project:
-  name: Balance Monitor (Extractor Dev)
-  description: >
-    Monitors Account/Contract balance (native token), for 0x00
 
 imports:
-- config/databases.yaml
-- config/inputs.yaml
-- config/outputs.yaml
+- ../profiles/inputs.yaml
+- profiles/databases.yaml
 
 sentries:
 
 - name: BalanceMonitor
-  type: examples.balance_monitor.sentry.BalanceMonitor
+  type: balance_monitor.sentry.BalanceMonitor
+  description: >
+    Balance Monitor (Extractor Dev). Monitors Account/Contract balance (native token), for 0x00
   parameters:
     chain_id: 1
     network: ethereum
@@ -19,8 +16,8 @@ sentries:
     balance_threshold: 2
     decimals: 18
   inputs:
-  - kafka_transactions
+  - hacken/cloud/kafka/transaction/ethereum
   outputs:
-  - kafka_events
+  - hacken/cloud/kafka/event
   databases:
-  - local_address_0x00
+  - balance_monitor/local/address/0x00

@@ -1,0 +1,51 @@
+
+imports:
+- profiles/databases.yaml
+- profiles/inputs.yaml
+- profiles/outputs.yaml
+
+sentries:
+
+- name: BalanceMonitor
+  type: balance_monitor.sentry.BalanceMonitor
+  description: >
+    Balance Monitor, monitors Account/Contract balance (native token)
+    - HAI Bridge Balance Monitor (ETH)
+  parameters:
+    network: ethereum
+    rpc: {{ env['ETH_RPC_URL'] }}
+    native: ETH
+    balance_threshold: 100000000000000000
+    decimals: 18
+    severity: 0.5
+    erc20_addr: '0x05Fb86775Fd5c16290f1E838F5caaa7342bD9a63'
+    erc20_balance_threshold: 300000000000
+    erc20_decimals: 8
+  inputs:
+  - hacken/remote/kafka/transaction/ethereum
+  outputs:
+  - hacken/remote/kafka/event
+  databases:
+  - balance_monitor/local/address/etheruem/bridge_hai
+
+- name: BalanceMonitor
+  type: balance_monitor.sentry.BalanceMonitor
+  description: >
+    Balance Monitor, monitors Account/Contract balance (native token)
+    - HAI Bridge Balance Monitor (BSC)
+  parameters:
+    network: bsc
+    rpc: {{ env['BSC_RPC_URL'] }}
+    native: BSC
+    balance_threshold: 100000000000000000
+    decimals: 18
+    severity: 0.5
+    erc20_addr: '0xaA9E582e5751d703F85912903bacADdFed26484C'
+    erc20_balance_threshold: 300000000000
+    erc20_decimals: 8
+  inputs:
+  - hacken/remote/kafka/transaction/ethereum
+  outputs:
+  - hacken/remote/kafka/event
+  databases:
+  - balance_monitor/local/address/bsc/bridge_hai
