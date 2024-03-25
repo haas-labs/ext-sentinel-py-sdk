@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from aiokafka.structs import ConsumerRecord
@@ -7,12 +8,19 @@ from sentinel.models.transaction import Transaction
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 
 
+logger = logging.getLogger(__name__)
+
 class InboundTransactionsChannel(InboundKafkaChannel):
     name = "transactions"
 
     def __init__(self, name: str, **kwargs) -> None:
+        # Building sentry specific group id
+        sentry_name = kwargs.pop("sentry_name")
+        default_group_id = "sentinel.{}.tx".format(sentry_name)
+
         super().__init__(name, record_type="sentinel.models.transaction.Transaction", **kwargs)
 
+        self.config["group_id"] = self.config.get("group_id", default_group_id)
         self.config["value_deserializer"] = json_deserializer
 
     async def on_message(self, message: ConsumerRecord) -> None:
