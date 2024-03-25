@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.3.18
+
+Feature
+
+- Auto group id for kafka inbound (transaction) channels
+
+Documentation
+
+- remove default kafka parameters for doc
+
 ## v0.3.17
 
 Feature
