@@ -8,15 +8,16 @@ from rich import box
 from rich.table import Table
 from rich.console import Console
 
-from sentinel.utils.settings import load_project_settings
 from sentinel.models.project import ProjectSettings, ComponentType
+from sentinel.utils.settings import load_project_settings, IncorrectFileFormat, IncorrectSettingsFormat
 
 logger = logging.getLogger(__name__)
 
 
 class Inventory:
-    def __init__(self, settings: ProjectSettings) -> None:
+    def __init__(self, settings: ProjectSettings, extra_vars: Dict = dict()) -> None:
         self.settings = settings
+        self.extra_vars = extra_vars.copy()
 
         self.projects = []
         self.sentries = []
@@ -42,7 +43,7 @@ class Inventory:
         for p in self.settings.project.path.glob("**/*.y*ml"):
             p = p.relative_to(self.settings.project.path)
             try:
-                settings = load_project_settings(p)
+                settings = load_project_settings(p, extra_vars=self.extra_vars)
                 match ctype:
                     case ComponentType.project:
                         self.extract_projects(p, settings)
@@ -55,6 +56,12 @@ class Inventory:
                     case ComponentType.database:
                         self.extract_databases(p, settings)
             except IOError as err:
+                logger.error(f"{err}, reference: {p}")
+                continue
+            except IncorrectFileFormat as err:
+                logger.error(f"{err}, reference: {p}")
+                continue
+            except IncorrectSettingsFormat as err:
                 logger.error(f"{err}, reference: {p}")
                 continue
 
@@ -121,7 +128,7 @@ class Inventory:
         for col_name in data[0].keys():
             table.add_column(col_name)
 
-        data = sorted(data, key=lambda k: k.get("id", None) or k.get('name', None))
+        data = sorted(data, key=lambda k: k.get("id", None) or k.get("name", None))
         for row in data:
             table.add_row(*row.values())
 

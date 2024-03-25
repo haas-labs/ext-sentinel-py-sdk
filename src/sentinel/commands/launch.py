@@ -9,7 +9,6 @@ import rich
 
 from sentinel.profile import LauncherProfile
 from sentinel.project import SentinelProject
-from sentinel.utils.settings import load_extra_vars
 from sentinel.utils.settings import IncorrectFileFormat
 from sentinel.commands.common import SentinelCommand
 from sentinel.dispatcher import Dispatcher, SentryDispatcher
@@ -28,12 +27,6 @@ class Command(SentinelCommand):
 
         parser.add_argument("--profile", type=pathlib.Path, required=True, help="Sentinel Process Profile")
         parser.add_argument(
-            "--vars",
-            type=str,
-            action="append",
-            help="Set additional variables as JSON, " + "if filename prepend with @. Support YAML/JSON file",
-        )
-        parser.add_argument(
             "--dry-run",
             action="store_true",
             help="Run in dry-run mode w/o real processing, just profile validation and printing out",
@@ -43,17 +36,6 @@ class Command(SentinelCommand):
 
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
-
-        extra_vars = load_extra_vars(args.vars)
-
-        # Update env var from file
-        if args.env_vars is not None:
-            for k, v in load_extra_vars(
-                [
-                    f"@{args.env_vars}",
-                ]
-            ).items():
-                os.environ[k] = v
 
         if args.import_service_tokens:
             logger.info("Importing service account tokens")
@@ -65,12 +47,12 @@ class Command(SentinelCommand):
                     logger.error("Cannot detect project directory, missed sentinel.yalm file")
                     return
 
-                settings = SentinelProject().parse(path=args.profile, extra_vars=extra_vars)
+                settings = SentinelProject().parse(path=args.profile, extra_vars=self.extra_vars)
                 dispatcher = SentryDispatcher(settings)
                 if args.dry_run:
                     rich.print_json(settings.model_dump_json())
             else:
-                profile = LauncherProfile().parse(path=args.profile, settings=extra_vars)
+                profile = LauncherProfile().parse(path=args.profile, settings=self.extra_vars)
                 dispatcher = Dispatcher(profile=profile)
                 if args.dry_run:
                     rich.print_json(profile.model_dump_json())

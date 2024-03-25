@@ -35,16 +35,6 @@ class Command(SentinelCommand):
             logger.error("Cannot detect project directory, missed sentinel.yalm file")
             return
 
-        # Update env var from file
-        if args.env_vars is not None:
-            for k, v in load_extra_vars(
-                [
-                    f"@{args.env_vars}",
-                ]
-            ).items():
-                os.environ[k] = v
-                
         if args.type:
-            inventory = Inventory(settings=args.settings)
+            inventory = Inventory(settings=args.settings, extra_vars=self.extra_vars)
             inventory.scan(ctype=args.type)
-
