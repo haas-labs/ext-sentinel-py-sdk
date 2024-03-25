@@ -1,5 +1,23 @@
 # Change Log
 
+## v0.3.17
+
+Feature
+
+- Apply new channel ids for examples
+- Add project profiles
+- Add label to project components
+- Add inventory feature to track inputs, outputs and databases in a project
+
+Refactoring
+
+- Refactoring example profiles
+- Remove outdated profiles
+
+Migration 
+
+- Migrate examples code to sentry code base
+
 ## v0.3.16
 
 Feature
