@@ -33,7 +33,6 @@ class Command(SentinelCommand):
             action="append",
             help="Set additional variables as JSON, " + "if filename prepend with @. Support YAML/JSON file",
         )
-        parser.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
         parser.add_argument(
             "--dry-run",
             action="store_true",
@@ -62,6 +61,10 @@ class Command(SentinelCommand):
 
         try:
             if args.sentry:
+                if args.settings.project is None or not args.settings.project.path.exists():
+                    logger.error("Cannot detect project directory, missed sentinel.yalm file")
+                    return
+
                 settings = SentinelProject().parse(path=args.profile, extra_vars=extra_vars)
                 dispatcher = SentryDispatcher(settings)
                 if args.dry_run:
