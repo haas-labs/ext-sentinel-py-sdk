@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.19
+
+Feature
+
+- vars parameters/file support
+
 ## v0.3.18
 
 Feature
