@@ -1,0 +1,12 @@
+project:
+  name: SentinelExamples
+  description: >
+    The collection of examples how to use Sentinel SDK
+    - Balance Monitor
+    - Block Tx
+    - Transaction
+
+imports:
+- profiles/inputs.yaml
+- profiles/outputs.yaml
+- profiles/databases.yaml
