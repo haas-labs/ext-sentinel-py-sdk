@@ -23,6 +23,7 @@ class StandardABISignatures:
     - ERC-721
     - ERC-1155
     """
+    name = "StandardABISignatures"
 
     def __init__(self, standards: List[str] = list()) -> None:
         """
