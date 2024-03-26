@@ -6,7 +6,7 @@ imports:
 
 sentries:
 
-- name: balanceMonitor
+- name: BalanceMonitor
   type: balance_monitor.sentry.BalanceMonitor
   description: >
     Balance Monitor. Monitors Account/Contract balance (native token)
