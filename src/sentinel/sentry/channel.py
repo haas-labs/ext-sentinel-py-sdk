@@ -12,9 +12,14 @@ class SentryChannels:
 
         self.sentry_name = sentry_name
         self._channels: List[str] = []
+        
+        self.logger.info(f"Channel(-s) activation: {ids}")
         for channel in channels:
             if channel.id in ids:
                 self._load_channel(channel)
+        assert len(self._channels) == len(
+            ids
+        ), f"Channels mismatch, expected: {sorted(ids)}, activated: {sorted(self._channels)}"
 
     @property
     def channels(self):
