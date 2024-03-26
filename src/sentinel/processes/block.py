@@ -1,15 +1,9 @@
-import logging
-
-
 from typing import Dict, List
 
 from pydantic import BaseModel
 
 from sentinel.models.transaction import Transaction
 from sentinel.processes.transaction import TransactionDetector
-
-
-logger = logging.getLogger(__name__)
 
 
 class Block(BaseModel):

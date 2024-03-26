@@ -1,14 +1,13 @@
 import time
 import httpx
-import logging
 import datetime
 
 from typing import List
 
 from .common import Contract
 
+from sentinel.utils.logger import get_logger
 
-logger = logging.getLogger(__name__)
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -29,6 +28,8 @@ class MonitoredContractsDB:
         """
         Monitored Constacts Database Init
         """
+        self.logger = get_logger(__name__)
+
         self._endpoint_url = endpoint_url
         self._token = token
 
@@ -76,7 +77,7 @@ class MonitoredContractsDB:
             self._contracts = list(set(self._contracts))
 
             last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
-            logger.info(f"Detected monitored contracts: {len(self.contracts)}, last update: {last_update_dt}")
+            self.logger.info(f"Detected monitored contracts: {len(self.contracts)}, last update: {last_update_dt}")
             self._initial_update = False
             return self._contracts
 

@@ -1,13 +1,9 @@
 import json
-import logging
 import websockets
 
 from typing import Any
 
 from sentinel.channels.common import Channel
-
-
-logger = logging.getLogger(__name__)
 
 
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
@@ -32,16 +28,16 @@ class InboundWebsocketChannel(WebsocketChannel):
         """
         try:
             async for ws_server in websockets.connect(self.server_uri):
-                logger.info(f"Connecting to websocket, {self.server_uri}")
+                self.logger.info(f"Connecting to websocket, {self.server_uri}")
                 try:
                     async for msg in ws_server:
                         json_record = json.loads(msg)
                         record = self.record_type(**json_record)
                         await self.on_message(record)
                 except websockets.ConnectionClosed as err:
-                    logger.warning(f"Connection to websocket closed, {err}")
+                    self.logger.warning(f"Connection to websocket closed, {err}")
                     continue
         finally:
-            logger.info(f"Closing connection to websocket channel: {self.name}")
+            self.logger.info(f"Closing connection to websocket channel: {self.name}")
 
     async def on_message(self, message: Any) -> None: ...

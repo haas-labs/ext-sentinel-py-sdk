@@ -1,12 +1,11 @@
 import os
-
 import httpx
-import logging
 
 
 from sentinel.models.token import Token
+from sentinel.utils.logger import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 SERVICE_ACCOUNT_TOKENS = {
@@ -32,6 +31,7 @@ class ServiceAccountToken:
         """
         Service Account Token Init
         """
+        self.logger = get_logger(__name__)
         self._endpoint_url = endpoint_url
         self._realm = realm
         self._client_id = client_id
@@ -94,7 +94,7 @@ def import_service_tokens():
 if __name__ == "__main__":
     import argparse
 
-    from sentinel.utils.vars import load_extra_vars
+    from sentinel.utils.settings import load_extra_vars
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--env-vars", type=str, required=True, help="Set environment variables from JSON/YAML file")

@@ -1,5 +1,3 @@
-import os
-import logging
 import pathlib
 
 from typing import List
@@ -13,9 +11,6 @@ from sentinel.utils.settings import IncorrectFileFormat
 from sentinel.commands.common import SentinelCommand
 from sentinel.dispatcher import Dispatcher, SentryDispatcher
 from sentinel.services.service_account import import_service_tokens
-
-
-logger = logging.getLogger(__name__)
 
 
 class Command(SentinelCommand):
@@ -38,13 +33,13 @@ class Command(SentinelCommand):
         super().run(opts, args)
 
         if args.import_service_tokens:
-            logger.info("Importing service account tokens")
+            self.logger.info("Importing service account tokens")
             import_service_tokens()
 
         try:
             if args.sentry:
                 if args.settings.project is None or not args.settings.project.path.exists():
-                    logger.error("Cannot detect project directory, missed sentinel.yalm file")
+                    self.logger.error("Cannot detect project directory, missed sentinel.yalm file")
                     return
 
                 settings = SentinelProject().parse(path=args.profile, extra_vars=self.extra_vars)
@@ -58,4 +53,4 @@ class Command(SentinelCommand):
                     rich.print_json(profile.model_dump_json())
             dispatcher.run()
         except IncorrectFileFormat as err:
-            logger.error(err)
+            self.logger.error(err)

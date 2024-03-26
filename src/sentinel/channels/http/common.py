@@ -1,14 +1,10 @@
 import httpx
 import asyncio
-import logging
 
 from typing import Dict, Union
 
 from pydantic import BaseModel
 from sentinel.channels.common import OutboundChannel
-
-
-logger = logging.getLogger(__name__)
 
 
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
@@ -47,7 +43,7 @@ class OutboundHTTPChannel(OutboundChannel):
         Run Channel Processing
         """
 
-        logger.info(f"{self.name} -> Starting channel for publishing messages to events channel: {self.name}")
+        self.logger.info(f"{self.name} -> Starting channel for publishing messages to events channel: {self.name}")
         endpoint_url = self._endpoint + "/api/v1/event"
 
         while True:
@@ -58,16 +54,16 @@ class OutboundHTTPChannel(OutboundChannel):
                 response = await httpx_async_client.post(url=endpoint_url, headers=self._headers, json=query)
                 match response.status_code:
                     case 200:
-                        logger.debug(f"{response}")
+                        # self.logger.debug(f"{response}")
                         # The event sent successfully, check the number of accepted events
                         content = response.json()
                         if content.get("count", 0) != 1:
-                            logger.error(
+                            self.logger.error(
                                 f"Publishing HTTP event failed, status code: {response.status_code}, "
                                 + f"response: {content}, query: {query}"
                             )
                     case _:
-                        logger.error(
+                        self.logger.error(
                             f"Publishing HTTP Event failed, status code: {response.status_code}, "
                             + f"response: {response.content}, query: {query}"
                         )

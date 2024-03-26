@@ -3,17 +3,17 @@ import re
 import json
 import yaml
 import jinja2
-import logging
 import pathlib
 
 from typing import Dict, List
 
 from jinja2.ext import Extension as JinjaExtension
 
+from sentinel.utils.logger import get_logger
 from sentinel.models.project import ProjectSettings
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class IncorrectFileFormat(Exception): ...
@@ -97,11 +97,10 @@ def load_project_settings(path: pathlib.Path, env: str = "local", extra_vars: Di
     config_dir = path.parent
     settings_content = apply_extra_settings(path=path, settings=extra_vars)
 
-    logger.info(f"Loading settings from {path}")
     settings = load_settings(settings_content)
 
     for config in settings.get("imports", []):
-        config_path = config_dir / pathlib.Path(config)
+        config_path = (config_dir / pathlib.Path(config)).resolve()
         if not config_path.exists():
             raise IOError(f"The import path does not exist, {config_path}")
         config_content = apply_extra_settings(config_path, settings=extra_vars)

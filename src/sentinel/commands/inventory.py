@@ -1,15 +1,10 @@
-import os
-import logging
-
 from typing import List
 from argparse import ArgumentParser, Namespace
 
 from sentinel.inventory import Inventory
 from sentinel.models.project import ComponentType
 from sentinel.commands.common import SentinelCommand
-from sentinel.utils.settings import load_extra_vars
 
-logger = logging.getLogger(__name__)
 
 
 class Command(SentinelCommand):
@@ -32,7 +27,7 @@ class Command(SentinelCommand):
         super().run(opts, args)
 
         if args.settings.project is None or not args.settings.project.path.exists():
-            logger.error("Cannot detect project directory, missed sentinel.yalm file")
+            self.logger.error("Cannot detect project directory, missed sentinel.yalm file")
             return
 
         if args.type:

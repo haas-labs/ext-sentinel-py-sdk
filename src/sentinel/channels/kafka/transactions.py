@@ -1,4 +1,3 @@
-import logging
 from typing import List
 
 from aiokafka.structs import ConsumerRecord
@@ -7,8 +6,6 @@ from sentinel.transform import json_deserializer
 from sentinel.models.transaction import Transaction
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 
-
-logger = logging.getLogger(__name__)
 
 class InboundTransactionsChannel(InboundKafkaChannel):
     name = "transactions"

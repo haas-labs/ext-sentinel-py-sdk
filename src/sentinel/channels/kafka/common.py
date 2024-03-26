@@ -1,8 +1,4 @@
-import logging
-
 from sentinel.channels.common import Channel
-
-logger = logging.getLogger(__name__)
 
 
 class KafkaChannel(Channel):
@@ -14,7 +10,7 @@ class KafkaChannel(Channel):
         """
         super().__init__(name=name, record_type=record_type, **kwargs)
 
-        logger.info(f"{self.name} -> Connecting to Kafka: {kwargs}")
+        self.logger.info(f"{self.name} -> Connecting to Kafka: {kwargs}")
 
         # Topics
         self.topics = self.config.pop("topics")

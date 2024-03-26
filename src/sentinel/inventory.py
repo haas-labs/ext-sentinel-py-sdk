@@ -1,4 +1,3 @@
-import logging
 import pathlib
 
 from typing import Dict, List
@@ -8,10 +7,11 @@ from rich import box
 from rich.table import Table
 from rich.console import Console
 
+from sentinel.utils.logger import get_logger
 from sentinel.models.project import ProjectSettings, ComponentType
 from sentinel.utils.settings import load_project_settings, IncorrectFileFormat, IncorrectSettingsFormat
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class Inventory:

@@ -1,11 +1,9 @@
 import csv
-import logging
 import pathlib
-
 
 from pydantic import BaseModel
 
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class MixerRecord(BaseModel):
@@ -24,6 +22,8 @@ class Mixers:
         """
         Mixers Init
         """
+        self.logger = get_logger(__name__)
+
         # The path to local mixers DB
         if isinstance(path, str):
             self.path = pathlib.Path(path)
@@ -48,7 +48,7 @@ class Mixers:
             row = MixerRecord(**row)
             if row.network_id == self.allowed_chain_id:
                 self._db.append(row.address)
-        logger.info(f"Imported {len(self._db)} mixer records")
+        self.logger.info(f"Imported {len(self._db)} mixer records")
 
     def is_mixer(self, address: str) -> bool:
         """

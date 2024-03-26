@@ -11,19 +11,16 @@ from logging.config import dictConfig
 
 from argparse import ArgumentParser, Namespace
 
-from rich.logging import RichHandler
-
 from sentinel.version import VERSION
+from sentinel.utils.logger import get_logger
 from sentinel.models.project import ProjectSettings
 from sentinel.utils.settings import load_extra_vars
-
-
-logger = logging.getLogger(__name__)
 
 
 class SentinelCommand:
     def __init__(self) -> None:
         self.settings: Dict = dict()
+        self.logger = get_logger(__name__)
 
     def description(self) -> str:
         return ""
@@ -63,7 +60,7 @@ class SentinelCommand:
             "--env", type=str, default="local", help="Environment, possible values: local, demo, cloud. Default: local"
         )
         group.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
-        group.add_argument("--rich-logging", action="store_true", help="Activate rich logging")
+        # group.add_argument("--rich-logging", action="store_true", help="Activate rich logging")
 
         # group.add_argument(
         #     "--pidfile",
@@ -103,20 +100,20 @@ class SentinelCommand:
         """
         SentinelCommand.overwrite_logging_settings(args.log_level)
 
-        if args.rich_logging:
-            logging.basicConfig(
-                level=args.log_level,
-                format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) %(message)s",
-                # format="%(asctime)s.%(msecs)03d (%(name)s) %(message)s",
-                datefmt="%Y-%m-%dT%H:%M:%S",
-                handlers=[RichHandler(rich_tracebacks=True)],
-            )
-        else:
-            logging.basicConfig(
-                level=args.log_level,
-                format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
-                datefmt="%Y-%m-%dT%H:%M:%S",
-            )
+        # if args.rich_logging:
+        #     logging.basicConfig(
+        #         level=args.log_level,
+        #         format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) %(message)s",
+        #         # format="%(asctime)s.%(msecs)03d (%(name)s) %(message)s",
+        #         datefmt="%Y-%m-%dT%H:%M:%S",
+        #         handlers=[RichHandler(rich_tracebacks=True)],
+        #     )
+        # else:
+        #     logging.basicConfig(
+        #         level=args.log_level,
+        #         format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
+        #         datefmt="%Y-%m-%dT%H:%M:%S",
+        #     )
 
         self.extra_vars = load_extra_vars(args.vars)
 

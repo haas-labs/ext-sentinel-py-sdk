@@ -1,12 +1,12 @@
-import logging
 import pathlib
 
 from typing import Any
 
 import multiprocessing as mp
 
+from sentinel.utils.logger import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class LocalChannel:

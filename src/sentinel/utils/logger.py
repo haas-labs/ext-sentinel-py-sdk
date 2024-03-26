@@ -4,7 +4,7 @@ from typing import Union
 from rich.logging import RichHandler
 
 
-def get_logger(name: str, log_level: Union[str, int], rich: bool = False) -> logging.Logger:
+def get_logger(name: str, log_level: Union[str, int] = logging.INFO, rich: bool = False) -> logging.Logger:
     """
     return Logger with required formatting
     """
