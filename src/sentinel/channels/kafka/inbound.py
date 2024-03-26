@@ -1,6 +1,7 @@
 from aiokafka.structs import ConsumerRecord
 from aiokafka import AIOKafkaConsumer as KafkaConsumer
 
+from sentinel.utils.logger import get_logger
 from sentinel.channels.kafka.common import KafkaChannel
 
 
@@ -9,6 +10,8 @@ class InboundKafkaChannel(KafkaChannel):
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
         super().__init__(name, record_type, **kwargs)
+        self.logger = get_logger(__name__)
+
         # Setting default values for auto_offset_reset
         self.config["auto_offset_reset"] = self.config.get("auto_offset_reset", "latest")
 
