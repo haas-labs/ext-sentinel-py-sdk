@@ -15,7 +15,6 @@ class InboundEventsChannel(InboundKafkaChannel):
 
     def __init__(self, name: str, **kwargs) -> None:
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
-
         self.config["value_deserializer"] = json_deserializer
 
     async def on_message(self, message: ConsumerRecord) -> None:
@@ -40,9 +39,6 @@ class OutboundEventsChannel(OutboundKafkaChannel):
     name = "events"
 
     def __init__(self, name: str, metadata: Dict = dict(), **kwargs) -> None:
-        """
-        Event Kafka Channel
-        """
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
         self._default_metadata = metadata.copy()
 

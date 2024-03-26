@@ -1,6 +1,5 @@
 from typing import Any
 
-from sentinel.utils.logger import get_logger
 from sentinel.utils.imports import import_by_classpath
 
 
@@ -14,7 +13,6 @@ class Channel:
         self.name = name
         _, self.record_type = import_by_classpath(record_type)
         self.config = kwargs.copy()
-        self.logger = get_logger(__name__)
 
     async def run(self) -> None:
         """

@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 from aiokafka import AIOKafkaProducer as KafkaProducer
 
+from sentinel.utils.logger import get_logger
 from sentinel.channels.kafka.common import KafkaChannel
 
 
@@ -18,6 +19,7 @@ class OutboundKafkaChannel(KafkaChannel):
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
         super().__init__(name, record_type, **kwargs)
+        self.logger = get_logger(__name__)
         self.msg_queue = asyncio.Queue(maxsize=DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE)
 
     async def run(self):

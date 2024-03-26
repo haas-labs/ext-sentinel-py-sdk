@@ -2,18 +2,16 @@ from typing import List
 
 from sentinel.models.channel import Channel
 
-from sentinel.utils.logger import get_logger
+from sentinel.utils.logger import logger
 from sentinel.utils.imports import import_by_classpath
 
 
 class SentryChannels:
     def __init__(self, channel_type: str, ids: List[str], channels: List[Channel], sentry_name: str = None) -> None:
-        self.logger = get_logger(__name__)
-
         self.sentry_name = sentry_name
         self._channels: List[str] = []
 
-        self.logger.info(f"Channel(-s) activation: {ids}")
+        logger.info(f"Channel(-s) activation: {ids}")
         for channel in channels:
             if channel.id in ids:
                 self._load_channel(channel)
@@ -33,13 +31,13 @@ class SentryChannels:
             if self.sentry_name is not None:
                 ch_parameters["sentry_name"] = self.sentry_name
 
-            self.logger.info(f"Initializing channel: channel id: {channel.id}, type: {channel.type}")
+            logger.info(f"Initializing channel: channel id: {channel.id}, type: {channel.type}")
             _, ch_class = import_by_classpath(channel.type)
             ch_instance = ch_class(name=ch_class.name, **ch_parameters)
             setattr(self, ch_instance.name, ch_instance)
             self._channels.append(ch_instance.name)
         except AttributeError as err:
-            self.logger.error(f"Channel initialization issue, channel: {channel.id}, error: {err}")
+            logger.error(f"Channel initialization issue, channel: {channel.id}, error: {err}")
 
 
 class SentryInputs(SentryChannels):
