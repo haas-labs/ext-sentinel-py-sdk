@@ -1,15 +1,9 @@
-import logging
-
-
 from typing import Dict, List
 
 from pydantic import BaseModel
 
 from sentinel.models.transaction import Transaction
 from sentinel.processes.transaction import TransactionDetector
-
-
-logger = logging.getLogger(__name__)
 
 
 class Block(BaseModel):
@@ -63,7 +57,7 @@ class BlockDetector(TransactionDetector):
             if last_blk_num - blk_id < self._blocks_stack_size:
                 queued_blocks[blk_id] = blk_meta
             else:
-                logger.warning(
+                self.logger.warning(
                     f"Incomplete block detected, block id: {blk_id}, "
                     + f"expected tx: {blk_meta.size}, "
                     + f"detected tx: {len(blk_meta.txs)}"

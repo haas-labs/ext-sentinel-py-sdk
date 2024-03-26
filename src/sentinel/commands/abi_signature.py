@@ -2,7 +2,6 @@ import os
 import csv
 import json
 import asyncio
-import logging
 import pathlib
 
 from argparse import ArgumentParser, Namespace
@@ -12,10 +11,11 @@ from sentinel.utils.settings import load_extra_vars
 from sentinel.db.contract.remote import RemoteContractDB
 from sentinel.services.service_account import import_service_tokens
 
+from sentinel.utils.logger import get_logger
 from sentinel.commands.common import SentinelCommand
 from sentinel.formats.mappings import NETWORKS_BY_ID
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class Command(SentinelCommand):

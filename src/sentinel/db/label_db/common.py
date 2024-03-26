@@ -1,13 +1,11 @@
 import time
-import logging
 import datetime
 
 from typing import List, Dict
 
 from pydantic import BaseModel
 
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class LabelDBRecord(BaseModel):
@@ -26,6 +24,7 @@ class CommonLabelDB:
         @param update_tags      the list of tags for updating
         @param update_interval  time between updates in seconds, default: 120 secs
         """
+        self.logger = get_logger(__name__)
         # Local database for storing addresses by tag
         self._addresses = {tag: list() for tag in update_tags}
         self._addresses_updated = False
@@ -79,7 +78,7 @@ class CommonLabelDB:
 
         self._last_update = self.current_time()
         last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
-        logger.info(f"Updating label database, last update: {last_update_dt}")
+        self.logger.info(f"Updating label database, last update: {last_update_dt}")
 
         for tag in self._addresses.keys():
             try:
@@ -87,7 +86,7 @@ class CommonLabelDB:
                 if len(addresses) > 0:
                     self._addresses[tag] = list(set(addresses))
             except RuntimeError as err:
-                logger.error(err)
+                self.logger.error(err)
         self._addresses_updated = True
 
     def has_tag(self, address: str, tag: str) -> bool:

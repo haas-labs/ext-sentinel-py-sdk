@@ -1,16 +1,12 @@
-import logging
-
 from typing import Dict
 
 from sentinel.models.event import Event
 from sentinel.channels.http.common import OutboundHTTPChannel
 
-logger = logging.getLogger(__name__)
-
 
 class OutboundEventsChannel(OutboundHTTPChannel):
     name = "events"
-    
+
     def __init__(self, name: str, metadata: Dict = dict(), **kwargs) -> None:
         """
         Event Kafka Channel
@@ -28,7 +24,6 @@ class OutboundEventsChannel(OutboundHTTPChannel):
                 msg.metadata[k] = v
 
         if not isinstance(msg, Event):
-            logger.error(f"Incorrect message type, expected: Event, detected: {type(msg)}")
+            self.logger.error(f"Incorrect message type, expected: Event, detected: {type(msg)}")
 
         await super().send(msg)
-

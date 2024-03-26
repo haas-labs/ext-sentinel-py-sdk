@@ -1,8 +1,7 @@
-import logging
 import pathlib
 
 
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class LocalDEXAddresses:
@@ -12,6 +11,7 @@ class LocalDEXAddresses:
         """
         Local DEX Address Database Init
         """
+        self.logger = get_logger(__name__)
         # The path to local DEX Addresses
         if isinstance(path, str):
             self.path = pathlib.Path(path)
@@ -34,7 +34,7 @@ class LocalDEXAddresses:
                     self._db.append(address.strip())
 
         self._db = list(set(self._db))
-        logger.info(f"Imported {len(self._db)} DEX addresses")
+        self.logger.info(f"Imported {len(self._db)} DEX addresses")
 
     def exists(self, address: str) -> bool:
         """

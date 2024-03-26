@@ -1,10 +1,8 @@
 import httpx
-import logging
 
 from typing import List, Dict
 
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 JSONRPC_VERSION = "2.0"
@@ -50,6 +48,8 @@ class Tracer:
         """
         Tracer Init
         """
+        self.logger = get_logger(__name__)
+
         if network not in SUPPORTED_NETWORKS:
             raise RuntimeError(f"Unsupported network: {network}")
 
@@ -77,8 +77,8 @@ class Tracer:
                 else:
                     return data.get("result", {})
             case _:
-                logger.error(f"RPC Data Fetching error code: {response.status_code}, request: {request.data}")
-                logger.error(response.content)
+                self.logger.error(f"RPC Data Fetching error code: {response.status_code}, request: {request.data}")
+                self.logger.error(response.content)
                 return {}
 
     async def get(self, tx_hash: str) -> Dict:

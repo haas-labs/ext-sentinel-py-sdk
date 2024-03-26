@@ -1,12 +1,12 @@
 import sys
-import logging
 import pathlib
 import argparse
 
 from typing import List
 
-from sentinel.utils.settings import load_project_settings
+from sentinel.utils.logger import get_logger
 from sentinel.models.project import ProjectSettings
+from sentinel.utils.settings import load_project_settings
 
 from sentinel.commands.common import (
     get_command,
@@ -15,7 +15,7 @@ from sentinel.commands.common import (
     print_unknown_command,
 )
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def execute(argv: List[str] = None):
@@ -26,6 +26,7 @@ def execute(argv: List[str] = None):
     sentinel_settings_path = current_path / "sentinel.yaml"
     settings = ProjectSettings()
     if sentinel_settings_path.exists():
+        logger.info(f"Checking settings from {sentinel_settings_path}")
         settings = load_project_settings(sentinel_settings_path)
         settings.project.path = sentinel_settings_path.parent
 

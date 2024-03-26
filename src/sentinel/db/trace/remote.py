@@ -1,12 +1,7 @@
-import logging
-
 from .common import CommonTraceDB
 
 from sentinel.formats.trace import Trace
 from sentinel.services.rpc.tracer import Tracer
-
-
-logger = logging.getLogger(__name__)
 
 
 class RemoteTraceDB(CommonTraceDB):

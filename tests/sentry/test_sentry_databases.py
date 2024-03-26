@@ -1,3 +1,5 @@
+import pytest
+
 from sentinel.models.database import Database
 from sentinel.sentry.db import SentryDatabases
 from sentinel.db.address.memory import InMemoryAddressDB
@@ -18,10 +20,9 @@ def test_sentry_db_success_import():
 
 
 def test_sentry_db_failed_import():
-    dbs = SentryDatabases(ids=["address"], databases=DATABASES)
-    assert isinstance(dbs, SentryDatabases), "Incorrect Sentry Databases type"
-    assert dbs.names == [], "Imported incorrect database(-s)"
+    with pytest.raises(RuntimeError):
+        SentryDatabases(ids=["address"], databases=DATABASES)
 
-    dbs = SentryDatabases(ids=["failed"], databases=DATABASES)
-    assert isinstance(dbs, SentryDatabases), "Incorrect Sentry Databases type"
-    assert dbs.names == [], "Imported incorrect database(-s)"
+
+    with pytest.raises(RuntimeError):
+        SentryDatabases(ids=["failed"], databases=DATABASES)

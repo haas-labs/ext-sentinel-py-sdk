@@ -22,9 +22,10 @@ There are several required files to run the detector locally:
 from sentinel.sentry.block_tx import BlockTxDetector
 
 from sentinel.models.event import Event
+from sentinel.utils.logger import get_logger
 from sentinel.models.transaction import Transaction
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 class BlockDetector(BlockTxDetector):
     async def on_block(self, transactions: List[Transactions]) -> None:

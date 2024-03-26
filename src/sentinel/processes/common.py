@@ -1,5 +1,4 @@
 import asyncio
-import logging
 
 import multiprocessing as mp
 
@@ -7,9 +6,7 @@ from collections import Counter
 from typing import Dict, List, Any
 
 from sentinel.models.transaction import Transaction
-
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class Process(mp.Process):
@@ -44,11 +41,11 @@ class Process(mp.Process):
         self.init_channels(inputs, outputs)
 
     async def init(self) -> None:
-        '''
+        """
         Detector specific initialization
 
         User can add custom init logic here
-        '''
+        """
         pass
 
     def init_databases(self, databases: Dict) -> None:
@@ -75,17 +72,19 @@ class Process(mp.Process):
         """
         Run Process
         """
+        self.logger = get_logger(__name__)
+
         await self.init()
-        
+
         try:
             channels = []
             for name, channel in self.channels.items():
-                logger.info(f"Starting channel, name: {name}")
+                self.logger.info(f"Starting channel, name: {name}")
                 channel_task = asyncio.create_task(channel.run(), name=name)
                 channels.append(channel_task)
             await asyncio.gather(*channels)
         finally:
-            logger.info("Processor completed")
+            self.logger.info("Processor completed")
 
     def run(self, **kwargs):
         """
@@ -156,15 +155,17 @@ class Detector(mp.Process):
         """
         Run Detector processing
         """
+        self.logger = get_logger(__name__)
+
         try:
             channels = []
             for name, channel in self.channels.items():
-                logger.info(f"Starting channel, name: {name}")
+                self.logger.info(f"Starting channel, name: {name}")
                 channel_task = asyncio.create_task(channel.run(), name=name)
                 channels.append(channel_task)
             await asyncio.gather(*channels)
         finally:
-            logger.info("Detector Processing completed")
+            self.logger.info("Detector Processing completed")
 
     def run(self, **kwargs):
         """
@@ -173,7 +174,7 @@ class Detector(mp.Process):
         try:
             asyncio.run(self._run())
         except KeyboardInterrupt:
-            logger.warning("Interrupted by user")
+            self.logger.warning("Interrupted by user")
 
     async def on_transaction(self, transaction: Transaction) -> None:
         """

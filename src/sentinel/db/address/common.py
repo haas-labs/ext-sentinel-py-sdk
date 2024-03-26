@@ -1,5 +1,5 @@
+from sentinel.utils.logger import get_logger
 from sentinel.models.address import AddressType
-
 
 class CommonAddressDB:
     name = "address"
@@ -8,6 +8,7 @@ class CommonAddressDB:
         """
         Common Address DB Init
         """
+        self.logger = get_logger(__name__)
         self._accounts = list()
         self._contracts = list()
 

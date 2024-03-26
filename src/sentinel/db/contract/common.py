@@ -1,9 +1,5 @@
-import logging
-
+from sentinel.utils.logger import get_logger
 from sentinel.models.contract import Contract
-
-
-logger = logging.getLogger(__name__)
 
 
 class CommonContractDB:
@@ -13,6 +9,7 @@ class CommonContractDB:
         """
         Common Contract DB Init
         """
+        self.logger = get_logger(__name__)
         self.network = network
         self.chain_id = chain_id
 

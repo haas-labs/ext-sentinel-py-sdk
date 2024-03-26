@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import platform
 
 import multiprocessing as mp
@@ -8,10 +7,8 @@ from typing import Dict
 from collections import Counter
 
 from sentinel.definitions import BLOCKCHAIN
+from sentinel.utils.logger import get_logger
 from sentinel.models.transaction import Transaction
-
-logger = logging.getLogger(__name__)
-
 
 class TransactionDetector(mp.Process):
     """
@@ -30,6 +27,8 @@ class TransactionDetector(mp.Process):
         """
         Transaction Detector Init
         """
+        self.logger = get_logger(__name__)
+
         if platform.system() == "Darwin":
             # TODO migrate a process to use spawn instead of fork
             # Current implementation is just workaround to solve issue on MacOS
@@ -87,12 +86,12 @@ class TransactionDetector(mp.Process):
         try:
             channels = []
             for name, channel in self.channels.items():
-                logger.info(f"Starting channel, name: {name}")
+                self.logger.info(f"Starting channel, name: {name}")
                 channel_task = asyncio.create_task(channel.run(), name=name)
                 channels.append(channel_task)
             await asyncio.gather(*channels)
         finally:
-            logger.info("Transaction Detector Processing completed")
+            self.logger.info("Transaction Detector Processing completed")
 
     def run(self, **kwargs):
         """
@@ -101,7 +100,7 @@ class TransactionDetector(mp.Process):
         try:
             asyncio.run(self._run())
         except KeyboardInterrupt:
-            logger.warning("Interrupted by user")
+            self.logger.warning("Interrupted by user")
 
     async def on_transaction(self, transaction: Transaction) -> None:
         """

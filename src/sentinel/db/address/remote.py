@@ -1,10 +1,7 @@
 import httpx
-import logging
 
 from sentinel.models.address import AddressType
 from sentinel.db.address.common import CommonAddressDB
-
-logger = logging.getLogger(__name__)
 
 
 DEFAULT_HEADERS = {

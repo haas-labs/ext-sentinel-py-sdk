@@ -1,6 +1,5 @@
 import csv
 import time
-import logging
 import pathlib
 import datetime
 
@@ -8,8 +7,7 @@ from typing import List
 
 from .common import Contract
 
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class MonitoredContractsDB:
@@ -19,6 +17,8 @@ class MonitoredContractsDB:
         """
         Static Monitored Constacts Database Init
         """
+        self.logger = get_logger(__name__)
+        
         # The path to local static monitored contracts DB
         if isinstance(path, str):
             self.path = pathlib.Path(path)
@@ -50,7 +50,7 @@ class MonitoredContractsDB:
             contract = Contract(**row)
             if contract.network == self.network:
                 self._contracts.append(contract.contract_address.lower())
-        logger.info(f"Imported {len(self.contracts)} monitored contracts")
+        self.logger.info(f"Imported {len(self.contracts)} monitored contracts")
         self._contracts = list(set(self._contracts))
 
     async def update(self) -> None:
@@ -65,7 +65,7 @@ class MonitoredContractsDB:
 
         self._last_update = self.current_time()
         last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
-        logger.info(f"Updating monitored contract list, last update: {last_update_dt}")
+        self.logger.info(f"Updating monitored contract list, last update: {last_update_dt}")
 
         self._import_csv(self.path)
 

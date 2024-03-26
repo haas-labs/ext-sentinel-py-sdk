@@ -1,5 +1,4 @@
 import json
-import logging
 
 
 from typing import List, Dict, Iterator
@@ -10,9 +9,7 @@ from .erc1155 import ERC1155
 
 from sentinel.models.contract import ABIRecord, ABISignature
 from sentinel.db.contract.utils import to_signature_record
-
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class StandardABISignatures:
@@ -23,12 +20,15 @@ class StandardABISignatures:
     - ERC-721
     - ERC-1155
     """
+
     name = "StandardABISignatures"
 
     def __init__(self, standards: List[str] = list()) -> None:
         """
         Standard ABI Signatures Init
         """
+        self.logger = get_logger(__name__)
+
         self._db = []
         self._standards = standards
         self.update(standards=self._standards)
@@ -55,7 +55,7 @@ class StandardABISignatures:
             elif standard == "ERC1155":
                 self._load("ERC1155", json.loads(ERC1155))
             else:
-                logger.warning(f"Unknown standard name, {standard}")
+                self.logger.warning(f"Unknown standard name, {standard}")
 
     def _load(self, standard: str, abi_records: List[Dict]) -> None:
         """

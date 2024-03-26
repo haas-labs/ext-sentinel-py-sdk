@@ -1,5 +1,4 @@
 import httpx
-import logging
 
 from rich.progress import Progress
 
@@ -23,9 +22,8 @@ from sentinel.formats.mappings import (
     JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS,
     JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST,
 )
+from sentinel.utils.logger import get_logger
 
-
-logger = logging.getLogger(__name__)
 
 
 JSONRPC_VERSION = "2.0"
@@ -68,6 +66,7 @@ class Fetcher:
         """
         JSON RPC Fetcher Init
         """
+        self.logger = get_logger(__name__)
         self.endpoint = endpoint
 
     def fetch(self, request: JsonRpcRequest) -> Dict:
@@ -89,8 +88,8 @@ class Fetcher:
             else:
                 return data.get("result", {})
         else:
-            logger.error(f"RPC Data Fetching error code: {response.status_code}, request: {request.data}")
-            logger.error(response.content)
+            self.logger.error(f"RPC Data Fetching error code: {response.status_code}, request: {request.data}")
+            self.logger.error(response.content)
             return None
 
     def get_block_transactions(self, block_numbers: List[str]) -> Iterator[Dict]:
@@ -157,7 +156,7 @@ class Fetcher:
         """
         for tx_hash in tx_hashes:
             if not tx_hash:
-                logger.error("The hash field required for fetching transaction data")
+                self.logger.error("The hash field required for fetching transaction data")
                 continue
 
             tx_data = self.get_transaction_by_hash(tx_hash)

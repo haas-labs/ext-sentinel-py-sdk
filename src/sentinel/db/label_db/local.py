@@ -1,15 +1,11 @@
 import json
 import aiofiles
 import pathlib
-import logging
 
 from typing import List
 
 from .common import CommonLabelDB
 from .common import LabelDBRecord
-
-
-logger = logging.getLogger(__name__)
 
 
 def touch(path: pathlib.Path) -> None:

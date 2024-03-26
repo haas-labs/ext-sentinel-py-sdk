@@ -1,8 +1,6 @@
-import logging
 import pathlib
 
-
-logger = logging.getLogger(__name__)
+from sentinel.utils.logger import get_logger
 
 
 class LocalBlacklistDB:
@@ -12,6 +10,8 @@ class LocalBlacklistDB:
         """
         Local Blacklist Database Init
         """
+        self.logger = get_logger(__name__)
+
         # The path to local blacklist DB
         if isinstance(path, str):
             self.path = pathlib.Path(path)
@@ -34,7 +34,7 @@ class LocalBlacklistDB:
                     self._db.append(address.strip())
 
         self._db = list(set(self._db))
-        logger.info(f"Imported {len(self._db)} blacklist records")
+        self.logger.info(f"Imported {len(self._db)} blacklist records")
 
     def exists(self, address: str) -> bool:
         """

@@ -2,16 +2,12 @@ import os
 import json
 import time
 import asyncio
-import logging
 import pathlib
 import aiofiles
 
 from typing import Any, Dict
 
 from sentinel.channels.common import InboundChannel, OutboundChannel
-
-
-logger = logging.getLogger(__name__)
 
 
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
@@ -79,7 +75,7 @@ class OutboundFileChannel(OutboundChannel):
         Run Channel Processing
         """
         buffering = -1 if self.buffering else 1
-        logger.info(
+        self.logger.info(
             f"{self.name} -> Starting channel for publishing messages to file channel: {self.name}, "
             + f"buffering: {self.buffering}"
         )

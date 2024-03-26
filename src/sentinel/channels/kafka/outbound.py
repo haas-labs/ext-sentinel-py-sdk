@@ -1,6 +1,5 @@
 import json
 import asyncio
-import logging
 
 from typing import Union, Dict
 
@@ -9,9 +8,6 @@ from pydantic import BaseModel
 from aiokafka import AIOKafkaProducer as KafkaProducer
 
 from sentinel.channels.kafka.common import KafkaChannel
-
-
-logger = logging.getLogger(__name__)
 
 
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
@@ -28,10 +24,10 @@ class OutboundKafkaChannel(KafkaChannel):
         """
         Run Outbound Kafka Channel
         """
-        logger.info(f"{self.name} -> Subscribing to Kafka topics: {self.topics}")
+        self.logger.info(f"{self.name} -> Subscribing to Kafka topics: {self.topics}")
         self.producer = KafkaProducer(**self.config)
 
-        logger.info(f"{self.name} -> Starting channel for publishing messages towards Kafka channel: {self.name}")
+        self.logger.info(f"{self.name} -> Starting channel for publishing messages towards Kafka channel: {self.name}")
         await self.producer.start()
         try:
             while True:
