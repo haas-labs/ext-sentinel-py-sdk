@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.23
+
+Feature
+
+- Add common logger for non-sentry processes
+
 ## v0.3.22
 
 Feature
