@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.21
+
+Feature
+
+- Use sentinel logger for all components
+- Add verification logic for channels and databases activation
+
 ## v0.3.20
 
 Fix
