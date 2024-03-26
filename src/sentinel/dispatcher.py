@@ -7,11 +7,9 @@ from sentinel.version import VERSION
 from sentinel.profile import Profile
 from sentinel.project import ProjectSettings
 from sentinel.models.sentry import Sentry
-from sentinel.utils.logger import get_logger
+from sentinel.utils.logger import logger
 from sentinel.utils.imports import import_by_classpath
 
-
-logger = get_logger(__name__)
 
 
 def process_init(process_classpath: str, **kwargs) -> Any:

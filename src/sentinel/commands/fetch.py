@@ -7,6 +7,7 @@ from argparse import ArgumentParser, Namespace
 from enum import Enum
 from typing import List
 
+from sentinel.utils.logger import logger
 from sentinel.services.fetcher import Fetcher
 from sentinel.commands.common import SentinelCommand
 
@@ -47,7 +48,7 @@ class Command(SentinelCommand):
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
 
-        self.logger.info(f"Fetch {args.dataset} data via JSON-RPC endpont: {args.rpc}")
+        logger.info(f"Fetch {args.dataset} data via JSON-RPC endpont: {args.rpc}")
         fetcher = Fetcher(endpoint=args.rpc)
 
         try:
@@ -80,9 +81,9 @@ class Command(SentinelCommand):
                 )
 
             else:
-                self.logger.error(f"Unknown dataset: {args.dataset}")
+                logger.error(f"Unknown dataset: {args.dataset}")
         except KeyboardInterrupt:
-            self.logger.warning("Interrupted by user")
+            logger.warning("Interrupted by user")
 
     def handle_blocks(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """

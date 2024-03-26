@@ -12,7 +12,6 @@ from logging.config import dictConfig
 from argparse import ArgumentParser, Namespace
 
 from sentinel.version import VERSION
-from sentinel.utils.logger import get_logger
 from sentinel.models.project import ProjectSettings
 from sentinel.utils.settings import load_extra_vars
 
@@ -20,7 +19,6 @@ from sentinel.utils.settings import load_extra_vars
 class SentinelCommand:
     def __init__(self) -> None:
         self.settings: Dict = dict()
-        self.logger = get_logger(__name__)
 
     def description(self) -> str:
         return ""
