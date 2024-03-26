@@ -87,6 +87,7 @@ def load_env_vars(self, env_name: str = None):
     if env_name is None:
         env_name = os.environ.get("SENTINEL_ENV") or "local"
 
+
 def load_project_settings(path: pathlib.Path, env: str = "local", extra_vars: Dict = dict()) -> ProjectSettings:
     """
     Load project settings from a path
