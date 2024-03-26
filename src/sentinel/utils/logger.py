@@ -18,6 +18,14 @@ class Logger:
         # Add the handler to the logger
         self.logger.addHandler(console_handler)
 
+    @property
+    def name(self):
+        return self.logger.name
+
+    @property
+    def level(self):
+        return self.logger.level
+
     def info(self, *args, **kwargs):
         self.logger.info(*args, **kwargs)
 
