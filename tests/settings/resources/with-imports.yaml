@@ -4,6 +4,6 @@ project:
 
 imports:
 - config/sentries.yaml
-- config/inputs.yaml
-- config/outputs.yaml
-- config/databases.yaml
+- config/local-inputs.yaml
+- config/local-outputs.yaml
+- config/local-databases.yaml

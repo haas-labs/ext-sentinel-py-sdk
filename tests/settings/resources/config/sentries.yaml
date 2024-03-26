@@ -5,8 +5,8 @@ sentries:
   parameters:
     network: ethereum
   inputs:
-  - FSTransactions
+  - local/fs/transaction
   outputs:
-  - FSEvents
+  - local/fs/vent
   databases:
-  - AddressDBList
+  - local/address

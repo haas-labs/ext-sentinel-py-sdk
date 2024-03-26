@@ -1,6 +1,6 @@
 inputs:
 
-- id: FSTransactions
+- id: local/fs/transaction
   type: sentinel.channels.fs.transactions.InboundTransactionsChannel
   parameters:
     path: ./data/transactions.json

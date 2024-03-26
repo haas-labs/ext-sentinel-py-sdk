@@ -1,0 +1,12 @@
+project:
+  name: Project with multiple imports
+  description: Project with multiple imports
+
+imports:
+- config/sentries.yaml
+- config/local-inputs.yaml
+- config/cloud-inputs.yaml
+- config/local-outputs.yaml
+- config/cloud-outputs.yaml
+- config/local-databases.yaml
+- config/cloud-databases.yaml
