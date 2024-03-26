@@ -1,3 +1,5 @@
+import pytest
+
 from sentinel.models.channel import Channel
 from sentinel.sentry.channel import SentryInputs
 from sentinel.channels.fs.transactions import InboundTransactionsChannel as FSInboundTransactionsChannel
@@ -61,10 +63,8 @@ def test_sentry_channel_inputs_success_import():
 
 
 def test_sentry_channel_inputs_failed_import():
-    inputs = SentryInputs(sentry_name="TestSentry", ids=["kafka_events"], channels=INPUTS)
-    assert isinstance(inputs, SentryInputs), "Incorrect Sentry Inputs type"
-    assert inputs.channels == [], "Imported incorrect channel(-s)"
+    with pytest.raises(RuntimeError):
+        SentryInputs(sentry_name="TestSentry", ids=["kafka_events"], channels=INPUTS)
 
-    inputs = SentryInputs(sentry_name="TestSentry", ids=["failed"], channels=INPUTS)
-    assert isinstance(inputs, SentryInputs), "Incorrect Sentry Inputs type"
-    assert inputs.channels == [], "Imported incorrect channel(-s)"
+    with pytest.raises(RuntimeError):
+        SentryInputs(sentry_name="TestSentry", ids=["failed"], channels=INPUTS)

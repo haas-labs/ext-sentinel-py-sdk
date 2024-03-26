@@ -1,3 +1,5 @@
+import pytest
+
 from sentinel.models.channel import Channel
 from sentinel.sentry.channel import SentryOutputs
 from sentinel.channels.kafka.events import OutboundEventsChannel as KafkaOutboundEventsChannel
@@ -29,10 +31,8 @@ def test_sentry_channel_outputs_success_import():
     assert outputs.events is not None, "Events channel shouldn't be None"
 
 def test_sentry_channel_outputs_failed_import():
-    outputs = SentryOutputs(ids=["kafka_transactions"], channels=OUTPUTS)
-    assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Outputs type"
-    assert outputs.channels == [], "Imported incorrect channel(-s)"
+    with pytest.raises(RuntimeError):
+        SentryOutputs(ids=["kafka_transactions"], channels=OUTPUTS)
 
-    outputs = SentryOutputs(ids=["failed"], channels=OUTPUTS)
-    assert isinstance(outputs, SentryOutputs), "Incorrect Sentry Outputs type"
-    assert outputs.channels == [], "Imported incorrect channel(-s)"
+    with pytest.raises(RuntimeError):
+        SentryOutputs(ids=["failed"], channels=OUTPUTS)

@@ -15,9 +15,8 @@ class SentryDatabases:
         for db in databases:
             if db.id in ids:
                 self._load_db(db)
-        assert len(self._databases) == len(
-            ids
-        ), f"Databases mismatch, expected: {sorted(ids)}, activated: {sorted(self._channels)}"
+        if len(self._databases) != len(ids): 
+            raise RuntimeError(f"Databases mismatch, expected: {sorted(ids)}, activated: {sorted(self._databases)}")
 
 
     @property
