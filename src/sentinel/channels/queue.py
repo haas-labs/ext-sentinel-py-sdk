@@ -4,9 +4,7 @@ from typing import Any
 
 import multiprocessing as mp
 
-from sentinel.utils.logger import get_logger
-
-logger = get_logger(__name__)
+from sentinel.utils.logger import logger
 
 
 class LocalChannel:
