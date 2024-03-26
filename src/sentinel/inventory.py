@@ -120,6 +120,7 @@ class Inventory:
         Show components details in table form
         """
         if len(data) == 0:
+            logger.warning("No records found")
             return
 
         table = Table(box=box.MINIMAL_HEAVY_HEAD)
