@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.22
+
+Feature
+
+- Add new logger for dispatcher and spawned processes
+
 ## v0.3.21
 
 Feature
