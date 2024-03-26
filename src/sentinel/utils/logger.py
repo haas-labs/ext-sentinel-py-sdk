@@ -49,6 +49,8 @@ def get_logger(name: str, log_level: Union[str, int] = logging.INFO) -> Logger:
     logger = Logger(name=name, log_level=log_level)
     return logger
 
+logger = Logger(name=__name__, log_level=logging.INFO)
+
 # def get_logger(name: str, log_level: Union[str, int] = logging.INFO, rich: bool = False) -> logging.Logger:
 #     """
 #     return Logger with required formatting
