@@ -27,6 +27,8 @@ class TransactionDetector(mp.Process):
         """
         Transaction Detector Init
         """
+        self.logger = get_logger(__name__)
+
         if platform.system() == "Darwin":
             # TODO migrate a process to use spawn instead of fork
             # Current implementation is just workaround to solve issue on MacOS
@@ -79,8 +81,6 @@ class TransactionDetector(mp.Process):
         """
         Run Transaction Detector processing
         """
-        self.logger = get_logger(__name__)
-
         await self.init()
 
         try:

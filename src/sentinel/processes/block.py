@@ -57,7 +57,7 @@ class BlockDetector(TransactionDetector):
             if last_blk_num - blk_id < self._blocks_stack_size:
                 queued_blocks[blk_id] = blk_meta
             else:
-                logger.warning(
+                self.logger.warning(
                     f"Incomplete block detected, block id: {blk_id}, "
                     + f"expected tx: {blk_meta.size}, "
                     + f"detected tx: {len(blk_meta.txs)}"
