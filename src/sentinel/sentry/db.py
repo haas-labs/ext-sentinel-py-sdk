@@ -10,9 +10,15 @@ class SentryDatabases:
     def __init__(self, ids: List[str], databases: List[Database]) -> None:
         self.logger = get_logger(__name__)
         self._databases = []
+
+        self.logger.info(f"Database(-s) activation: {ids}")
         for db in databases:
             if db.id in ids:
                 self._load_db(db)
+        assert len(self._databases) == len(
+            ids
+        ), f"Databases mismatch, expected: {sorted(ids)}, activated: {sorted(self._channels)}"
+
 
     @property
     def names(self):
