@@ -4,7 +4,7 @@ import argparse
 
 from typing import List
 
-from sentinel.utils.logger import get_logger
+from sentinel.utils.logger import logger
 from sentinel.models.project import ProjectSettings
 from sentinel.utils.settings import load_project_settings
 
@@ -14,9 +14,6 @@ from sentinel.commands.common import (
     print_commands,
     print_unknown_command,
 )
-
-logger = get_logger(__name__)
-
 
 def execute(argv: List[str] = None):
     # Add current directory to python path

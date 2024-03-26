@@ -11,11 +11,9 @@ from sentinel.utils.settings import load_extra_vars
 from sentinel.db.contract.remote import RemoteContractDB
 from sentinel.services.service_account import import_service_tokens
 
-from sentinel.utils.logger import get_logger
+from sentinel.utils.logger import logger
 from sentinel.commands.common import SentinelCommand
 from sentinel.formats.mappings import NETWORKS_BY_ID
-
-logger = get_logger(__name__)
 
 
 class Command(SentinelCommand):

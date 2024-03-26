@@ -5,10 +5,7 @@ from typing import Dict, List
 from pydantic import BaseModel
 
 from sentinel.models.process import Process
-from sentinel.utils.logger import get_logger
 from sentinel.utils.settings import load_settings, apply_extra_settings
-
-logger = get_logger(__name__)
 
 
 class Profile(BaseModel):
