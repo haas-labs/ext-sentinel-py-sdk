@@ -1,0 +1,8 @@
+inputs:
+
+- id: cloud/transaction
+  type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
+  parameters:
+    bootstrap_servers:
+    - example.cloud
+

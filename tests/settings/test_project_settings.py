@@ -26,7 +26,7 @@ def test_project_settings_load_plain():
 
     # Inputs
     assert len(settings.inputs) == 1, "Incorrect number of inputs"
-    assert settings.inputs[0].id == "FSTransactions", "Incorrect input id"
+    assert settings.inputs[0].id == "local/fs/transaction", "Incorrect input id"
     assert (
         settings.inputs[0].type == "sentinel.channels.fs.transactions.InboundTransactionsChannel"
     ), "Incorrect input type"
@@ -36,7 +36,7 @@ def test_project_settings_load_plain():
 
     # Outputs
     assert len(settings.outputs) == 1, "Incorrect number of outputs"
-    assert settings.outputs[0].id == "FSEvents", "Incorrect output id"
+    assert settings.outputs[0].id == "local/fs/event", "Incorrect output id"
     assert settings.outputs[0].type == "sentinel.channels.fs.common.OutboundFileChannel", "Incorrect output type"
     assert settings.outputs[0].parameters == {
         "record_type": "sentinel.models.event.Event",
@@ -46,7 +46,7 @@ def test_project_settings_load_plain():
 
     # Databases
     assert len(settings.databases) == 1, "Incorrect number of databases"
-    assert settings.databases[0].id == "AddressDBList", "Incorrect database id"
+    assert settings.databases[0].id == "local/address", "Incorrect database id"
     assert settings.databases[0].type == "sentinel.db.address.local.AddressDB", "Incorrect database type"
     assert settings.databases[0].parameters == {
         "path": "./data/address.list",
@@ -62,18 +62,18 @@ def test_project_settings_import_partially():
     assert settings.sentries[0].parameters == {"network": "ethereum"}, "Incorrect sentry parameters"
 
     # Databases
-    settings = load_project_settings(pathlib.Path("tests/settings/resources/config/databases.yaml"))
+    settings = load_project_settings(pathlib.Path("tests/settings/resources/config/local-databases.yaml"))
     assert len(settings.databases) == 1, "Incorrect number of databases"
-    assert settings.databases[0].id == "AddressDBList", "Incorrect database id"
+    assert settings.databases[0].id == "local/address", "Incorrect database id"
     assert settings.databases[0].type == "sentinel.db.address.local.AddressDB", "Incorrect database type"
     assert settings.databases[0].parameters == {
         "path": "./data/address.list",
     }, "Incorrect database parameters"
 
     # Inputs
-    settings = load_project_settings(pathlib.Path("tests/settings/resources/config/inputs.yaml"))
+    settings = load_project_settings(pathlib.Path("tests/settings/resources/config/local-inputs.yaml"))
     assert len(settings.inputs) == 1, "Incorrect number of inputs"
-    assert settings.inputs[0].id == "FSTransactions", "Incorrect input id"
+    assert settings.inputs[0].id == "local/fs/transaction", "Incorrect input id"
     assert (
         settings.inputs[0].type == "sentinel.channels.fs.transactions.InboundTransactionsChannel"
     ), "Incorrect input type"
@@ -82,9 +82,9 @@ def test_project_settings_import_partially():
     }, "Incorrect input parameters"
 
     # Outputs
-    settings = load_project_settings(pathlib.Path("tests/settings/resources/config/outputs.yaml"))
+    settings = load_project_settings(pathlib.Path("tests/settings/resources/config/local-outputs.yaml"))
     assert len(settings.outputs) == 1, "Incorrect number of outputs"
-    assert settings.outputs[0].id == "FSEvents", "Incorrect output id"
+    assert settings.outputs[0].id == "local/fs/event", "Incorrect output id"
     assert settings.outputs[0].type == "sentinel.channels.fs.common.OutboundFileChannel", "Incorrect output type"
     assert settings.outputs[0].parameters == {
         "record_type": "sentinel.models.event.Event",
@@ -102,10 +102,28 @@ def test_project_settings_handling_imports():
     assert settings.sentries[0].name == "eth://UserLoggerSentry", "Incorrect sentry name"
 
     assert len(settings.inputs) == 1, "Incorrect number of inputs"
-    assert settings.inputs[0].id == "FSTransactions", "Incorrect input id"
+    assert settings.inputs[0].id == "local/fs/transaction", "Incorrect input id"
 
     assert len(settings.outputs) == 1, "Incorrect number of outputs"
-    assert settings.outputs[0].id == "FSEvents", "Incorrect output id"
+    assert settings.outputs[0].id == "local/fs/event", "Incorrect output id"
 
     assert len(settings.databases) == 1, "Incorrect number of databases"
-    assert settings.databases[0].id == "AddressDBList", "Incorrect database id"
+    assert settings.databases[0].id == "local/address", "Incorrect database id"
+
+
+def test_project_settings_handling_multiple_imports():
+    settings = load_project_settings(pathlib.Path("tests/settings/resources/multiple-imports.yaml"))
+    assert settings.project.name == "Project with multiple imports", "Incorrect project name"
+    assert settings.project.description == "Project with multiple imports", "Incorrect project description"
+
+    assert len(settings.sentries) == 1, "Incorrect number of sentries"
+    assert settings.sentries[0].name == "eth://UserLoggerSentry", "Incorrect sentry name"
+
+    assert len(settings.inputs) == 2, "Incorrect number of inputs"
+    assert settings.inputs[0].id == "local/fs/transaction", "Incorrect input id"
+
+    assert len(settings.outputs) == 2, "Incorrect number of outputs"
+    assert settings.outputs[0].id == "local/fs/event", "Incorrect output id"
+
+    assert len(settings.databases) == 2, "Incorrect number of databases"
+    assert settings.databases[0].id == "local/address", "Incorrect database id"

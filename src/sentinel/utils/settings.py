@@ -105,9 +105,13 @@ def load_project_settings(path: pathlib.Path, env: str = "local", extra_vars: Di
         config_path = (config_dir / pathlib.Path(config)).resolve()
         if not config_path.exists():
             raise IOError(f"The import path does not exist, {config_path}")
-        config_content = apply_extra_settings(config_path, settings=extra_vars)
+        config_content = load_settings(apply_extra_settings(config_path, settings=extra_vars))
         logger.info(f"Importing settings from {config_path}")
-        settings.update(load_settings(config_content))
+        for section in config_content.keys():
+            if section in settings.keys():
+                settings[section].extend(config_content[section])
+            else:
+                settings[section] = config_content[section]
     return ProjectSettings(**settings)
 
 

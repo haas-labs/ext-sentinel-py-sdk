@@ -1,11 +1,8 @@
 import os
 import httpx
 
-
 from sentinel.models.token import Token
-from sentinel.utils.logger import get_logger
-
-logger = get_logger(__name__)
+from sentinel.utils.logger import logger
 
 
 SERVICE_ACCOUNT_TOKENS = {
@@ -31,7 +28,6 @@ class ServiceAccountToken:
         """
         Service Account Token Init
         """
-        self.logger = get_logger(__name__)
         self._endpoint_url = endpoint_url
         self._realm = realm
         self._client_id = client_id
