@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import json
 import yaml
 import jinja2
@@ -56,6 +57,7 @@ def load_extra_vars(extra_vars: List[str] = list()) -> Dict:
                         logger.error("{}, {}".format(err, vars))
             except FileNotFoundError as err:
                 logger.error(err)
+                sys.exit(1)
         else:
             try:
                 data = json.loads(vars)
