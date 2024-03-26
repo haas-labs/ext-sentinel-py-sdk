@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.24
+
+Fix
+
+- Multiple imports for channels and databases
+
 ## v0.3.23
 
 Feature
