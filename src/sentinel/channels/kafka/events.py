@@ -5,7 +5,6 @@ from aiokafka.structs import ConsumerRecord
 
 from sentinel.models.event import Event
 
-from sentinel.utils.logger import get_logger
 from sentinel.transform import json_deserializer
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 from sentinel.channels.kafka.outbound import OutboundKafkaChannel
@@ -16,8 +15,6 @@ class InboundEventsChannel(InboundKafkaChannel):
 
     def __init__(self, name: str, **kwargs) -> None:
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
-        self.logger = get_logger(__name__)
-
         self.config["value_deserializer"] = json_deserializer
 
     async def on_message(self, message: ConsumerRecord) -> None:
@@ -43,8 +40,6 @@ class OutboundEventsChannel(OutboundKafkaChannel):
 
     def __init__(self, name: str, metadata: Dict = dict(), **kwargs) -> None:
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
-        self.logger = get_logger(__name__)
-
         self._default_metadata = metadata.copy()
 
     async def send(self, msg: Event) -> None:
