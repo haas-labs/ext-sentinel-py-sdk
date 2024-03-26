@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.20
+
+Fix
+
+- Add name for StandardABISignature database
+
 ## v0.3.19
 
 Feature
