@@ -3,7 +3,7 @@ imports:
 
 sentries:
 
-- name: SimpleTxDetector
+- name: SimpleTxMetricsDetector
   type: transaction.sentry.SimpleTxDetector
   description: >
     The example of simple transactions detector for logging 
