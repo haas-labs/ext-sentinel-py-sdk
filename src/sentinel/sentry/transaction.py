@@ -46,7 +46,7 @@ class TransactionDetector(AsyncCoreSentry):
         assert network is not None, f"Unknown network, {network}"
 
         detector_prefix = BLOCKCHAIN.get(network).short_name
-        self.name = "://".join([detector_prefix, name]) if network != "" else name
+        self.logger_name = "://".join([detector_prefix, name]) if network != "" else name
 
     # handle incoming transaction
     async def on_transaction(self, transaction: Transaction) -> None: ...
