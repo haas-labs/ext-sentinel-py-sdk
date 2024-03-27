@@ -7,6 +7,7 @@ import aiofiles
 
 from typing import Any, Dict
 
+from sentinel.utils.logger import get_logger
 from sentinel.channels.common import InboundChannel, OutboundChannel
 
 
@@ -29,6 +30,8 @@ class InboundFileChannel(InboundChannel):
                                     messages in seconfs, default: 0
         """
         super().__init__(name, record_type, **kwargs)
+        self.logger = get_logger(__name__)
+
         self.path = path
         self.time_interval = time_interval
 
@@ -63,6 +66,7 @@ class OutboundFileChannel(OutboundChannel):
         **kwargs,
     ) -> None:
         super().__init__(name, record_type, **kwargs)
+        self.logger = get_logger(__name__)
 
         self.buffering = buffering
         self.msg_queue = asyncio.Queue(maxsize=DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE)

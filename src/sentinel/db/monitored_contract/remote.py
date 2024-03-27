@@ -76,7 +76,7 @@ class MonitoredContractsDB:
             # remove duplicates
             self._contracts = list(set(self._contracts))
 
-            last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
+            last_update_dt = datetime.datetime.fromtimestamp(self._last_update).isoformat()
             self.logger.info(f"Detected monitored contracts: {len(self.contracts)}, last update: {last_update_dt}")
             self._initial_update = False
             return self._contracts

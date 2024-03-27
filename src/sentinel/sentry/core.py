@@ -26,13 +26,11 @@ class CoreSentry(multiprocessing.Process):
     # understand sentry's purpose
     description: str = "Core Sentry"
 
-    # Restart policy
-    restart: bool = False
-
     def __init__(
         self,
         name: str = None,
         description: str = None,
+        restart: bool = False,
         parameters: Dict = dict(),
         inputs: List[str] = list(),
         outputs: List[str] = list(),
@@ -51,6 +49,7 @@ class CoreSentry(multiprocessing.Process):
         self.description = (
             description.strip() if description is not None else " ".join(self.description.split()).strip()
         )
+        self.restart = restart
         self.parameters = parameters.copy()
         self.settings = settings
 

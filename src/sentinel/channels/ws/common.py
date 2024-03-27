@@ -3,6 +3,7 @@ import websockets
 
 from typing import Any
 
+from sentinel.utils.logger import get_logger
 from sentinel.channels.common import Channel
 
 
@@ -14,10 +15,10 @@ class WebsocketChannel(Channel):
 
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
         super().__init__(name=name, record_type=record_type, **kwargs)
-
+        self.logger = get_logger(__name__)
+        
         # Web socket server URI
         self.server_uri = self.config.get("server_uri")
-
 
 class InboundWebsocketChannel(WebsocketChannel):
     name = "inbound_websocket_channel"

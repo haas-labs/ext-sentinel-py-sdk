@@ -292,7 +292,7 @@ class SentryDispatcher:
                 if len(self.active_sentries) == 0:
                     logger.info("No active sentries")
                     break
-                logger.info(f"Active sentries: {[s.name for s in self.active_sentries]}")
+                logger.info(f"Active sentries: {[s.logger_name for s in self.active_sentries]}")
 
         except KeyboardInterrupt:
             logger.warning("Interrupting by user")
