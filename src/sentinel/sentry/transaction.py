@@ -20,6 +20,8 @@ Optional dependencies:
 - different databases
 
 """
+
+
 class TransactionDetector(AsyncCoreSentry):
     name = "TransactionDetector"
     description = """
@@ -31,13 +33,23 @@ class TransactionDetector(AsyncCoreSentry):
         self,
         name: str = None,
         description: str = None,
+        restart: bool = True,
         parameters: Dict = dict(),
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
         settings: ProjectSettings = None,
     ) -> None:
-        super().__init__(name, description, parameters, inputs, outputs, databases, settings)
+        super().__init__(
+            name=name,
+            description=description,
+            restart=restart,
+            parameters=parameters,
+            inputs=inputs,
+            outputs=outputs,
+            databases=databases,
+            settings=settings,
+        )
 
         # remove empty spaces and new lines in description
         self.description = " ".join(self.description.split())

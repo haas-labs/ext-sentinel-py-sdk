@@ -28,13 +28,23 @@ class BlockTxDetector(TransactionDetector):
         self,
         name: str = None,
         description: str = None,
+        restart: bool = True,
         parameters: Dict = dict(),
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
         settings: ProjectSettings = None,
     ) -> None:
-        super().__init__(name, description, parameters, inputs, outputs, databases, settings)
+        super().__init__(
+            name=name,
+            description=description,
+            restart=restart,
+            parameters=parameters,
+            inputs=inputs,
+            outputs=outputs,
+            databases=databases,
+            settings=settings,
+        )
 
         # Blocks stack size
         self._blocks_stack_size = parameters.get("block_stack_size", 3)
