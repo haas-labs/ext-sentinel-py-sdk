@@ -77,8 +77,8 @@ class CommonLabelDB:
             return
 
         self._last_update = self.current_time()
-        last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
-        self.logger.info(f"Updating label database, last update: {last_update_dt}")
+        last_update_dt = datetime.datetime.fromtimestamp(self._last_update).isoformat()
+        self.logger.info(f"Updating label database, last update: {last_update_dt}, records: {self.stats()}")
 
         for tag in self._addresses.keys():
             try:

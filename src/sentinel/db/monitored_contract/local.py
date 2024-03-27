@@ -18,7 +18,7 @@ class MonitoredContractsDB:
         Static Monitored Constacts Database Init
         """
         self.logger = get_logger(__name__)
-        
+
         # The path to local static monitored contracts DB
         if isinstance(path, str):
             self.path = pathlib.Path(path)
@@ -64,8 +64,8 @@ class MonitoredContractsDB:
             return self.contracts
 
         self._last_update = self.current_time()
-        last_update_dt = datetime.datetime.utcfromtimestamp(self._last_update).isoformat()
-        self.logger.info(f"Updating monitored contract list, last update: {last_update_dt}")
+        last_update_dt = datetime.datetime.fromtimestamp(self._last_update).isoformat()
+        self.logger.info(f"Detected monitored contract: {len(self.contracts)}, last update: {last_update_dt}")
 
         self._import_csv(self.path)
 
