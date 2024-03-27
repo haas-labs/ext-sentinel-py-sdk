@@ -1,13 +1,16 @@
+from sentinel.models.project import ProjectSettings
 from sentinel.sentry.transaction import TransactionDetector
 
 
 def test_tx_detector_init():
     detector = TransactionDetector(
         name="TestTXDetector",
+        settings=ProjectSettings(),
         parameters={
             "network": "ethereum",
         },
     )
+    detector.activate()
     assert isinstance(detector, TransactionDetector), "Incorrect tx detector type"
     assert detector.name == "eth://TestTXDetector", "Incorrect detector name"
     assert (

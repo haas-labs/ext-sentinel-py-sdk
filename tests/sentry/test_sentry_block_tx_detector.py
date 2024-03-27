@@ -1,13 +1,16 @@
+from sentinel.models.project import ProjectSettings
 from sentinel.sentry.block_tx import BlockTxDetector
 
 
 def test_block_tx_detector_init():
     detector = BlockTxDetector(
         name="TestBlockTxDetector",
+        settings=ProjectSettings(),
         parameters={
             "network": "ethereum",
         },
     )
+    detector.activate()
     assert isinstance(detector, BlockTxDetector), "Incorrect block tx detector type"
     assert detector.name == "eth://TestBlockTxDetector", "Incorrect detector name"
     assert (
