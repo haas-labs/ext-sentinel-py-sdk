@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.25
+
+Feature
+
+- Optimize sentry channels and databases (#182)
+- Split using logger name and process name for sentry
+
 ## v0.3.24
 
 Fix
