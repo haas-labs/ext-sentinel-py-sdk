@@ -6,7 +6,6 @@ inputs:
   type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
   parameters:
     bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
-    auto_offset_reset: latest
     topics: 
     - {{ env['KAFKA_INBOUND_ETH_TX_TOPIC'] }}
 
@@ -14,7 +13,6 @@ inputs:
   type: sentinel.channels.kafka.transactions.InboundTransactionsChannel
   parameters:
     bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
-    auto_offset_reset: latest
     topics: 
     - {{ env['KAFKA_INBOUND_BSC_TX_TOPIC'] }}
 
