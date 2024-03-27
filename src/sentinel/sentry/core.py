@@ -47,26 +47,42 @@ class CoreSentry(multiprocessing.Process):
         """
         super().__init__()
         self.name = name if name is not None else self.name
+        self.logger_name = self.name
         self.description = (
             description.strip() if description is not None else " ".join(self.description.split()).strip()
         )
         self.parameters = parameters.copy()
         self.settings = settings
-        self.inputs = SentryInputs(
-            sentry_name=self.name, ids=inputs, channels=settings.inputs if hasattr(settings, "inputs") else []
-        )
-        self.outputs = SentryOutputs(ids=outputs, channels=settings.outputs if hasattr(settings, "outputs") else [])
-        self.databases = SentryDatabases(
-            ids=databases, databases=settings.databases if hasattr(settings, "databases") else []
-        )
+
+        self._inputs = inputs
+        self._outputs = outputs
+        self._databases = databases
 
     def run(self) -> None:
         """
         Method representing sentry's activity
         """
-        self.logger = get_logger(name=self.name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
+        self.activate()
         self.on_init()
         self.on_run()
+
+    def activate(self):
+        """
+        Activate Sentry periphery
+        """
+        self.logger = get_logger(name=self.logger_name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
+
+        self.inputs = SentryInputs(
+            sentry_name=self.name,
+            ids=self._inputs,
+            channels=self.settings.inputs if hasattr(self.settings, "inputs") else [],
+        )
+        self.outputs = SentryOutputs(
+            ids=self._outputs, channels=self.settings.outputs if hasattr(self.settings, "outputs") else []
+        )
+        self.databases = SentryDatabases(
+            ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
+        )
 
     def on_init(self) -> None: ...
 
@@ -95,7 +111,8 @@ class AsyncCoreSentry(CoreSentry):
         """
         Method representing async sentry's activity
         """
-        self.logger = get_logger(name=self.name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
+        self.activate()
+        
         try:
             asyncio.run(self._run())
         except KeyboardInterrupt:
