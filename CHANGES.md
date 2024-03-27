@@ -1,5 +1,20 @@
 # Change Log
 
+## v0.3.26
+
+Feature
+
+- Simple Tx Transaction detector counts transaction metrics
+- Add logger for FS and WS channels
+- Add metrics for databases: label db and monitored contracts
+
+Fix
+
+- Websocket configuration
+- Label DB Metrics
+- Activate restart flag for sentry processes
+- Remove parameters with default values in profiles
+
 ## v0.3.25
 
 Feature
