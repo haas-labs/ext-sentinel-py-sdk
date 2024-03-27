@@ -23,7 +23,7 @@ inputs:
 - id: hacken/cloud/ws/transaction/ethereum
   type: sentinel.channels.ws.transactions.InboundTransactionChannel
   parameters:
-    server_uri: {{ env["ETH_WS_URL"] }}
+    server_uri: {{ env["ETHEREUM_WS_URL"] }}
 
 - id: local/ws/transaction
   type: sentinel.channels.ws.transactions.InboundTransactionChannel
