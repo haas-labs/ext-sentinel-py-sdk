@@ -24,6 +24,7 @@ def process_init(process_classpath: str, **kwargs) -> Any:
 
 PROCESS_STATE_CHECK_TIME_INTERVAL = 30
 STATE_CHECK_TIME_INTERVAL = 5
+TERMINATION_TIMEOUT = 3
 
 
 class Dispatcher:
@@ -223,7 +224,7 @@ class SentryDispatcher:
 
     @property
     def active_sentries(self):
-        return [s for s in self._sentries if s.instance.is_alive()]
+        return [s for s in self._sentries if s.instance is not None and  s.instance.is_alive()]
 
     def intro(self):
         """
@@ -238,9 +239,13 @@ class SentryDispatcher:
             )
         )
 
-    def init_sentry(self, sentry: Sentry) -> Any:
+    def sentry_run(self, sentry: Sentry) -> Any:
+        """
+        Init and run sentry
+        """
         sentry_instance = None
 
+        # Sentry init
         try:
             logger.info(f"Initializing sentry: {sentry.name}<{sentry.type}>")
             _, sentry_class = import_by_classpath(sentry.type)
@@ -259,6 +264,8 @@ class SentryDispatcher:
             logger.error(f"{sentry.type} initialization issue, {err}")
             return None
 
+        # Sentry start
+        sentry_instance.start()
         return sentry_instance
 
     def run(self) -> None:
@@ -269,23 +276,22 @@ class SentryDispatcher:
                 for sentry in self._sentries:
                     # start sentry instance
                     if sentry.instance is None:
-                        sentry.instance = self.init_sentry(sentry=sentry)
-                        if sentry.instance is not None:
-                            sentry.instance.start()
+                        sentry.instance = self.sentry_run(sentry=sentry)
 
                     # TODO check inactive sentry
 
-                    if not sentry.instance.is_alive() and sentry.restart:
+                    if sentry.instance is not None and sentry.restart and not sentry.instance.is_alive():
                         logger.warning(f"Detected inactive sentry ({sentry.name}), restarting...")
-                        # sentry.start()
+                        sentry.instance = self.sentry_run(sentry=sentry)
 
                 logger.info(f"Active sentries: {[s.instance.logger_name for s in self.active_sentries]}")
 
-                # if len(self.active_sentries) == 0:
-                #     logger.info("No active sentries")
-                #     break
+                if len(self.active_sentries) == 0:
+                    logger.info("No active sentries")
+                    break
 
                 time.sleep(STATE_CHECK_TIME_INTERVAL)
+
         except KeyboardInterrupt:
             logger.warning("Interrupting by user")
         finally:
@@ -330,7 +336,7 @@ class SentryDispatcher:
     def stop(self):
         # Terminate the rest of sentries
         for sentry in self._sentries:
-            if sentry.instance.is_alive():
+            if sentry.instance is not None and sentry.instance.is_alive():
                 logger.info(f"Terminating the sentry: {sentry.name}")
                 # TODO Make sure that sentry instance terminated
                 sentry.instance.terminate()
@@ -340,6 +346,5 @@ class SentryDispatcher:
             if len(active_sentries) == 0:
                 break
             logger.info(f"Waiting for termination, {active_sentries}")
-            time.sleep(3)
+            time.sleep(TERMINATION_TIMEOUT)
         logger.info("Termination completed")
-        
