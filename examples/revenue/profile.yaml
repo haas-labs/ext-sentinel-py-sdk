@@ -1,0 +1,22 @@
+sentries:
+
+- name: RevenueMonitor10
+  type: revenue.sentry.RevenueMonitor
+  restart: false
+  description: >
+    The example of simple revenue monitor
+  parameters:
+    network: ethereum
+    timeout: 10
+  schedule: "*/5 * * * *"
+
+
+# - name: RevenueMonitor15
+#   type: revenue.sentry.RevenueMonitor
+#   restart: false
+#   description: >
+#     The example of simple revenue monitor
+#   parameters:
+#     network: ethereum
+#     timeout: 15
+#   schedule: "*/5 * * * *"
