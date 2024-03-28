@@ -4,7 +4,7 @@ from sentinel.models.transaction import Transaction
 from sentinel.sentry.transaction import TransactionDetector
 
 
-class SimpleTxDetector(TransactionDetector):
+class SimpleTxMetricsDetector(TransactionDetector):
     name = "SimpleTxMetricsDetector"
 
     async def on_init(self):
@@ -13,8 +13,8 @@ class SimpleTxDetector(TransactionDetector):
     async def on_transaction(self, transaction: Transaction) -> None:
         """
         Handle transactions with value > 0
-        """        
-        if len(self.metrics) > 0  and self.metrics["total tx"] % 100 == 0:
+        """
+        if len(self.metrics) > 0 and self.metrics["total tx"] % 100 == 0:
             self.logger.info(self.metrics)
 
         match transaction.value:
