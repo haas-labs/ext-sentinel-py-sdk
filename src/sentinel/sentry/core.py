@@ -45,6 +45,7 @@ class CoreSentry(multiprocessing.Process):
         not be inherited
         """
         super().__init__()
+
         self.name = name if name is not None else self.name
         self.logger_name = self.name
         self.description = (
