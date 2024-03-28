@@ -11,7 +11,8 @@ class SentryDatabases:
         self.logger = get_logger(__name__)
         self._databases = []
 
-        self.logger.info(f"Database(-s) activation: {ids}")
+        if len(ids) > 0:
+            self.logger.info(f"Database(-s) activation: {ids}")
         for db in databases:
             if db.id in ids:
                 self._load_db(db)
