@@ -14,7 +14,7 @@ class SimpleTxMetricsDetector(TransactionDetector):
         """
         Handle transactions with value > 0
         """
-        if len(self.metrics) > 0 and self.metrics["total tx"] % 100 == 0:
+        if len(self.metrics) > 0 and self.metrics["total tx"] % 1000 == 0:
             self.logger.info(self.metrics)
 
         match transaction.value:
