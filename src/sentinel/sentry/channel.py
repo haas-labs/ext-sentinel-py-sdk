@@ -11,7 +11,7 @@ class SentryChannels:
         self.sentry_name = sentry_name
         self._channels: List[str] = []
 
-        logger.info(f"Channel(-s) activation: {ids}")
+        logger.info(f"{channel_type.capitalize()} channel(-s) activation: {ids}")
         for channel in channels:
             if channel.id in ids:
                 self._load_channel(channel)
