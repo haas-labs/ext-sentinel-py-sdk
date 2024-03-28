@@ -33,7 +33,8 @@ class BalanceMonitor(BlockTxDetector):
         self.erc20_addr = self.parameters.get("erc20_addr").lower()
         self.erc20_decimals = 10 ** self.parameters.get("erc20_decimals", 18)
         self.erc20_balance_threshold = self.parameters.get("erc20_balance_threshold", 0)
-        self.severity = self.parameters.get("severity", 0.14)
+        # Change to 0.14 when new FrontEnd UI is ready
+        self.severity = self.parameters.get("severity", 0.15)
 
         self.erc20_contract = self.w3.eth.contract(address=self.w3.to_checksum_address(self.erc20_addr), abi=ERC20_ABI)
 

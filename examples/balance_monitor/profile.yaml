@@ -17,7 +17,7 @@ sentries:
     erc20_balance_threshold: 300000000000
     erc20_decimals: 8
     balance_threshold: 100000000000000000000.0000
-    severity: 0.14
+    severity: 0.15
     decimals: 18
   inputs:
   - hacken/cloud/kafka/transaction/ethereum

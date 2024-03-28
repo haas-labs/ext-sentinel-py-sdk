@@ -13,7 +13,7 @@ sentries:
     network: ethereum
     rpc: {{ env['ETH_RPC_URL'] }}
     balance_threshold: 10.0
-    severity: 0.14
+    severity: 0.15
   inputs:
   - balance_monitor/local/fs/transaction/ethereum
   outputs:
