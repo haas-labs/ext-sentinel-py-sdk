@@ -35,6 +35,7 @@ class CoreSentry(multiprocessing.Process):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
+        schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
         """
@@ -56,6 +57,8 @@ class CoreSentry(multiprocessing.Process):
         self._inputs = inputs
         self._outputs = outputs
         self._databases = databases
+
+        self.schedule = schedule
 
     def run(self) -> None:
         """
