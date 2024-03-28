@@ -11,7 +11,6 @@ from sentinel.utils.logger import logger
 from sentinel.utils.imports import import_by_classpath
 
 
-
 def process_init(process_classpath: str, **kwargs) -> Any:
     """
     start process
@@ -233,7 +232,7 @@ class SentryDispatcher:
     def init(self):
         # self._project.settings["LOG_QUEUE"] = self._log_queue
         logger.info(
-            "Initializing project: {}".format(
+            "Project: {}".format(
                 {
                     "name": self.settings.project.name if self.settings.project else "Unknown",
                     "description": self.settings.project.description if self.settings.project else "",
@@ -257,11 +256,13 @@ class SentryDispatcher:
             sentry_instance = sentry_class(
                 name=sentry.name,
                 description=sentry.description,
+                restart=sentry.restart,
                 parameters=sentry.parameters,
                 inputs=sentry.inputs,
                 outputs=sentry.outputs,
                 databases=sentry.databases,
                 settings=self.settings,
+                schedule=sentry.schedule,
             )
         except RuntimeError as err:
             logger.error(f"{sentry.type} initialization issue, {err}")
@@ -300,6 +301,38 @@ class SentryDispatcher:
             self.stop()
 
         logger.info("Processing completed")
+
+    # def run(self) -> None:
+    #     # Init sentry before start
+    #     if not self.init():
+    #         logger.error("Project initialization failed")
+    #         return
+
+    #     for _, sentry in self._sentries.items():
+    #         sentry.start()
+
+    #     try:
+    #         logger.info("Processing started")
+    #         # Main loop
+    #         while True:
+    #             for name, sentry in self._sentries.items():
+    #                 if not sentry.is_alive() and sentry.restart:
+    #                     logger.warning(f"Detected inactive sentry ({name}), restarting...")
+    #                     sentry.start()
+
+    #             time.sleep(STATE_CHECK_TIME_INTERVAL)
+
+    #             if len(self.active_sentries) == 0:
+    #                 logger.info("No active sentries")
+    #                 break
+    #             logger.info(f"Active sentries: {[s.logger_name for s in self.active_sentries]}")
+
+    #     except KeyboardInterrupt:
+    #         logger.warning("Interrupting by user")
+    #     finally:
+    #         self.stop()
+
+    #     logger.info("Processing completed")
 
     def stop(self):
         # Terminate the rest of sentries
