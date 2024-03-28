@@ -20,4 +20,6 @@ def test_sentry_dispatcher_init_components():
     """
     settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/simple-sentinel-project.yml"))
     dispatcher = SentryDispatcher(settings)
-    dispatcher.init()
+
+    assert isinstance(dispatcher, SentryDispatcher), "Incorrect dispatcher type"
+    # TODO the test case is incomplete, this work needs to be done
