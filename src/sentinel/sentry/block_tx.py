@@ -33,6 +33,7 @@ class BlockTxDetector(TransactionDetector):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
+        schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
         super().__init__(
@@ -43,6 +44,7 @@ class BlockTxDetector(TransactionDetector):
             inputs=inputs,
             outputs=outputs,
             databases=databases,
+            schedule=schedule,
             settings=settings,
         )
 

@@ -1,15 +1,33 @@
 import time
 import multiprocessing as mp
 
-from typing import Any, Dict
+from typing import Any, Dict, List
+from datetime import datetime, timezone
+
+from dataclasses import dataclass
 
 from sentinel.version import VERSION
+
 from sentinel.profile import Profile
 from sentinel.project import ProjectSettings
-from sentinel.models.sentry import Sentry
+
 from sentinel.utils.logger import logger
+from sentinel.models.sentry import Sentry
+from sentinel.sentry.core import CoreSentry
 from sentinel.utils.imports import import_by_classpath
 
+
+@dataclass
+class SentryInstance:
+    settings: Sentry
+    name: str = None
+    pid: int = None
+    restart: bool = None
+    instance: CoreSentry = None
+    schedule: str = None
+    launch_time: datetime = None
+    status: str = None
+    exitcode: int = None
 
 
 def process_init(process_classpath: str, **kwargs) -> Any:
@@ -24,7 +42,8 @@ def process_init(process_classpath: str, **kwargs) -> Any:
 # Constants
 
 PROCESS_STATE_CHECK_TIME_INTERVAL = 30
-STATE_CHECK_TIME_INTERVAL = 30
+STATE_CHECK_TIME_INTERVAL = 5
+TERMINATION_TIMEOUT = 3
 
 
 class Dispatcher:
@@ -219,91 +238,159 @@ class SentryDispatcher:
         dispatcher.name = "Dispatcher"
 
         logger.info(f"Sentinel SDK version: {VERSION}")
-        self._sentries = dict()
+
+        # prepare the list of sentries for launch
+        self._sentry_instances: List[SentryInstance] = []
+        for s in self.settings.sentries:
+            if s.restart and s.schedule is not None:
+                logger.warning(
+                    f"The restart option will be unavailable while the schedule is active, sentry: {s.name} "
+                )
+                s.restart = False
+            instance = SentryInstance(settings=s)
+            self._sentry_instances.append(instance)
+
         # self._log_queue = mp.Queue()
 
     @property
-    def sentries(self, active: bool = False):
-        return self._sentries
+    def active_sentries(self):
+        return [s for s in self._sentry_instances if s.instance is not None and s.instance.is_alive()]
 
     @property
-    def active_sentries(self):
-        return [s for s in self._sentries.values() if s.is_alive()]
+    def restarting_sentries(self):
+        return [s for s in self._sentry_instances if s.restart]
 
-    def init(self):
-        # self._project.settings["LOG_QUEUE"] = self._log_queue
+    @property
+    def scheduled_sentries(self):
+        return [s for s in self._sentry_instances if s.schedule is not None]
+
+    def intro(self):
+        """
+        Show project details in log
+        """
         logger.info(
-            "Initializing project: {}".format(
+            "Project: {}".format(
                 {
                     "name": self.settings.project.name if self.settings.project else "Unknown",
                     "description": self.settings.project.description if self.settings.project else "",
                 }
             )
         )
-        try:
-            for sentry in self.settings.sentries:
-                self._sentries[sentry.name] = self.init_sentry(sentry)
-        except RuntimeError as err:
-            logger.error(f"Project initialization failed, {err}")
-            return False
-        return True
 
-    def init_sentry(self, sentry: Sentry) -> Any:
-        sentry_instance = None
-
+    def run_sentry(self, sentry: SentryInstance) -> SentryInstance:
+        """
+        Run sentry and update sentry instance details
+        """
+        settings = sentry.settings
+        # Sentry init
         try:
-            logger.info(f"Initializing sentry: {sentry.name}<{sentry.type}>")
-            _, sentry_class = import_by_classpath(sentry.type)
-            sentry_instance = sentry_class(
-                name=sentry.name,
-                description=sentry.description,
-                parameters=sentry.parameters,
-                inputs=sentry.inputs,
-                outputs=sentry.outputs,
-                databases=sentry.databases,
+            _, sentry_class = import_by_classpath(settings.type)
+            sentry.instance = sentry_class(
+                name=settings.name,
+                description=settings.description,
+                restart=settings.restart,
+                parameters=settings.parameters,
+                inputs=settings.inputs,
+                outputs=settings.outputs,
+                databases=settings.databases,
+                schedule=settings.schedule,
                 settings=self.settings,
             )
         except RuntimeError as err:
-            logger.error(f"{sentry.type} initialization issue, {err}")
+            logger.error(f"{settings.type} initialization issue, {err}")
             return None
 
-        return sentry_instance
+        if settings.schedule:
+            current_datetime = datetime.now(tz=timezone.utc).replace(second=0).replace(microsecond=0)
+            time_to_run = sentry.instance.time_to_run()
+            # logger.info(
+            #     f"Time to run: {time_to_run['curr_date']}, last launch time: {sentry.launch_time}, current datetime: {current_datetime}"
+            # )
+            if time_to_run["curr_date"] == sentry.launch_time or time_to_run["curr_date"] != current_datetime:
+                return sentry
+
+        sentry.instance.start()
+        sentry.launch_time = datetime.now(tz=timezone.utc).replace(microsecond=0).replace(second=0)
+        return self.update_senty_instance_opts(sentry)
+
+    def update_senty_instance_opts(self, sentry: SentryInstance) -> SentryInstance:
+        sentry.name = sentry.settings.name
+        sentry.restart = sentry.settings.restart
+        sentry.schedule = sentry.settings.schedule
+
+        if sentry.instance is not None:
+            sentry.pid = sentry.instance.pid
+            if sentry.instance.is_alive():
+                sentry.status = "started"
+            else:
+                sentry.status = "stopped"
+                sentry.exitcode = sentry.instance.exitcode
+                sentry.instance = None
+
+        return sentry
 
     def run(self) -> None:
-        # Init sentry before start
-        if not self.init():
-            logger.error("Project initialization failed")
-            return
-
-        for _, sentry in self._sentries.items():
-            sentry.start()
+        self.intro()
 
         try:
-            logger.info("Processing started")
-            # Main loop
             while True:
-                for name, sentry in self._sentries.items():
-                    if not sentry.is_alive() and sentry.restart:
-                        logger.warning(f"Detected inactive sentry ({name}), restarting...")
-                        sentry.start()
+                for _id, sentry in enumerate(self._sentry_instances):
+                    # ignore running sentries
+                    if sentry.instance is not None:
+                        continue
 
-                time.sleep(STATE_CHECK_TIME_INTERVAL)
+                    # ignore finished sentries w/o restart flag = true
+                    if sentry.status == "stopped" and not sentry.restart and not sentry.schedule:
+                        continue
 
-                if len(self.active_sentries) == 0:
+                    if sentry.status == "stopped" and sentry.restart:
+                        logger.warning(f"Detected inactive sentry ({sentry.name}), restarting...")
+
+                    self._sentry_instances[_id] = self.run_sentry(sentry)
+
+                logger.info(
+                    "Sentries: "
+                    + f"{len(self._sentry_instances)} total, "
+                    + f"{len(self.active_sentries)} active, "
+                    + f"{len(self.restarting_sentries)} restarting, "
+                    + f"{len(self.scheduled_sentries)} scheduled, "
+                    + f"{len(self._sentry_instances) - len(self.active_sentries)} finished"
+                )
+
+                # update instance options for finished sentry(-ies)
+                for _id, sentry in enumerate(self._sentry_instances):
+                    if sentry.instance is not None and sentry.instance.is_alive():
+                        continue
+                    self._sentry_instances[_id] = self.update_senty_instance_opts(sentry)
+
+                # Stop processing if no active sentries
+                if (
+                    len(self.active_sentries) == 0
+                    and len(self.restarting_sentries) == 0
+                    and len(self.scheduled_sentries) == 0
+                ):
                     logger.info("No active sentries")
                     break
-                logger.info(f"Active sentries: {[s.logger_name for s in self.active_sentries]}")
+
+                time.sleep(STATE_CHECK_TIME_INTERVAL)
 
         except KeyboardInterrupt:
             logger.warning("Interrupting by user")
         finally:
             self.stop()
 
-        logger.info("Processing completed")
-
     def stop(self):
         # Terminate the rest of sentries
-        for name, sentry in self._sentries.items():
-            if sentry.is_alive():
-                logger.info(f"Terminating the sentry: {name}")
-                sentry.terminate()
+        for sentry in self.active_sentries:
+            if sentry is not None and sentry.instance.is_alive():
+                logger.info(f"Terminating the sentry: {sentry.name}")
+                sentry.instance.terminate()
+
+        # Make sure that sentry instance terminated
+        while True:
+            active_sentries = [s.instance.logger_name for s in self.active_sentries]
+            if len(active_sentries) == 0:
+                break
+            logger.info(f"Waiting for termination, {active_sentries}")
+            time.sleep(TERMINATION_TIMEOUT)
+        logger.info("Termination completed")

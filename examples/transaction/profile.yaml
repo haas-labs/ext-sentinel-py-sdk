@@ -4,12 +4,14 @@ imports:
 sentries:
 
 - name: SimpleTxMetricsDetector
-  type: transaction.sentry.SimpleTxDetector
+  type: transaction.sentry.SimpleTxMetricsDetector
+  restart: true
   description: >
     The example of simple transactions detector for logging 
     transactions where a value more than 0
   parameters:
     network: ethereum
   inputs:
-  - hacken/cloud/ws/transaction/ethereum
+  # - hacken/cloud/ws/transaction/ethereum
+  - hacken/cloud/kafka/transaction/ethereum
 

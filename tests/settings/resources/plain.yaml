@@ -14,8 +14,6 @@ sentries:
   - local/fs/Event
   databases:
   - local/address
-  schedule:
-  - kubernetes
 
 # Sentry Input Definitions
 
