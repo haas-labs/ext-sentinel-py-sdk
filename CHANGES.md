@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.3.27
+
+Feature
+
+- Add sentry scheduler (#186)
+- Add croniter deps
+- Sentry Dispatcher support single run sentry, restarted and scheduled
+- Add anvil blockchain definition
+- Update severity to 0.15 
+
 ## v0.3.26
 
 Feature
