@@ -12,4 +12,7 @@ BLOCKCHAIN = {
     "arbitrum": Blockchain(
         network="arbitrum", chain_id=42161, short_name="arb", description="Arbitrum One", currency="ETH"
     ),
+    "anvil": Blockchain(
+        network="anvil", chain_id=31337, short_name="anv", description="Anvil Testnet", currency="ETH"
+    ),
 }
