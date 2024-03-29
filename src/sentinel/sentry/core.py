@@ -57,6 +57,7 @@ class CoreSentry(multiprocessing.Process):
         self.restart = restart
         self.parameters = parameters.copy()
         self.settings = settings
+        self.run_on_schedule = False
 
         self._inputs = inputs
         self._outputs = outputs
@@ -70,6 +71,8 @@ class CoreSentry(multiprocessing.Process):
         """
         self.activate()
         self.on_init()
+        if self.run_on_schedule:
+            self.on_schedule()
         self.on_run()
 
     def activate(self):
@@ -104,6 +107,7 @@ class CoreSentry(multiprocessing.Process):
 
     def on_run(self) -> None: ...
 
+    def on_schedule(self) -> None: ...
 
 class AsyncCoreSentry(CoreSentry):
     name = "AsyncCoreSentry"

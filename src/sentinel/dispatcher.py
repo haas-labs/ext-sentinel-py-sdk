@@ -308,6 +308,7 @@ class SentryDispatcher:
             # )
             if time_to_run["curr_date"] == sentry.launch_time or time_to_run["curr_date"] != current_datetime:
                 return sentry
+            sentry.instance.run_on_schedule = True
 
         sentry.instance.start()
         sentry.launch_time = datetime.now(tz=timezone.utc).replace(microsecond=0).replace(second=0)
