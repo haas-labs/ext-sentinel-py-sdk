@@ -1,22 +1,41 @@
 sentries:
 
-- name: RevenueMonitor10
-  type: revenue.sentry.RevenueMonitor
+- name: TimeoutMonitor10
+  type: revenue.sentry.TimeoutMonitor
   restart: false
   description: >
     The example of simple revenue monitor
   parameters:
     network: ethereum
     timeout: 10
-  schedule: "*/5 * * * *"
+  # schedule: "*/1 * * * *"
 
+- name: TimeoutMonitor20
+  type: revenue.sentry.TimeoutMonitor
+  restart: false
+  description: >
+    The example of simple revenue monitor
+  parameters:
+    network: ethereum
+    timeout: 20
+  # schedule: "*/2 * * * *"
 
-# - name: RevenueMonitor15
-#   type: revenue.sentry.RevenueMonitor
+- name: TimeoutMonitor30
+  type: revenue.sentry.TimeoutMonitor
+  restart: false
+  description: >
+    The example of simple revenue monitor
+  parameters:
+    network: ethereum
+    timeout: 30
+  # schedule: "*/2 * * * *"
+
+# - name: TimeoutMonitor60
+#   type: revenue.sentry.TimeoutMonitor
 #   restart: false
 #   description: >
 #     The example of simple revenue monitor
 #   parameters:
 #     network: ethereum
-#     timeout: 15
-#   schedule: "*/5 * * * *"
+#     timeout: 60
+#   schedule: "*/2 * * * *"

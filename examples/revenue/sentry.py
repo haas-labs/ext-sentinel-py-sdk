@@ -2,10 +2,9 @@ import time
 from sentinel.sentry.core import CoreSentry
 
 
-class RevenueMonitor(CoreSentry):
+class TimeoutMonitor(CoreSentry):
     def on_run(self) -> None:
-        timeout = self.parameters.get("timeout")
-        self.logger.info(f"Starting revenue monitor, with timeout: {timeout}")
-        # time.sleep(self.parameters.get("timeout"))
-        time.sleep(10)
-        self.logger.info("Revenue monitor finished")
+        timeout = self.parameters.get("timeout", 10)
+        self.logger.info(f"Starting timeout monitor, with timeout: {timeout}")
+        time.sleep(timeout)
+        self.logger.info("Timeout monitor finished")
