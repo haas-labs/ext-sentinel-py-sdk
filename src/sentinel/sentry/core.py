@@ -3,6 +3,9 @@ import logging
 import multiprocessing
 
 from typing import Dict, List
+from datetime import datetime, timezone
+
+from croniter import croniter
 
 from sentinel.utils.logger import get_logger
 
@@ -87,6 +90,16 @@ class CoreSentry(multiprocessing.Process):
             ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
         )
 
+    def time_to_run(self) -> datetime:
+        if self.schedule is None:
+            return False
+        cron = croniter(self.schedule, datetime.now(tz=timezone.utc))
+        return {
+            "prev_date": cron.get_prev(datetime),
+            "curr_date": cron.get_current(datetime),
+            "next_date": cron.get_next(datetime),
+        }
+
     def on_init(self) -> None: ...
 
     def on_run(self) -> None: ...
@@ -115,7 +128,7 @@ class AsyncCoreSentry(CoreSentry):
         Method representing async sentry's activity
         """
         self.activate()
-        
+
         try:
             asyncio.run(self._run())
         except KeyboardInterrupt:
