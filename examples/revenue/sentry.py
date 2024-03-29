@@ -3,7 +3,6 @@ from sentinel.sentry.core import CoreSentry
 
 
 class TimeoutMonitor(CoreSentry):
-
     def on_schedule(self) -> None:
         self.logger.info("Started on schedule")
 
