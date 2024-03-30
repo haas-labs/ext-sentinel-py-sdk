@@ -16,6 +16,7 @@ help() {
     echo " - list-images"
     echo " - remove-images"
     echo 
+    echo " - base-version"
     echo " - build-base-image"
     echo " - build-dev-image"
     echo " - build-all"
@@ -54,6 +55,10 @@ remove-images() {
     echo "[INFO] Removing ext/sentinel images from local" \
         && docker images "ext/sentinel*/*" --quiet | xargs docker image rm \
         && docker images "ext/sentinel*" --quiet | xargs docker image rm   
+}
+
+base-version() {
+    echo ${SENTINEL_DOCKER_VERSION}
 }
 
 build-base-image() {
