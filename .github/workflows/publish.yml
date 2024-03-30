@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  Publish Base Docker Image:
+  Publish-Base-Docker-Image:
     runs-on: gha-arc-basic
 
     steps:
