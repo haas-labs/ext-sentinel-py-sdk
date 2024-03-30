@@ -4,9 +4,12 @@ The directory contains dockerfiles for building docker images:
 - base: required for building Sentinel detectors/monitors/... 
 - dev: required for local development and testing. For example, this image is helpful to be used in [VS Code devcontainer](https://code.visualstudio.com/docs/devcontainers/containers). Dev image uses the base image and contains extra python packages for SDK testing.
 
+The reference to Base Docker image
+- `dkr.ecr.eu-west-1.amazonaws.com/extractor/sentinel/base:<version>`
+
 ## Version
 
-The version of base Sentinel SDK docker image stored in `/scripts/common`, variable: SENTINEL_DOCKER_VERSION
+The version of base Sentinel SDK docker image stored in `/scripts/common`, variable: `SENTINEL_DOCKER_VERSION`
 
 ## How to build docker images locally
 
