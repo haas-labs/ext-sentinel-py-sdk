@@ -8,7 +8,7 @@ The directory contains dockerfiles for building docker images:
 
 The version of base Sentinel SDK docker image stored in `/scripts/common`, variable: SENTINEL_DOCKER_VERSION
 
-## How to build docker images
+## How to build docker images locally
 
 From Sentinel SDK root directory, to build base docker image, run:
 ```sh
@@ -19,3 +19,7 @@ To build dev image, run:
 ```sh
 ./scripts/docker build-dev-image
 ```
+
+## How to build base docker image and publish to AWS ECR
+
+Check Github workflow `.github/workflows/publish.yml`
