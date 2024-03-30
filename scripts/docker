@@ -16,9 +16,9 @@ help() {
     echo " - list-images"
     echo " - remove-images"
     echo 
+    echo " - base-version"
     echo " - build-base-image"
     echo " - build-dev-image"
-    echo " - build-bundle-image"
     echo " - build-all"
     echo 
 }
@@ -57,21 +57,16 @@ remove-images() {
         && docker images "ext/sentinel*" --quiet | xargs docker image rm   
 }
 
-build-base-image() {
+base-version() {
+    echo ${SENTINEL_DOCKER_VERSION}
+}
 
-    ./scripts/build
-    
-    sentinel_sdk_tarball=$(ls dist/*.tar.gz)
-    cp $sentinel_sdk_tarball docker/ext_sentinel_py_sdk.tar.gz
+build-base-image() {
     
     echo "[INFO] Building base image" \
     && docker build \
         -t ext/sentinel/base:${SENTINEL_DOCKER_VERSION} \
         -f docker/Dockerfile.base docker/ \
-    && echo -n "[INFO] Installed Sentinel SDK: " \
-    && docker run -ti --rm --name sentinel-console \
-        ext/sentinel/base:${SENTINEL_DOCKER_VERSION} \
-        sentinel version --all \
     && echo "[INFO] Completed successfully"
 }
 
@@ -83,19 +78,10 @@ build-dev-image() {
         -f docker/Dockerfile.dev . 
 }
 
-build-bundle-image() {
-
-    echo "[INFO] Building bundle image" \
-    && docker build \
-        -t ext/sentinel/bundle:${SENTINEL_DOCKER_VERSION} \
-        -f docker/Dockerfile.bundle . 
-}
-
 build-all-images() {
 
     build-base-image \
-    && build-dev-image \
-    && build-bundle-image
+    && build-dev-image
 }
 
 $@

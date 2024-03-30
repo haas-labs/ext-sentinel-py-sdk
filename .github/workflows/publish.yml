@@ -1,0 +1,61 @@
+name: Publish
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - docker/**
+
+jobs:
+
+  Publish Base Docker Image:
+    runs-on: gha-arc-basic
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.HAAS_DEVOPS }}
+        fetch-depth: 0
+
+    - name: Getting Sentinel Base Docker Image Version
+      run: |-
+        BASE_VERSION=`./scripts/docker base-version`
+        echo "BASE_VERSION=$BASE_VERSION" >> $GITHUB_ENV
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Context for Buildx
+      id: buildx-context
+      run: |
+        docker context create builders
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        endpoint: builders
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: eu-west-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build Sentinel Detectors Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: docker/Dockerfile
+        push: false
+        tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/extractor/sentinel/base:${{ env.BASE_VERSION }}
+        outputs: type=docker
+
+    # workaround https://github.com/docker/build-push-action/issues/826#issuecomment-1453354130
+    - name: Push manually
+      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/extractor/sentinel/core-detectors:${{ env.DETECTORS_VERSION }}
