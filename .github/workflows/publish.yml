@@ -51,11 +51,11 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: docker/Dockerfile
+        file: docker/Dockerfile.base
         push: false
         tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/extractor/sentinel/base:${{ env.BASE_VERSION }}
         outputs: type=docker
 
     # workaround https://github.com/docker/build-push-action/issues/826#issuecomment-1453354130
     - name: Push manually
-      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/extractor/sentinel/core-detectors:${{ env.DETECTORS_VERSION }}
+      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com/extractor/sentinel/base:${{ env.BASE_VERSION }}
