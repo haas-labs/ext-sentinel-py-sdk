@@ -1,1 +1,1 @@
-VERSION="0.3.27.dev6"
+VERSION="0.3.27.dev7"
