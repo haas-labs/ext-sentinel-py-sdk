@@ -4,6 +4,10 @@ from typing import Dict, Optional
 from pydantic import BaseModel, Field
 
 
+def get_event_id() -> str:
+    return str(uuid.uuid4().hex)
+
+
 class Blockchain(BaseModel):
     network: str
     chain_id: str
@@ -18,7 +22,7 @@ class Event(BaseModel):
     did: str
 
     # Event UUID
-    eid: str = Field(default=uuid.uuid4().hex)
+    eid: str = Field(default_factory=get_event_id)
 
     # Source ID
     # TODO Default value for Sentinel Detector
