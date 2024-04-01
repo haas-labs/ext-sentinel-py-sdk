@@ -1,5 +1,31 @@
 # Change Log
 
+## v0.3.28
+
+Feature
+
+- Restart flag for sentry is true by default
+- Update Githib workflows to run tests only when needed
+- Build base docker during release
+- Docker base image has own versioning
+- Add on_schedule() method support
+
+Fix
+
+- event eid generation issue
+- Sentinel base docker image name
+
+Refactoring
+
+- Increase time interval for sentry status check (30 secs)
+- Refs to dockerfile and name of base docker image
+- Remove outdated methods
+
+Documentation
+
+- Add details about base docker image (#195)
+- Add CHANGE and README for dockers
+
 ## v0.3.27
 
 Feature
