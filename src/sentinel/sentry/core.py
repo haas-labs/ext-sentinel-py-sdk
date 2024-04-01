@@ -33,7 +33,7 @@ class CoreSentry(multiprocessing.Process):
         self,
         name: str = None,
         description: str = None,
-        restart: bool = False,
+        restart: bool = True,
         parameters: Dict = dict(),
         inputs: List[str] = list(),
         outputs: List[str] = list(),
