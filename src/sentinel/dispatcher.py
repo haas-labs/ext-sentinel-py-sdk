@@ -42,7 +42,7 @@ def process_init(process_classpath: str, **kwargs) -> Any:
 # Constants
 
 PROCESS_STATE_CHECK_TIME_INTERVAL = 30
-STATE_CHECK_TIME_INTERVAL = 5
+STATE_CHECK_TIME_INTERVAL = 30
 TERMINATION_TIMEOUT = 3
 
 
