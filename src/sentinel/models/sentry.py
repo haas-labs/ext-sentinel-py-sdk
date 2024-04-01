@@ -25,8 +25,8 @@ class Sentry(BaseModel):
     # For example: label a senty for specific env only, prod or dev
     label: Optional[Dict[str, str]] = Field(default_factory=dict)
 
-    # restart flag: true means that dispatcher should restart a sentry if it is ended
-    restart: bool = False
+    # restart flag: true means that dispatcher should restart a sentry if it is finished
+    restart: bool = True
 
     # schedule. Cron-style string to describe periodical sentry runs
     schedule: Optional[str] = None

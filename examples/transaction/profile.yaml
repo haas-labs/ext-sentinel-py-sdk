@@ -5,7 +5,6 @@ sentries:
 
 - name: SimpleTxMetricsDetector
   type: transaction.sentry.SimpleTxMetricsDetector
-  restart: true
   description: >
     The example of simple transactions detector for logging 
     transactions where a value more than 0
