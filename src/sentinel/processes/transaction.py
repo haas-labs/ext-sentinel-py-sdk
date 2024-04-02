@@ -40,7 +40,7 @@ class TransactionDetector(mp.Process):
         network = parameters.get("network")
         assert network is not None, f"Unknown network, {network}"
         
-        detector_prefix = BLOCKCHAIN.get(network).short_name
+        detector_prefix = BLOCKCHAIN.get(network).network
         self.name = "://".join([detector_prefix, name]) if network != "" else name
 
         # Detector Name
