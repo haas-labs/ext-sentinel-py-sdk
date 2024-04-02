@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.29
+
+Feature
+
+- Use full network name in prefix (#199)
+- Add base and optimism chains in definitions
+
 ## v0.3.28
 
 Feature
