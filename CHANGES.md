@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.30
+
+Feature
+
+- Add async web3 helper
+- Add static abi transfer event
+
 ## v0.3.29
 
 Feature

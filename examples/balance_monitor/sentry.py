@@ -1,17 +1,16 @@
 import time
+import uuid
 
 from typing import List
 
-from web3 import Web3
-from web3.eth import AsyncEth
-
-import uuid
 
 from sentinel.definitions import BLOCKCHAIN
 from sentinel.sentry.block_tx import BlockTxDetector
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
 from sentinel.db.contract.abi.erc20 import ERC20 as ERC20_ABI
+from sentinel.utils.web3 import get_async_web3
+
 
 class BalanceMonitor(BlockTxDetector):
     name = "BalanceMonitor"
@@ -22,7 +21,7 @@ class BalanceMonitor(BlockTxDetector):
         addresses: list = self.databases.address.all()
 
         rpc_url = self.parameters.get("rpc")
-        self.w3 = Web3(Web3.AsyncHTTPProvider(rpc_url), modules={"eth": (AsyncEth,)}, middlewares=[])
+        self.w3 = get_async_web3(rpc_url)
 
         self.native = self.parameters.get("native", "ETH")
         self.balances = {a: 0 for a in addresses}
