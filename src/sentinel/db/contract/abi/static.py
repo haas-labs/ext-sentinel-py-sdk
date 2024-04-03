@@ -106,3 +106,41 @@ ABI_EVENT_WITHDRAWAL = ABISignature(
         }
     ),
 )
+
+ABI_EVENT_TRANSFER = ABISignature(
+    contract_address="0x",
+    type="event",
+    signature_hash="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+    signature="Transfer(address,address,uint256)",
+    abi=ABIRecord(
+        **{
+            "name": "Transfer",
+            "type": "event",
+            "inputs": [
+                {
+                    "internal_type": "address",
+                    "name": "from",
+                    "type": "address",
+                    "indexed": True,
+                },
+                {
+                    "internal_type": "address",
+                    "name": "to",
+                    "type": "address",
+                    "indexed": True,
+                },
+                {
+                    "internal_type": "uint256",
+                    "name": "value",
+                    "type": "uint256",
+                    "indexed": False,
+                },
+            ],
+            "outputs": [],
+            "state_mutability": None,
+            "payable": None,
+            "anonymous": False,
+            "constant": None,
+        }
+    ),
+)
