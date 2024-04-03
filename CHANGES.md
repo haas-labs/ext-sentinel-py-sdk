@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.3.31
+
+Feature
+
+- Add outbound fs events channel
+
+Test
+
+- Add general test for inbound transactions channel
+
 ## v0.3.30
 
 Feature
