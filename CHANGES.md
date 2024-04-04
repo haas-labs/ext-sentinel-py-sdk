@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.32
+
+Fix
+
+- Inbound FS events channel name
+
 ## v0.3.31
 
 Feature
