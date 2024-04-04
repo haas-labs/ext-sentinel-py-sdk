@@ -1,5 +1,7 @@
+import time
 from collections import Counter
 
+from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
 from sentinel.sentry.transaction import TransactionDetector
 
@@ -24,3 +26,19 @@ class SimpleTxMetricsDetector(TransactionDetector):
                 self.metrics["total tx with value > 0"] += 1
 
         self.metrics["total tx"] += 1
+        if transaction.value == 0:
+            return
+
+        await self.outputs.events.send(
+            Event(
+                did="transactions",
+                type="test_event",
+                severity=0.01,
+                ts=int(time.time()),
+                blockchain=Blockchain(network="ethereum", chain_id="1"),
+                metadata={
+                    "tx_hash": transaction.hash,
+                    "value": transaction.value,
+                }
+            )
+        )
