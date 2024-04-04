@@ -13,4 +13,13 @@ sentries:
   inputs:
   # - hacken/cloud/ws/transaction/ethereum
   - hacken/cloud/kafka/transaction/ethereum
+  outputs:
+  - transaction/local/fs/event
 
+outputs:
+
+- id: transaction/local/fs/event
+  type: sentinel.channels.fs.events.OutboundEventsChannel
+  parameters:
+    path: transaction/data/events/events.json
+    mode: overwrite
