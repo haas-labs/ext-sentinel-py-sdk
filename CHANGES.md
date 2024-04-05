@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.33
+
+Feature
+
+- Add support several Auth endpoints for getting tokens
+- Add outbound local events channel
+
 ## v0.3.32
 
 Fix
