@@ -7,11 +7,15 @@ from sentinel.utils.logger import logger
 
 SERVICE_ACCOUNT_TOKENS = {
     "HAAS_API_TOKEN": {
+        # "endpoint": "AUTH_HAAS_SERVICE_ENDPOINT_URL",
+        "endpoint": "AUTH_SERVICE_ENDPOINT_URL",
         "realm": "HAAS_REALM",
         "client_id": "HAAS_CLIENT_ID",
         "client_secret": "HAAS_CLIENT_SECRET",
     },
     "EXT_API_TOKEN": {
+        # "endpoint": "AUTH_EXT_SERVICE_ENDPOINT_URL",
+        "endpoint": "AUTH_SERVICE_ENDPOINT_URL",
         "realm": "HACKEN_REALM",
         "client_id": "HACKEN_CLIENT_ID",
         "client_secret": "HACKEN_CLIENT_SECRET",
@@ -68,14 +72,21 @@ def import_service_tokens():
     """
     Import service tokens
     """
-    endpoint = os.environ.get("AUTH_SERVICE_ENDPOINT_URL", None)
-    if endpoint is None:
-        raise AttributeError("Environment variable AUTH_SERVICE_ENDPOINT_URL missed")
-
     for token_name, vars in SERVICE_ACCOUNT_TOKENS.items():
-        realm = os.environ.get(vars.get("realm")) if vars.get("realm") is not None else None
-        client_id = os.environ.get(vars.get("client_id")) if vars.get("client_id") is not None else None
-        client_secret = os.environ.get(vars.get("client_secret")) if vars.get("client_secret") is not None else None
+        endppoint_var_name = vars.get("endpoint")
+        endpoint = os.environ.get(endppoint_var_name) if endppoint_var_name is not None else None
+        if endpoint is None:
+            raise AttributeError(f"Environment variable {endppoint_var_name} missed")
+
+        realm_var_name = vars.get("realm")
+        realm = os.environ.get(realm_var_name) if realm_var_name is not None else None
+
+        client_id_var_name = vars.get("client_id")
+        client_id = os.environ.get(client_id_var_name) if client_id_var_name is not None else None
+
+        client_secret_var_name = vars.get("client_secret")
+        client_secret = os.environ.get(client_secret_var_name) if client_secret_var_name is not None else None
+
         sa_token = ServiceAccountToken(
             endpoint_url=endpoint, realm=realm, client_id=client_id, client_secret=client_secret
         )
