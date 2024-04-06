@@ -75,7 +75,7 @@ class LabelDB(CommonLabelDB):
                 + f"response: {response.content}, query: {query}"
             )
 
-    async def search_by_tag(self, tags: List[str], from_pos: int = 0, limit: int = 10000) -> List[LabelDBRecord]:
+    async def search_by_tag(self, tags: List[str], from_pos: int = 0, limit: int = 15000) -> List[LabelDBRecord]:
         """
         Search labeles by tags
         """
