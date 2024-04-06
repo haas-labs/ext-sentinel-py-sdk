@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.34
+
+Feature
+
+- Increase limits for label db
+
 ## v0.3.33
 
 Feature
