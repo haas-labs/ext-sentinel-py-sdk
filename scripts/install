@@ -11,6 +11,20 @@ else
     PIP="pip"
 fi
 
+function help() {
+
+    echo "Usage: ./scripts/install <option>"
+    echo
+    echo "Options:"
+    echo "  help                - show this help"
+    echo "  deployment-tools    - install deloyment tools: build, twine, hatch"
+    echo "  dev-tools           - install dev tools: ruff, pytest, ..."
+    echo "  sentinel            - install Sentinel SDK in editable mode"
+    echo "  all                 - install deployment and dev tools, Sentinel SDK"
+    echo
+}
+
+
 function deployment-tools() {
 
     echo "[INFO] Install/Upgrade pip" \
