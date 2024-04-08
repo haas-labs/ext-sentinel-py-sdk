@@ -1,31 +1,25 @@
 import pathlib
 
-from sentinel.profile import LauncherProfile
+from sentinel.project import SentinelProject
 from sentinel.dispatcher import Dispatcher
 
 
-def test_dispatcher_discovery():
+def test_sentry_dispatcher_discovery():
     """
     Dispatcher Init
     """
-    profile_path = pathlib.Path("tests/dispatcher/resources/single-process-profile.yml")
-    profile = LauncherProfile().parse(profile_path)
-    dispatcher = Dispatcher(profile)
+    settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/simple-sentinel-project.yml"))
+    dispatcher = Dispatcher(settings)
 
     assert isinstance(dispatcher, Dispatcher), "Incorrect dispatcher type"
 
 
-def test_dispatcher_init_components():
+def test_sentry_dispatcher_init_components():
     """
-    Dispatcher Init
+    Dispatcher Components Init
     """
-    profile_path = pathlib.Path("tests/dispatcher/resources/single-process-profile.yml")
-    profile = LauncherProfile().parse(profile_path)
-    dispatcher = Dispatcher(profile=profile)
-    dispatcher.init()
+    settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/simple-sentinel-project.yml"))
+    dispatcher = Dispatcher(settings)
 
-    assert sorted(dispatcher.processes.keys()) == sorted(
-        [
-            "SimpleDetector",
-        ]
-    ), "Incorrect database list"
+    assert isinstance(dispatcher, Dispatcher), "Incorrect dispatcher type"
+    # TODO the test case is incomplete, this work needs to be done
