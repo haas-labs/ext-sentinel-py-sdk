@@ -75,8 +75,7 @@ class LabelDB(CommonLabelDB):
                 )
 
         if not fetch_all:
-            results = await _query(endpoint=endpoint, query=query)
-            return results.records
+            return await _query(endpoint=endpoint, query=query)
         else:
             records = []
             query.update(
