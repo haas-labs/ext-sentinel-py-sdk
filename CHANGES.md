@@ -1,10 +1,16 @@
 # Change Log
 
+## v0.3.35
+
+Feature
+
+- Add pagination for Label DB
+
 ## v0.3.34
 
 Feature
 
-- Increase limits for label db
+- Increase limits for Label DB (deprecated)
 
 ## v0.3.33
 
