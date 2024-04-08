@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.36
+
+Fix
+
+- Handling queries to Label DB
+
 ## v0.3.35
 
 Feature
