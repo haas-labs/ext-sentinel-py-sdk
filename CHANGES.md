@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.4.0
+
+Feature
+
+- Sentry only approach
+
 ## v0.3.36
 
 Fix
