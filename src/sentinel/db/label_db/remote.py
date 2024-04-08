@@ -1,6 +1,6 @@
 import httpx
 
-from typing import List
+from typing import List, Dict
 
 from .common import CommonLabelDB
 from .common import LabelDBRecord
@@ -10,6 +10,8 @@ DEFAULT_HEADERS = {
     "Accept": "application/json",
     "Content-Type": "application/json",
 }
+
+RECORDS_PER_REQUEST = 10000
 
 
 class LabelDB(CommonLabelDB):
@@ -39,77 +41,79 @@ class LabelDB(CommonLabelDB):
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self._token}"
 
+    async def query(self, endpoint: str, query: Dict, fetch_all: bool = False) -> List[LabelDBRecord]:
+        """
+        Run query agains LabelDB
+        """
+        uniq_addresses = list()
+
+        async def _query(endpoint: str, query: str) -> List[LabelDBRecord]:
+            label_db_record_fields = LabelDBRecord.model_fields.keys()
+            records = []
+            async with httpx.AsyncClient(verify=False) as httpx_async_client:
+                response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
+            if response.status_code == 200:
+                resp = response.json()
+                data = resp.get("data", [])
+                for record in data:
+                    # addresses deduplication
+                    record_address = record.get("address")
+                    if record_address in uniq_addresses:
+                        continue
+                    uniq_addresses.append(record_address)
+
+                    record = {k: v for k, v in record.items() if k in label_db_record_fields}
+                    records.append(LabelDBRecord(**record))
+                return records
+
+            elif response.status_code == 404:
+                return records
+            else:
+                raise RuntimeError(
+                    f"Request error, status code: {response.status_code}, "
+                    + f"response: {response.content}, query: {query}"
+                )
+
+        if not fetch_all:
+            results = await _query(endpoint=endpoint, query=query)
+            return results.records
+        else:
+            records = []
+            query.update(
+                {
+                    "from": 0,
+                    "size": RECORDS_PER_REQUEST,
+                }
+            )
+            while True:
+                query_results = await _query(endpoint=endpoint, query=query)
+                if len(query_results) == 0:
+                    break
+                records.extend(query_results)
+                query["from"] += RECORDS_PER_REQUEST + 1
+            return records
+
     async def search_by_address(self, addresses: List[str], tags: List[str]) -> List[LabelDBRecord]:
         """
         Search labeles for specific addresses and tags
         """
-        uniq_addresses = list()
+        endpoint = self._endpoint_url + "/api/v2/label/cached"
         query = {
             "addresses": addresses,
             "tags": tags,
             # "blockchainNetwork": self._network,
         }
-        endpoint = self._endpoint_url + "/api/v2/label/cached"
+        return await self.query(endpoint=endpoint, query=query)
 
-        async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
-        if response.status_code == 200:
-            results = []
-            label_db_record_fields = LabelDBRecord.model_fields.keys()
-            for record in response.json().get("data", []):
-                # addresses deduplication
-                record_address = record.get("address")
-                if record_address in uniq_addresses:
-                    continue
-                uniq_addresses.append(record_address)
-
-                record = {k: v for k, v in record.items() if k in label_db_record_fields}
-                results.append(LabelDBRecord(**record))
-            return results
-
-        elif response.status_code == 404:
-            return []
-        else:
-            raise RuntimeError(
-                f"Request error, status code: {response.status_code}, "
-                + f"response: {response.content}, query: {query}"
-            )
-
-    async def search_by_tag(self, tags: List[str], from_pos: int = 0, limit: int = 15000) -> List[LabelDBRecord]:
+    async def search_by_tag(self, tags: List[str]) -> List[LabelDBRecord]:
         """
         Search labeles by tags
         """
-        uniq_addresses = list()
+        endpoint = self._endpoint_url + "/api/v2/label/search"
         query = {
-            "from": from_pos,
-            "size": limit,
             "where": "tags in ({})".format(",".join([f"'{t}'" for t in tags])),
         }
-        endpoint = self._endpoint_url + "/api/v2/label/search"
-
-        async with httpx.AsyncClient(verify=False) as httpx_async_client:
-            response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
-        if response.status_code == 200:
-            results = []
-            label_db_record_fields = LabelDBRecord.model_fields.keys()
-            for record in response.json().get("data", []):
-                # addresses deduplication
-                record_address = record.get("address")
-                if record_address in uniq_addresses:
-                    continue
-                uniq_addresses.append(record_address)
-
-                record = {k: v for k, v in record.items() if k in label_db_record_fields}
-                results.append(LabelDBRecord(**record))
-            return results
-
-        elif response.status_code == 404:
-            return []
-        else:
-            raise RuntimeError(
-                f"Request error, status code: {response.status_code}, "
-                + f"response: {response.content}, query: {query}"
-            )
+        return await self.query(endpoint=endpoint, query=query, fetch_all=True)
 
     async def add(self, address: str, tags: List[str], category: str) -> bool:
         """
