@@ -6,11 +6,10 @@ from argparse import ArgumentParser, Namespace
 import rich
 
 from sentinel.utils.logger import logger
-from sentinel.profile import LauncherProfile
+from sentinel.dispatcher import Dispatcher
 from sentinel.project import SentinelProject
 from sentinel.utils.settings import IncorrectFileFormat
 from sentinel.commands.common import SentinelCommand
-from sentinel.dispatcher import Dispatcher, SentryDispatcher
 from sentinel.services.service_account import import_service_tokens
 
 
@@ -29,7 +28,6 @@ class Command(SentinelCommand):
             help="Run in dry-run mode w/o real processing, just profile validation and printing out",
         )
         parser.add_argument("--import-service-tokens", action="store_true", help="Import service tokens before launch")
-        parser.add_argument("--sentry", action="store_true", help="Use sentry dispatcher")
 
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
@@ -39,20 +37,14 @@ class Command(SentinelCommand):
             import_service_tokens()
 
         try:
-            if args.sentry:
-                if args.settings.project is None or not args.settings.project.path.exists():
-                    logger.error("Cannot detect project directory, missed sentinel.yalm file")
-                    return
+            if args.settings.project is None or not args.settings.project.path.exists():
+                logger.error("Cannot detect project directory, missed sentinel.yalm file")
+                return
 
-                settings = SentinelProject().parse(path=args.profile, extra_vars=self.extra_vars)
-                dispatcher = SentryDispatcher(settings)
-                if args.dry_run:
-                    rich.print_json(settings.model_dump_json())
-            else:
-                profile = LauncherProfile().parse(path=args.profile, settings=self.extra_vars)
-                dispatcher = Dispatcher(profile=profile)
-                if args.dry_run:
-                    rich.print_json(profile.model_dump_json())
+            settings = SentinelProject().parse(path=args.profile, extra_vars=self.extra_vars)
+            dispatcher = Dispatcher(settings)
+            if args.dry_run:
+                rich.print_json(settings.model_dump_json())
             dispatcher.run()
         except IncorrectFileFormat as err:
             logger.error(err)

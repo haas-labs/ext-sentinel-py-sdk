@@ -15,7 +15,7 @@ def test_load_extra_vars():
     assert (
         load_extra_vars(
             [
-                "@tests/profile/resources/vars.json",
+                "@tests/utils/resources/vars.json",
             ]
         )
         == expected_result
@@ -23,7 +23,7 @@ def test_load_extra_vars():
     assert (
         load_extra_vars(
             [
-                "@tests/profile/resources/vars.yml",
+                "@tests/utils/resources/vars.yaml",
             ]
         )
         == expected_result
