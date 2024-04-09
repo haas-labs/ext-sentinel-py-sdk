@@ -18,7 +18,7 @@ class InboundTransactionsChannel(InboundFileChannel):
         Handle consumer message for transaction channel
         """
         if self.use_current_time:
-            message.block.timestamp = int(time.time())
+            message.block.timestamp = int(time.time() * 1000)
         await self.on_transaction(message)
 
         # TODO add handling of transactions batch

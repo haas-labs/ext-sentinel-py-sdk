@@ -34,7 +34,7 @@ class SimpleTxMetricsDetector(TransactionDetector):
                 did="transactions",
                 type="test_event",
                 severity=0.01,
-                ts=int(time.time()),
+                ts=int(time.time() * 1000),
                 blockchain=Blockchain(network="ethereum", chain_id="1"),
                 metadata={
                     "tx_hash": transaction.hash,
