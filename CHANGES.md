@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.4.1
+
+Feature
+
+- Multiple auth service endpoints support
+
 ## v0.4.0
 
 Feature
