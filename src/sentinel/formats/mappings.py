@@ -33,7 +33,7 @@ JSONRPC_BLOCK_FIELD_MAPPINGS = {
 
 JSONRPC_BLOCK_FIELD_TRANSFORM = {
     "number": lambda v: int(v, 0),
-    "timestamp": lambda v: int(v, 0),
+    "timestamp": lambda v: int(v, 0) * 1000,
     "difficulty": lambda v: int(v, 0),
     "size": lambda v: int(v, 0),
     "total_difficulty": lambda v: int(v, 0),
