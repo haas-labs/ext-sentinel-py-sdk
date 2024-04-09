@@ -8,14 +8,14 @@ from sentinel.utils.logger import logger
 SERVICE_ACCOUNT_TOKENS = {
     "HAAS_API_TOKEN": {
         # "endpoint": "AUTH_HAAS_SERVICE_ENDPOINT_URL",
-        "endpoint": "AUTH_SERVICE_ENDPOINT_URL",
+        "endpoint": "AUTH_HAAS_SERVICE_ENDPOINT_URL",
         "realm": "HAAS_REALM",
         "client_id": "HAAS_CLIENT_ID",
         "client_secret": "HAAS_CLIENT_SECRET",
     },
     "EXT_API_TOKEN": {
         # "endpoint": "AUTH_EXT_SERVICE_ENDPOINT_URL",
-        "endpoint": "AUTH_SERVICE_ENDPOINT_URL",
+        "endpoint": "AUTH_EXT_SERVICE_ENDPOINT_URL",
         "realm": "HACKEN_REALM",
         "client_id": "HACKEN_CLIENT_ID",
         "client_secret": "HACKEN_CLIENT_SECRET",
