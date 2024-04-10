@@ -14,6 +14,7 @@ from sentinel.utils.logger import logger
 from sentinel.models.sentry import Sentry
 from sentinel.sentry.core import CoreSentry
 from sentinel.utils.imports import import_by_classpath
+from sentinel.metrics.core import MetricQueue
 
 
 @dataclass
@@ -27,6 +28,7 @@ class SentryInstance:
     launch_time: datetime = None
     status: str = None
     exitcode: int = None
+
 
 # Constants
 
@@ -57,7 +59,7 @@ class Dispatcher:
             instance = SentryInstance(settings=s)
             self._sentry_instances.append(instance)
 
-        # self._log_queue = mp.Queue()
+        self.metrics = MetricQueue()
 
     @property
     def active_sentries(self):
@@ -100,6 +102,7 @@ class Dispatcher:
                 inputs=settings.inputs,
                 outputs=settings.outputs,
                 databases=settings.databases,
+                metrics=self.metrics,
                 schedule=settings.schedule,
                 settings=self.settings,
             )
