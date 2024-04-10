@@ -1,5 +1,13 @@
 # Change Log
 
+## v0.4.2
+
+Fix
+
+- Block timestamp format in:
+  - sentinel fetch command for transactions
+  - case of use `use_current_time` for `sentinel.channels.fs.InboundTransactionsChannel`
+
 ## v0.4.1
 
 Feature
