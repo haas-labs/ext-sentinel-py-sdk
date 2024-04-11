@@ -2,10 +2,10 @@ from typing import Dict, List
 
 from pydantic import BaseModel
 
+from sentinel.metrics.core import MetricQueue
 from sentinel.models.project import ProjectSettings
 from sentinel.models.transaction import Transaction
 from sentinel.sentry.transaction import TransactionDetector
-
 
 class Block(BaseModel):
     """
@@ -33,6 +33,7 @@ class BlockTxDetector(TransactionDetector):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
+        metrics: MetricQueue = None,
         schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
@@ -44,6 +45,7 @@ class BlockTxDetector(TransactionDetector):
             inputs=inputs,
             outputs=outputs,
             databases=databases,
+            metrics=metrics,
             schedule=schedule,
             settings=settings,
         )

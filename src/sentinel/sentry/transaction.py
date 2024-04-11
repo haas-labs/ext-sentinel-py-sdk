@@ -2,6 +2,7 @@ import asyncio
 
 from typing import Dict, List
 
+from sentinel.metrics.core import MetricQueue
 from sentinel.sentry.core import AsyncCoreSentry
 
 from sentinel.definitions import BLOCKCHAIN
@@ -38,6 +39,7 @@ class TransactionDetector(AsyncCoreSentry):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
+        metrics: MetricQueue = None,
         schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
@@ -49,6 +51,7 @@ class TransactionDetector(AsyncCoreSentry):
             inputs=inputs,
             outputs=outputs,
             databases=databases,
+            metrics=metrics,
             schedule=schedule,
             settings=settings,
         )

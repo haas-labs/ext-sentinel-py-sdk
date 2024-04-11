@@ -26,6 +26,9 @@ class Logger:
     def level(self):
         return self.logger.level
 
+    def isEnabledFor(self, level: int):
+        return self.logger.isEnabledFor(level)
+
     def info(self, *args, **kwargs):
         self.logger.info(*args, **kwargs)
 

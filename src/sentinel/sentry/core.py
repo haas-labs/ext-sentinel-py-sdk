@@ -11,6 +11,7 @@ from sentinel.utils.logger import get_logger
 
 from sentinel.models.project import ProjectSettings
 
+from sentinel.metrics.core import MetricQueue
 from sentinel.sentry.db import SentryDatabases
 from sentinel.sentry.channel import SentryInputs, SentryOutputs
 
@@ -38,6 +39,7 @@ class CoreSentry(multiprocessing.Process):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
+        metrics: MetricQueue = None,
         schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
@@ -63,6 +65,7 @@ class CoreSentry(multiprocessing.Process):
         self._outputs = outputs
         self._databases = databases
 
+        self.metrics_queue = metrics
         self.schedule = schedule
 
     def run(self) -> None:
