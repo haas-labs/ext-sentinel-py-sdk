@@ -1,0 +1,112 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="719px" height="374px" viewBox="-0.5 -0.5 719 374" content="&lt;mxfile&gt;&lt;diagram id=&quot;CuLy3fPL6r8aAn4fYLnx&quot; name=&quot;Page-1&quot;&gt;5VrbUtswEP2aPJaxZcuXRwjQzrRMmWE6wKMiy44Gx8rICiT9+kqx5EuUlADOhfCEtV7rcvboaFdk4A0n8+8cTcc3LCH5ADjJfOBdDgBw/TiSf5RlUVnCGFaGjNNEOzWGO/qXaKOjrTOakLLjKBjLBZ12jZgVBcGiY0Ocs5euW8ry7qhTlOkRncZwh1FOLLd7mohxZY1A2Nh/EJqNzchuEFdvJsg4647LMUrYS8vkXQ28IWdMVE+T+ZDkCjyDS/Xd9Ya39cQ4KcRWH/jVF88on+nF6YmJhVktSeTidZNxMWYZK1B+1VgvyJyKB/nWOYO69Shbrn6+VHF3TGPRatwSTidEEG5sheCLh3bjcdkrgKbd9LVsmc6qOauJbsRBm0o241h76aUKxDNivLw6CJK9hMnZ8YX04SRHgj53u0eaRlnt1yAtHzTY64EHr+MuuTFVj3iR0yIh3JMLHbGZfEx+jXIN8Ajhp4wr6++ZkH5E28tq07gKOc6EnDwrZPtbrOCqWac8U5rnQ5YzvhzVSxCJUqycBGdPpPUmwBEZpTXaz4QLMv8/3jaQ+gPPbGWtAMDR7ZdmPwXaNG5vJWP8CPY253+i9AlZAZDLExYQBVMYb0QN5TRTQGMJhOL1hYKJSuk41y8mNEmWm4ZXodQMrkPi9AQwWAE4gFsB7PWArws/g6jsRlPgATVlC9i/lKZEe9SUwML+noxKzPCTpMEpC4vn71FYbJSPUFjC3ShLeEBlCb+4sjhxl/PBHpUlsrC/phJ04NwtSkEmpyUuTldcfGCLS7wjcYmPluOQRIm/juMRGHlB0A/0UbByeoI9ctyc3L2m5Aa2YyF3FK7mJ3s8Od2vzm7/XVlLP+y2i/3+JPzoWA5hV8JdW0d2JeHuFnnK9vmhyQjbd1CbE8Q6GWwKy8dO9rc+F1y2VjPLwbsSxCob7GaI8fpYbZ0g6k9vGZUDNzFeOabryst0UU1Bf7USv3oa24XUTn96C2n4KUPqbth//V9R9nyNA95QbvUJfSnRE+fq2l/JY47KkmJjljpsTrYeI/TRXbd1hA5XD3/qAG06wvoPUK8HUkuxTj5C+7rZMIO3InTLGSZyhUUm7X8Kat/fNRmU+0p2m0aY4LX3E6MI+rCnnAuuXvbH4Zmd39b/Y+kkuEblPwTigWrn12qLNE3BevSTYBTAnmqL+pJCow89O+N1TQHWxj7uIeUFduV8wyRnGZf8VOeDys28iyGT2xphUVpxeUOtUcN5LLWG78GzFexDYGG/q2oDHKimPg7Ww+CQrLcr6rtZOaWYslnZov05xhLWE2M9DA/KevvA/EKsD53uPdJ+WW//cGEt609T7EPX3x/tZbP5EVZ1bdH8lM27+gc=&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <path d="M 162 30 L 202 30 Q 212 30 212 40 L 212 68.8 Q 212 78.8 222 78.79 L 255.63 78.76" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 260.88 78.75 L 253.89 82.26 L 255.63 78.76 L 253.88 75.26 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 52 -35 C 52 -43.28 65.43 -50 82 -50 C 89.96 -50 97.59 -48.42 103.21 -45.61 C 108.84 -42.79 112 -38.98 112 -35 L 112 95 C 112 103.28 98.57 110 82 110 C 65.43 110 52 103.28 52 95 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" transform="translate(2,3)rotate(-90,82,30)" pointer-events="all" opacity="0.25"/>
+        <path d="M 52 -35 C 52 -43.28 65.43 -50 82 -50 C 89.96 -50 97.59 -48.42 103.21 -45.61 C 108.84 -42.79 112 -38.98 112 -35 L 112 95 C 112 103.28 98.57 110 82 110 C 65.43 110 52 103.28 52 95 Z" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" transform="rotate(-90,82,30)" pointer-events="all"/>
+        <path d="M 112 -35 C 112 -26.72 98.57 -20 82 -20 C 65.43 -20 52 -26.72 52 -35" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" transform="rotate(-90,82,30)" pointer-events="all"/>
+        <rect x="62" y="15" width="60" height="30" fill="#dae8fc" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="91.5" y="34.5">
+                Kafka
+            </text>
+        </g>
+        <path d="M 162 110 L 255.63 110" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 260.88 110 L 253.88 113.5 L 255.63 110 L 253.88 106.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 52 45 C 52 36.72 65.43 30 82 30 C 89.96 30 97.59 31.58 103.21 34.39 C 108.84 37.21 112 41.02 112 45 L 112 175 C 112 183.28 98.57 190 82 190 C 65.43 190 52 183.28 52 175 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" transform="translate(2,3)rotate(-90,82,110)" pointer-events="all" opacity="0.25"/>
+        <path d="M 52 45 C 52 36.72 65.43 30 82 30 C 89.96 30 97.59 31.58 103.21 34.39 C 108.84 37.21 112 41.02 112 45 L 112 175 C 112 183.28 98.57 190 82 190 C 65.43 190 52 183.28 52 175 Z" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" transform="rotate(-90,82,110)" pointer-events="all"/>
+        <path d="M 112 45 C 112 53.28 98.57 60 82 60 C 65.43 60 52 53.28 52 45" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" transform="rotate(-90,82,110)" pointer-events="all"/>
+        <rect x="62" y="95" width="60" height="30" fill="#dae8fc" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="91.5" y="114.5">
+                Webscocket
+            </text>
+        </g>
+        <path d="M 161 190 L 201.5 190 Q 211.5 190 211.5 180 L 211.5 151.3 Q 211.5 141.3 221.5 141.29 L 255.63 141.26" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 260.88 141.25 L 253.89 144.76 L 255.63 141.26 L 253.88 137.76 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 51 125 C 51 116.72 64.43 110 81 110 C 88.96 110 96.59 111.58 102.21 114.39 C 107.84 117.21 111 121.02 111 125 L 111 255 C 111 263.28 97.57 270 81 270 C 64.43 270 51 263.28 51 255 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" transform="translate(2,3)rotate(-90,81,190)" pointer-events="all" opacity="0.25"/>
+        <path d="M 51 125 C 51 116.72 64.43 110 81 110 C 88.96 110 96.59 111.58 102.21 114.39 C 107.84 117.21 111 121.02 111 125 L 111 255 C 111 263.28 97.57 270 81 270 C 64.43 270 51 263.28 51 255 Z" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" transform="rotate(-90,81,190)" pointer-events="all"/>
+        <path d="M 111 125 C 111 133.28 97.57 140 81 140 C 64.43 140 51 133.28 51 125" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" transform="rotate(-90,81,190)" pointer-events="all"/>
+        <rect x="42" y="175" width="90" height="30" fill="#dae8fc" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="86.5" y="194.5">
+                File System
+            </text>
+        </g>
+        <path d="M 602 -15 C 602 -23.28 615.43 -30 632 -30 C 639.96 -30 647.59 -28.42 653.21 -25.61 C 658.84 -22.79 662 -18.98 662 -15 L 662 115 C 662 123.28 648.57 130 632 130 C 615.43 130 602 123.28 602 115 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" transform="translate(2,3)rotate(-90,632,50)" pointer-events="all" opacity="0.25"/>
+        <path d="M 602 -15 C 602 -23.28 615.43 -30 632 -30 C 639.96 -30 647.59 -28.42 653.21 -25.61 C 658.84 -22.79 662 -18.98 662 -15 L 662 115 C 662 123.28 648.57 130 632 130 C 615.43 130 602 123.28 602 115 Z" fill="#d5e8d4" stroke="#82b366" stroke-miterlimit="10" transform="rotate(-90,632,50)" pointer-events="all"/>
+        <path d="M 662 -15 C 662 -6.72 648.57 0 632 0 C 615.43 0 602 -6.72 602 -15" fill="none" stroke="#82b366" stroke-miterlimit="10" transform="rotate(-90,632,50)" pointer-events="all"/>
+        <rect x="612" y="35" width="60" height="30" fill="#d5e8d4" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="641.5" y="54.5">
+                Kafka
+            </text>
+        </g>
+        <path d="M 606 110 C 606 101.72 619.43 95 636 95 C 643.96 95 651.59 96.58 657.21 99.39 C 662.84 102.21 666 106.02 666 110 L 666 240 C 666 248.28 652.57 255 636 255 C 619.43 255 606 248.28 606 240 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" transform="translate(2,3)rotate(-90,636,175)" pointer-events="all" opacity="0.25"/>
+        <path d="M 606 110 C 606 101.72 619.43 95 636 95 C 643.96 95 651.59 96.58 657.21 99.39 C 662.84 102.21 666 106.02 666 110 L 666 240 C 666 248.28 652.57 255 636 255 C 619.43 255 606 248.28 606 240 Z" fill="#d5e8d4" stroke="#82b366" stroke-miterlimit="10" transform="rotate(-90,636,175)" pointer-events="all"/>
+        <path d="M 666 110 C 666 118.28 652.57 125 636 125 C 619.43 125 606 118.28 606 110" fill="none" stroke="#82b366" stroke-miterlimit="10" transform="rotate(-90,636,175)" pointer-events="all"/>
+        <rect x="597" y="160" width="90" height="30" fill="#d5e8d4" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="641.5" y="179.5">
+                File System
+            </text>
+        </g>
+        <path d="M 462 78.75 L 497 78.79 Q 507 78.8 507 68.8 L 507 59.4 Q 507 50 517 50 L 545.63 50" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 550.88 50 L 543.88 53.5 L 545.63 50 L 543.88 46.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 462 141.25 L 499 141.29 Q 509 141.3 509 151.3 L 509 165 Q 509 175 519 175 L 549.63 175" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 554.88 175 L 547.88 178.5 L 549.63 175 L 547.88 171.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 312 178.87 L 312 216.3 Q 312 226.3 302 226.3 L 232.5 226.3 Q 222.5 226.3 222.5 236.3 L 222.5 273.63" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 312 173.62 L 315.5 180.62 L 312 178.87 L 308.5 180.62 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 222.5 278.88 L 219 271.88 L 222.5 273.63 L 226 271.88 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 362 178.87 L 362 216.3 Q 362 226.3 362.09 236.3 L 362.44 273.63" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 362 173.62 L 365.5 180.62 L 362 178.87 L 358.5 180.62 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 362.49 278.88 L 358.92 271.91 L 362.44 273.63 L 365.92 271.85 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 412 178.87 L 412 216.3 Q 412 226.3 422 226.3 L 491.5 226.3 Q 501.5 226.3 501.5 236.3 L 501.5 273.63" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 412 173.62 L 415.5 180.62 L 412 178.87 L 408.5 180.62 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 501.5 278.88 L 498 271.88 L 501.5 273.63 L 505 271.88 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="262" y="47.5" width="200" height="125" rx="18.75" ry="18.75" fill="#000000" stroke="#000000" pointer-events="all" transform="translate(2,3)" opacity="0.25"/>
+        <rect x="262" y="47.5" width="200" height="125" rx="18.75" ry="18.75" fill="#f8cecc" stroke="#b85450" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="361.5" y="114.5">
+                Processing Unit
+            </text>
+        </g>
+        <path d="M 167 295 C 167 286.72 191.85 280 222.5 280 C 237.22 280 251.34 281.58 261.74 284.39 C 272.15 287.21 278 291.02 278 295 L 278 355 C 278 363.28 253.15 370 222.5 370 C 191.85 370 167 363.28 167 355 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="all" transform="translate(2,3)" opacity="0.25"/>
+        <path d="M 167 295 C 167 286.72 191.85 280 222.5 280 C 237.22 280 251.34 281.58 261.74 284.39 C 272.15 287.21 278 291.02 278 295 L 278 355 C 278 363.28 253.15 370 222.5 370 C 191.85 370 167 363.28 167 355 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 278 295 C 278 303.28 253.15 310 222.5 310 C 191.85 310 167 303.28 167 295" fill="none" stroke="#d6b656" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="177.5" y="322" width="90" height="30" fill="#fff2cc" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="222" y="334.5">
+                Monitored
+            </text>
+            <text x="222" y="348.5">
+                Contracts
+            </text>
+        </g>
+        <path d="M 307 295 C 307 286.72 331.85 280 362.5 280 C 377.22 280 391.34 281.58 401.74 284.39 C 412.15 287.21 418 291.02 418 295 L 418 355 C 418 363.28 393.15 370 362.5 370 C 331.85 370 307 363.28 307 355 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="all" transform="translate(2,3)" opacity="0.25"/>
+        <path d="M 307 295 C 307 286.72 331.85 280 362.5 280 C 377.22 280 391.34 281.58 401.74 284.39 C 412.15 287.21 418 291.02 418 295 L 418 355 C 418 363.28 393.15 370 362.5 370 C 331.85 370 307 363.28 307 355 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 418 295 C 418 303.28 393.15 310 362.5 310 C 331.85 310 307 303.28 307 295" fill="none" stroke="#d6b656" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="317.5" y="322" width="90" height="30" fill="#fff2cc" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="362" y="334.5">
+                Suspicious
+            </text>
+            <text x="362" y="348.5">
+                Accounts
+            </text>
+        </g>
+        <path d="M 446 295 C 446 286.72 470.85 280 501.5 280 C 516.22 280 530.34 281.58 540.74 284.39 C 551.15 287.21 557 291.02 557 295 L 557 355 C 557 363.28 532.15 370 501.5 370 C 470.85 370 446 363.28 446 355 Z" fill="#000000" stroke="#000000" stroke-miterlimit="10" pointer-events="all" transform="translate(2,3)" opacity="0.25"/>
+        <path d="M 446 295 C 446 286.72 470.85 280 501.5 280 C 516.22 280 530.34 281.58 540.74 284.39 C 551.15 287.21 557 291.02 557 295 L 557 355 C 557 363.28 532.15 370 501.5 370 C 470.85 370 446 363.28 446 355 Z" fill="#fff2cc" stroke="#d6b656" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 557 295 C 557 303.28 532.15 310 501.5 310 C 470.85 310 446 303.28 446 295" fill="none" stroke="#d6b656" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="456.5" y="322" width="90" height="30" fill="#fff2cc" stroke="none" pointer-events="all"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" text-anchor="middle" font-size="12px">
+            <text x="501" y="334.5">
+                Suspicious
+            </text>
+            <text x="501" y="348.5">
+                Contracts
+            </text>
+        </g>
+    </g>
+</svg>
