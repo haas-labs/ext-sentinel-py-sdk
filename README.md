@@ -7,7 +7,7 @@ Detector Examples:
 - Liquidity Monitoring
 - DEX Activity
 - Large Funds transfers
-- MEV Artbitrage
+- MEV Arbitrage
 - Spam Detection
 - Labels collection
 - ...
