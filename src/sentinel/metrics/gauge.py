@@ -7,23 +7,9 @@ GaugeValueType = Union[int, float]
 
 
 class Gauge(Collector):
-    """
-    A gauge is a metric that represents a single numerical value that can
-    arbitrarily go up and down.
-
-    Examples of Gauges include:
-    - Inprogress requests
-    - Number of items in a queue
-    - Free memory
-    - Total memory
-    - Temperature
-
-    Gauges can go both up and down.
-    """
-
     kind = MetricsTypes.gauge
 
-    def set(self, labels: LabelsType, value:GaugeValueType) -> None:
+    def set(self, labels: LabelsType, value: GaugeValueType) -> None:
         """Set the gauge to an arbitrary value."""
         self.set_value(labels, value)
 
