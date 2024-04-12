@@ -13,3 +13,5 @@ class MetricsTypes(Enum):
     summary = 2
     untyped = 3
     histogram = 4
+    info = 5
+    enum = 6
