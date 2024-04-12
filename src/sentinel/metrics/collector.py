@@ -3,12 +3,16 @@
 import re
 import json
 
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Union
 
+from sentinel.metrics.quantile import Estimator
+from sentinel.metrics.histogram import Histogram
 from sentinel.metrics.metricdict import MetricDict
-# from sentinel.metrics.registry import Registry, get_registry
-from sentinel.metrics.core import LabelsType, NumericValueType, MetricsTypes
 
+# from sentinel.metrics.registry import Registry, get_registry
+from sentinel.metrics.types import LabelsType, MetricsTypes
+
+NumericValueType = Union[int, float, Histogram, Estimator]
 
 METRIC_NAME_RE = re.compile(r"^[a-zA-Z_:][a-zA-Z0-9_:]*$")
 RESTRICTED_LABELS_NAMES = ("job",)

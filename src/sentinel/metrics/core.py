@@ -1,24 +1,4 @@
-from enum import Enum
-from typing import Dict, Union
-
 import asyncio
-
-from sentinel.metrics import quantile
-from sentinel.metrics import histogram
-
-# Types
-
-LabelsType = Dict[str, str]
-NumericValueType = Union[int, float, histogram.Histogram, quantile.Estimator]
-
-
-class MetricsTypes(Enum):
-    counter = 0
-    gauge = 1
-    summary = 2
-    untyped = 3
-    histogram = 4
-
 
 class Metrics: ...
 

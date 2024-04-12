@@ -2,22 +2,24 @@
 
 from typing import Union, cast
 
-from sentinel.metrics.core import MetricsTypes, LabelsType, NumericValueType
 from sentinel.metrics.collector import Collector
+from sentinel.metrics.types import MetricsTypes, LabelsType
+
+
+CounterValueType = Union[int, float]
 
 
 class Counter(Collector):
-
     kind = MetricsTypes.counter
 
-    def get(self, labels: LabelsType) -> NumericValueType:
+    def get(self, labels: LabelsType) -> CounterValueType:
         """Get the Counter value matching an arbitrary group of labels.
 
         :raises: KeyError if an item with matching labels is not present.
         """
         return self.get_value(labels)
 
-    def set(self, labels: LabelsType, value: NumericValueType) -> None:
+    def set(self, labels: LabelsType, value: CounterValueType) -> None:
         """Set the counter to an arbitrary value."""
         self.set_value(labels, value)
 
@@ -25,7 +27,7 @@ class Counter(Collector):
         """Increments the counter by 1."""
         self.add(labels, 1)
 
-    def add(self, labels: LabelsType, value: NumericValueType) -> None:
+    def add(self, labels: LabelsType, value: CounterValueType) -> None:
         """Add the given value to the counter.
 
         :raises: ValueError if the value is negative. Counters can only
