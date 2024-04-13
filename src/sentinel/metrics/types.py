@@ -14,4 +14,4 @@ class MetricsTypes(Enum):
     untyped = 3
     histogram = 4
     info = 5
-    enum = 6
+    stateset = 6
