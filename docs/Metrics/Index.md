@@ -11,3 +11,6 @@
 - [Gauge Metric](/docs/Metrics/Gauge.md)
 - [Summary](/docs/Metrics/Summary.md)
 - [Histogram](/docs/Metrics/Histogram.md)
+- [Info](/docs/Metrics/Info.md)
+- [Enum](/docs/Metrics/Enum.md)
+- 
