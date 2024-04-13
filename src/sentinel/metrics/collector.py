@@ -2,16 +2,25 @@
 
 import re
 import json
+import time
 
-from typing import Optional, List, Tuple, Union
+from typing import Optional, List, Tuple, Dict, Union, Any
 
 from sentinel.metrics.metricdict import MetricDict
-
-# from sentinel.metrics.histogram import Histogram
-# from sentinel.metrics.summary import SummaryValueType
-
-# from sentinel.metrics.registry import Registry, get_registry
 from sentinel.metrics.types import LabelsType, MetricsTypes
+
+
+from pydantic import BaseModel, Field
+
+
+class MetricModel(BaseModel):
+    kind: int
+    name: str
+    doc: str
+    labels: Dict[str, str] = Field(default_factory=list)
+    timestamp: int
+    values: Any
+
 
 NumericValueType = Union[int, float]
 
@@ -32,7 +41,6 @@ class Collector:
         name: str,
         doc: str,
         labels: Optional[LabelsType] = None,
-        # registry: Optional[Registry] = None,
     ) -> None:
         """
         :param name: The name of the metric.
@@ -41,11 +49,6 @@ class Collector:
 
         :param labels: Labels that should always be included with all
           instances of this metric.
-
-        :param registry: A collector registry that is responsible for
-          rendering the metric into various formats. When a registry is
-          not supplied then the metric will be registered with the default
-          registry.
         """
         if not METRIC_NAME_RE.match(name):
             raise ValueError(f"Invalid metric name: {name}")
@@ -59,11 +62,6 @@ class Collector:
             self.labels = {}
 
         self.values = MetricDict()
-
-        # Register metric with a Registry or the default registry
-        # if registry is None:
-        #     registry = get_registry()
-        # registry.register(self)
 
     def set_value(self, labels: LabelsType, value: NumericValueType) -> None:
         """Sets a value in the container"""
@@ -122,6 +120,19 @@ class Collector:
             result.append((key, self.get(k)))
 
         return result
+
+    def dump_values(self) -> List[NumericValueType]:
+        return [{"labels": labels, "values": values} for labels, values in self.get_all()]
+
+    def dump(self) -> MetricModel:
+        return MetricModel(
+            kind=self.kind,
+            name=self.name,
+            doc=self.doc,
+            labels=self.labels,
+            timestamp=int(time.time() * 1000),
+            values=self.dump_values(),
+        )
 
     def __eq__(self, other) -> bool:
         return (

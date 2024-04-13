@@ -1,6 +1,8 @@
+import time
 import pytest
 
 from sentinel.metrics.summary import Summary
+from sentinel.metrics.types import MetricsTypes
 
 DEFAULT_DATA = {
     "name": "http_request_duration_microseconds",
@@ -45,7 +47,7 @@ def test_metric_summary_get():
         s.add(labels, i)
 
     data = s.get(labels)
-    correct_data = {
+    expected_data = {
         "sum": 25.2,
         "count": 4,
         "avg": 6.3,
@@ -56,7 +58,7 @@ def test_metric_summary_get():
         ],
     }
 
-    assert data == correct_data, "Incorrect summary metrics data"
+    assert data == expected_data, "Incorrect summary metrics data"
 
     labels = None
     values = [3, 5.2, 13, 4]
@@ -65,7 +67,7 @@ def test_metric_summary_get():
         s.add(labels, i)
 
     assert len(s.values) == 2, "Incorrect list of values"
-    assert s.get(labels) == correct_data, "Incorrect summary metrics data"
+    assert s.get(labels) == expected_data, "Incorrect summary metrics data"
 
 
 def test_metric_summary_wrong_types():
@@ -76,3 +78,40 @@ def test_metric_summary_wrong_types():
         with pytest.raises(TypeError) as err:
             s.add(labels, i)
         assert str(err.value) == "Summary only works with digits (int, float)", "Incorrect error message"
+
+
+def test_metric_summary_dump():
+    s = Summary(**DEFAULT_DATA)
+    labels = {"handler": "/static"}
+    values = [3, 5.2, 4, 13]
+
+    for i in values:
+        s.add(labels, i)
+
+    expected_data = [
+        {
+            "labels": labels,
+            "values": {
+                "sum": 25.2,
+                "count": 4,
+                "avg": 6.3,
+                "quantile": [
+                    {"quantile": 0.5, "value": 4.6},
+                    {"quantile": 0.9, "value": 10.66},
+                    {"quantile": 0.99, "value": 12.766},
+                ],
+            },
+        }
+    ]
+
+    timestamp = int(time.time() * 1000)
+    metrics_dump = s.dump()
+    assert metrics_dump.kind == MetricsTypes.summary.value, "Incorrect collector type"
+    assert metrics_dump.name == DEFAULT_DATA["name"], "Incorrect collector name"
+    assert metrics_dump.doc == DEFAULT_DATA["doc"], "Incorrect collector doc"
+    assert metrics_dump.labels == DEFAULT_DATA["labels"], "Incorrect collector labels"
+    assert metrics_dump.timestamp == timestamp, "Incorrect collector data timestamp"
+
+    assert len(metrics_dump.values) == len(expected_data), "Incorrect number of counter data records"
+    for i, record in enumerate(metrics_dump.values):
+        assert expected_data[i] == record, "Incorrect record"

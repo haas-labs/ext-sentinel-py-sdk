@@ -111,7 +111,7 @@ class Histogram(Collector):
 
         :raises: KeyError if an item with matching labels is not present.
         """
-        return_data = OrderedDict()  # type: Dict[Union[float, str], NumericValueType]
+        return_data = OrderedDict()  # type: Dict[Union[float, str], HistogramValueTypes]
 
         h = self.get_value(labels)
         h = cast(HistogramStruct, h)  # typing check, no runtime behaviour.
@@ -124,6 +124,9 @@ class Histogram(Collector):
         return_data[self.SUM_KEY] = h.sum
 
         return return_data
+
+    def dump_values(self) -> List[HistogramValueTypes]:
+        return [{"labels": labels, "values": dict(values)} for labels, values in self.get_all()]
 
 
 class HistogramStruct:

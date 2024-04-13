@@ -1,12 +1,14 @@
 # Based on https://github.com/claws/aioprometheus and refactored
 
+import time
 import pytest
 
+from sentinel.metrics.types import MetricsTypes
 from sentinel.metrics.histogram import Histogram, POS_INF
 
 DEFAULT_DATA = {
-    "name": "h",
-    "doc": "doc",
+    "name": "histogram_metric",
+    "doc": "histogram doc",
     "labels": {"app": "my_app"},
     "buckets": [5.0, 10.0, 15.0],
 }
@@ -112,3 +114,25 @@ def test_metric_histogram_add_get_without_labels():
         h.observe(labels, i)
     assert len(h.values) == 1, "Incorrect histogram metric data"
     assert h.get(labels) == EXPECTED_DATA, "Unexpected data"
+
+
+def test_metric_histogram_dump_all():
+    h = Histogram(**DEFAULT_DATA)
+    labels = {"max": "10T", "dev": "sdc"}
+    h.observe(labels, 7)
+    h.observe(labels, 7.5)
+    h.observe(labels, POS_INF)
+
+    expected_data = [{"labels": labels, "values": {5.0: 0, 10.0: 2, 15.0: 2, POS_INF: 3, "count": 3, "sum": POS_INF}}]
+
+    timestamp = int(time.time() * 1000)
+    metrics_dump = h.dump()
+    assert metrics_dump.kind == MetricsTypes.histogram.value, "Incorrect collector type"
+    assert metrics_dump.name == DEFAULT_DATA["name"], "Incorrect collector name"
+    assert metrics_dump.doc == DEFAULT_DATA["doc"], "Incorrect collector doc"
+    assert metrics_dump.labels == DEFAULT_DATA["labels"], "Incorrect collector labels"
+    assert metrics_dump.timestamp == timestamp, "Incorrect collector data timestamp"
+
+    assert len(metrics_dump.values) == len(expected_data), "Incorrect number of counter data records"
+    for i, record in enumerate(metrics_dump.values):
+        assert expected_data[i] == record, "Incorrect record"
