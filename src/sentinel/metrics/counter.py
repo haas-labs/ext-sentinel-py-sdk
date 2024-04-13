@@ -5,7 +5,6 @@ from typing import Union, cast
 from sentinel.metrics.collector import Collector
 from sentinel.metrics.types import MetricsTypes, LabelsType
 
-
 CounterValueType = Union[int, float]
 
 

@@ -1,6 +1,8 @@
+import time
 import pytest
 
 from sentinel.metrics.counter import Counter
+from sentinel.metrics.types import MetricsTypes
 
 DEFAULT_DATA = {
     "name": "logged_users_total",
@@ -82,3 +84,33 @@ def test_metric_counter_negative_add():
         c.add(labels, -1)
 
     assert str(err.value) == "Counters can't decrease", "Incorrect behavior, counter can't descrease"
+
+
+def test_metric_counter_dump_all():
+    c = Counter(**DEFAULT_DATA)
+    data = (
+        {"labels": {"country": "sp", "device": "desktop"}, "values": range(10)},
+        {"labels": {"country": "us", "device": "mobile"}, "values": range(10, 20)},
+        {"labels": {"country": "uk", "device": "desktop"}, "values": range(20, 30)},
+    )
+    expected_data = (
+        {"labels": {"country": "sp", "device": "desktop"}, "values": 9},
+        {"labels": {"country": "us", "device": "mobile"}, "values": 19},
+        {"labels": {"country": "uk", "device": "desktop"}, "values": 29},
+    )
+
+    for i in data:
+        for j in i["values"]:
+            c.set(i["labels"], j)
+
+    timestamp = int(time.time() * 1000)
+    metrics_dump = c.dump()
+    assert metrics_dump.kind == MetricsTypes.counter.value, "Incorrect collector type"
+    assert metrics_dump.name == DEFAULT_DATA["name"], "Incorrect collector name"
+    assert metrics_dump.doc == DEFAULT_DATA["doc"], "Incorrect collector doc"
+    assert metrics_dump.labels == DEFAULT_DATA["labels"], "Incorrect collector labels"
+    assert metrics_dump.timestamp == timestamp, "Incorrect collector data timestamp"
+
+    assert len(metrics_dump.values) == len(expected_data), "Incorrect number of counter data records"
+    for i, record in enumerate(metrics_dump.values):
+        assert expected_data[i] == record, "Incorrect record"

@@ -1,9 +1,10 @@
 # Re-org from https://github.com/claws/aioprometheus
 
+import time
 import pytest
 
+from sentinel.metrics.types import MetricsTypes
 from sentinel.metrics.collector import Collector
-
 
 DEFAULT_DATA = {
     "name": "logged_users_total",
@@ -153,3 +154,32 @@ def test_metric_collector_check_all():
     sorted_data = sorted(data, key=country_fetcher)
     sorted_result = sorted(c.get_all(), key=country_fetcher)
     assert sorted_data == sorted_result, "Incorrect data comparison for get_all()"
+
+
+def test_metric_collector_dump_all():
+    c = Collector(**DEFAULT_DATA)
+    data = (
+        ({"country": "sp", "device": "desktop"}, 520),
+        ({"country": "us", "device": "mobile"}, 654),
+        ({"country": "uk", "device": "desktop"}, 1001),
+    )
+    expected_data = (
+        {"labels": {"country": "sp", "device": "desktop"}, "values": 520},
+        {"labels": {"country": "us", "device": "mobile"}, "values": 654},
+        {"labels": {"country": "uk", "device": "desktop"}, "values": 1001},
+    )
+
+    for i in data:
+        c.set_value(i[0], i[1])
+
+    timestamp = int(time.time() * 1000)
+    metrics_dump = c.dump()
+    assert metrics_dump.kind == MetricsTypes.untyped.value, "Incorrect collector type"
+    assert metrics_dump.name == DEFAULT_DATA["name"], "Incorrect collector name"
+    assert metrics_dump.doc == DEFAULT_DATA["doc"], "Incorrect collector doc"
+    assert metrics_dump.labels == DEFAULT_DATA["labels"], "Incorrect collector labels"
+    assert metrics_dump.timestamp == timestamp, "Incorrect collector data timestamp"
+
+    assert len(metrics_dump.values) == len(expected_data), "Incorrect number of collector data records"
+    for i, record in enumerate(metrics_dump.values):
+        assert expected_data[i] == record, "Incorrect record"

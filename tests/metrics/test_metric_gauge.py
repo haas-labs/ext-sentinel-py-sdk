@@ -1,4 +1,7 @@
+import time
+
 from sentinel.metrics.gauge import Gauge
+from sentinel.metrics.types import MetricsTypes
 
 DEFAULT_DATA = {
     "name": "hdd_disk_used",
@@ -100,3 +103,26 @@ def test_metric_gauge_sub():
         g.sub(labels, i)
 
     assert g.get(labels) == 0, "Incorrect gauge metric value"
+
+
+def test_metric_gauge_dump_all():
+    g = Gauge(**DEFAULT_DATA)
+    labels = {"max": "10T", "dev": "sdc"}
+    iterations = 100
+
+    for i in range(iterations):
+        g.inc(labels)
+
+    expected_data = ({"labels": labels, "values": 100},)
+
+    timestamp = int(time.time() * 1000)
+    metrics_dump = g.dump()
+    assert metrics_dump.kind == MetricsTypes.gauge.value, "Incorrect collector type"
+    assert metrics_dump.name == DEFAULT_DATA["name"], "Incorrect collector name"
+    assert metrics_dump.doc == DEFAULT_DATA["doc"], "Incorrect collector doc"
+    assert metrics_dump.labels == DEFAULT_DATA["labels"], "Incorrect collector labels"
+    assert metrics_dump.timestamp == timestamp, "Incorrect collector data timestamp"
+
+    assert len(metrics_dump.values) == len(expected_data), "Incorrect number of counter data records"
+    for i, record in enumerate(metrics_dump.values):
+        assert expected_data[i] == record, "Incorrect record"
