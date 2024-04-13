@@ -72,11 +72,3 @@ class Registry:
         """
         for name in list(self.collectors.keys()):
             self.deregister(name)
-
-
-REGISTRY = Registry()
-
-
-def get_registry() -> Registry:
-    """Return the default Registry"""
-    return REGISTRY
