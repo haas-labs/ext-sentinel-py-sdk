@@ -39,7 +39,7 @@ class Collector:
 
         :param doc: A short description of the metric.
 
-        :param const_labels: Labels that should always be included with all
+        :param labels: Labels that should always be included with all
           instances of this metric.
 
         :param registry: A collector registry that is responsible for
