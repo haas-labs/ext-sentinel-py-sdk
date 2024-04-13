@@ -1,3 +1,5 @@
+# Based on https://github.com/claws/aioprometheus
+
 from typing import cast, Union
 
 from sentinel.metrics.collector import Collector
