@@ -49,6 +49,9 @@ class Dispatcher:
 
         logger.info(f"Sentinel SDK version: {VERSION}")
 
+        self.metrics = None
+        self.activate_telemetry()
+
         # prepare the list of sentries for launch
         self._sentry_instances: List[SentryInstance] = []
         for s in self.settings.sentries:
@@ -60,8 +63,6 @@ class Dispatcher:
             instance = SentryInstance(settings=s)
             self._sentry_instances.append(instance)
 
-        self.metrics = None
-        self.activate_telemetry()
 
     @property
     def active_sentries(self):
@@ -84,6 +85,7 @@ class Dispatcher:
         if not TELEMETRY_ENABLED:
             return
 
+        logger.info(f"Enabling telemetry, metric server port: {TELEMETRY_PORT}")
         self.metrics = MetricQueue()
         self.settings.sentries.append(
             Sentry(
