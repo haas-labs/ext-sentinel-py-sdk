@@ -48,7 +48,6 @@ async def test_metric_queue_send_receive_enum():
     assert metrics.labels == {"component": "A"}, "Unexpected metric labels"
     assert metrics.values == [{"labels": {"module": "A"}, "values": "running"}], "Unexpected metric values"
 
-
 @pytest.mark.asyncio
 async def test_metric_queue_send_receive_info():
     metric_queue = MetricQueue()
