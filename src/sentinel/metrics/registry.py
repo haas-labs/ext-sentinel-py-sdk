@@ -1,8 +1,9 @@
 # Based on https://github.com/claws/aioprometheus
 
-from typing import Dict, List
+from typing import Dict, List, Iterator
 
 from sentinel.metrics.collector import Collector
+from sentinel.metrics.collector import MetricModel
 
 
 class Registry:
@@ -41,7 +42,8 @@ class Registry:
         self.collectors[collector.name] = collector
 
     def deregister(self, name: str) -> None:
-        """Deregister a collector.
+        """
+        Deregister a collector.
 
         This will stop the collector metrics from being emitted.
 
@@ -52,7 +54,8 @@ class Registry:
         del self.collectors[name]
 
     def get(self, name: str) -> Collector:
-        """Get a collector by name.
+        """
+        Get a collector by name.
 
         :param name: The name of the collector to fetch.
 
@@ -60,9 +63,17 @@ class Registry:
         """
         return self.collectors[name]
 
-    def get_all(self) -> List[Collector]:
+    def get_all(self) -> Iterator[Collector]:
         """Return a list of all collectors"""
-        return list(self.collectors.values())
+        for c in self.collectors.values():
+            yield c
+
+    def dump_all(self) -> Iterator[MetricModel]:
+        """
+        Return dump of all collectors in MetricModel format for publishing in metrics queue
+        """
+        for c in self.collectors.values():
+            yield c.dump()
 
     def clear(self):
         """Clear all registered collectors.

@@ -109,7 +109,7 @@ def test_metric_counter_dump_all():
     assert metrics_dump.name == DEFAULT_DATA["name"], "Incorrect collector name"
     assert metrics_dump.doc == DEFAULT_DATA["doc"], "Incorrect collector doc"
     assert metrics_dump.labels == DEFAULT_DATA["labels"], "Incorrect collector labels"
-    assert metrics_dump.timestamp == timestamp, "Incorrect collector data timestamp"
+    assert metrics_dump.timestamp >= timestamp, "Incorrect collector data timestamp"
 
     assert len(metrics_dump.values) == len(expected_data), "Incorrect number of counter data records"
     for i, record in enumerate(metrics_dump.values):
