@@ -34,6 +34,7 @@ class SentryInstance:
 
 STATE_CHECK_TIME_INTERVAL = 30
 TERMINATION_TIMEOUT = 3
+DEFAULT_TELEMETRY_PORT = 9090
 
 
 class Dispatcher:
@@ -59,7 +60,8 @@ class Dispatcher:
             instance = SentryInstance(settings=s)
             self._sentry_instances.append(instance)
 
-        self.metrics = MetricQueue()
+        self.metrics = None
+        self.activate_telemetry()
 
     @property
     def active_sentries(self):
@@ -72,6 +74,25 @@ class Dispatcher:
     @property
     def scheduled_sentries(self):
         return [s for s in self._sentry_instances if s.schedule is not None]
+
+    def activate_telemetry(self):
+        """
+        Activate telemetry if settings TELEMETRY_ENABLED is True
+        """
+        TELEMETRY_ENABLED = self.settings.settings.get("TELEMETRY_ENABLED", False)
+        TELEMETRY_PORT = self.settings.settings.get("TELEMETRY_PORT", DEFAULT_TELEMETRY_PORT)
+        if not TELEMETRY_ENABLED:
+            return
+
+        self.metrics = MetricQueue()
+        self.settings.sentries.append(
+            Sentry(
+                name="MetricServer",
+                type="sentinel.sentry.metric.MetricServer",
+                parameters={"port": TELEMETRY_PORT},
+                restart=True,
+            )
+        )
 
     def intro(self):
         """

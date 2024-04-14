@@ -1,0 +1,11 @@
+---
+project:
+  name: TelemetryProject
+  description: Sample project with active telemetry
+
+settings:
+
+  # Telemetry settings
+  TELEMETRY_ENABLED: true
+  TELEMETRY_PORT: 9090
+

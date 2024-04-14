@@ -36,8 +36,8 @@ class Project(BaseModel):
 class ProjectSettings(BaseModel):
     project: Optional[Project] = None
     envs: Optional[Dict] = Field(default_factory=dict)
-    sentries: Optional[List[Sentry]] = Field(default_factory=list)
     settings: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    sentries: Optional[List[Sentry]] = Field(default_factory=list)
     imports: Optional[List[str]] = Field(default_factory=list)
     inputs: Optional[List[Channel]] = Field(default_factory=list)
     outputs: Optional[List[Channel]] = Field(default_factory=list)

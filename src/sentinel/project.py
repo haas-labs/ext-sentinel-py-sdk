@@ -14,6 +14,7 @@ class SentinelProject:
             settings = ProjectSettings()
         profile_settings = load_project_settings(path=path, extra_vars=extra_vars)
         settings.imports.extend(profile_settings.imports)
+        settings.settings.update(profile_settings.settings)
         settings.sentries.extend(profile_settings.sentries)
         settings.inputs.extend(profile_settings.inputs)
         settings.outputs.extend(profile_settings.outputs)
