@@ -14,6 +14,7 @@ from sentinel.models.project import ProjectSettings
 from sentinel.metrics.core import MetricQueue
 from sentinel.sentry.db import SentryDatabases
 from sentinel.sentry.channel import SentryInputs, SentryOutputs
+from sentinel.metrics.registry import Registry
 
 
 class CoreSentry(multiprocessing.Process):
@@ -65,8 +66,10 @@ class CoreSentry(multiprocessing.Process):
         self._outputs = outputs
         self._databases = databases
 
-        self.metrics_queue = metrics
         self.schedule = schedule
+
+        self.metrics = None
+        self.metrics_queue = metrics
 
     def run(self) -> None:
         """
@@ -95,6 +98,7 @@ class CoreSentry(multiprocessing.Process):
         self.databases = SentryDatabases(
             ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
         )
+        self.metrics = Registry()
 
     def time_to_run(self) -> datetime:
         if self.schedule is None:
@@ -111,6 +115,7 @@ class CoreSentry(multiprocessing.Process):
     def on_run(self) -> None: ...
 
     def on_schedule(self) -> None: ...
+
 
 class AsyncCoreSentry(CoreSentry):
     name = "AsyncCoreSentry"
