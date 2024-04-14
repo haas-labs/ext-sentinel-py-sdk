@@ -61,10 +61,21 @@ def test_metric_registry_get_all_and_clear():
     for i in range(q):
         registry.register(Collector("test" + str(i), "Test" + str(i)))
 
-    result = registry.get_all()
+    result = list(registry.get_all())
     assert isinstance(result, list), "Incorrect type of returned value"
     assert len(result) == q, "Incorrect number of collectors in registry"
 
     registry.clear()
-    result = registry.get_all()
+    result = list(registry.get_all())
     assert len(result) == 0, "Incorrect number of collectors in registry"
+
+def test_metric_registry_dump():
+    registry = Registry()
+    q = 10
+    expected_data = []
+    for i in range(q):
+        c = Collector("test" + str(i), "Test" + str(i))
+        expected_data.append(c.dump())
+        registry.register(c)
+    
+    assert list(registry.dump_all()) == expected_data, "Incorrect expected data dump"
