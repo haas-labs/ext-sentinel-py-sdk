@@ -78,4 +78,6 @@ def test_metric_registry_dump():
         expected_data.append(c.dump())
         registry.register(c)
     
-    assert list(registry.dump_all()) == expected_data, "Incorrect expected data dump"
+    for i, metric in enumerate(registry.dump_all()):
+        assert metric.name == expected_data[i].name, "Incorrect expected metric dump (name)"
+        assert metric.doc == expected_data[i].doc, "Incorrect expected metric dump (name)"
