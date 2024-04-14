@@ -27,7 +27,7 @@ class MetricServer(AsyncCoreSentry):
         settings: ProjectSettings = None,
     ) -> None:
         super().__init__(
-            nama=name,
+            name=name,
             description=description,
             restart=restart,
             parameters=parameters,
@@ -38,20 +38,19 @@ class MetricServer(AsyncCoreSentry):
             schedule=schedule,
             settings=settings,
         )
-        self._registry = None
 
     async def create_web_server(self) -> web.TCPSite:
         srv = web.Application(logger=self.logger)
         srv.add_routes(
             [
-                web.get("/metrics", self.metrics),
-                web.get("/health", self.health),
+                web.get("/metrics", self.handle_metrics),
+                web.get("/health", self.handle_health),
             ]
         )
         app_runner = web.AppRunner(srv)
         await app_runner.setup()
         # TODO add option to manage host and port via sentry parameters
-        return web.TCPSite(runner=app_runner, host="0.0.0.0", port=9090)
+        return web.TCPSite(runner=app_runner, host="0.0.0.0", port=self.parameters.get("port", 9090))
 
     async def _run(self) -> None:
         try:
@@ -67,7 +66,7 @@ class MetricServer(AsyncCoreSentry):
             metrics = await self.metrics_queue.receive()
             self.logger.info(f"Processing metrics: {metrics}")
 
-    async def health(self, request: web.Request) -> web.Response:
+    async def handle_health(self, request: web.Request) -> web.Response:
         """
         Healthcheck
         ===========
@@ -110,7 +109,7 @@ class MetricServer(AsyncCoreSentry):
         self.logger.info(health_status)
         return web.json_response(data=health_status)
 
-    async def metrics(self, request: web.Request) -> web.Response:
+    async def handle_metrics(self, request: web.Request) -> web.Response:
         """
         Metrics Endpoint
         """
