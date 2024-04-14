@@ -8,10 +8,10 @@ LabelsType = Dict[str, str]
 
 
 class MetricsTypes(Enum):
-    counter = 0
-    gauge = 1
-    summary = 2
-    untyped = 3
+    untyped = 0
+    counter = 1
+    gauge = 2
+    summary = 3
     histogram = 4
     info = 5
     stateset = 6
