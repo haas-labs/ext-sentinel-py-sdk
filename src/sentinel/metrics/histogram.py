@@ -9,8 +9,8 @@ from sentinel.metrics.types import MetricsTypes, BucketType, LabelsType
 
 HistogramValueTypes = Union[int, float]
 
-POS_INF = float("inf")
-NEG_INF = float("-inf")
+POS_INF = float("+Inf")
+NEG_INF = float("-Inf")
 
 
 def linearBuckets(start: Union[float, int], width: Union[int, float], count: int) -> List[BucketType]:
