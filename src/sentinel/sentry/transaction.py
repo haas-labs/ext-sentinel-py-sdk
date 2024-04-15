@@ -75,7 +75,7 @@ class TransactionDetector(AsyncCoreSentry):
         await self.on_init()
 
         try:
-            channels = []
+            tasks = []
             # Inputs
             for name in self.inputs.channels:
                 self.logger.info(f"Starting channel, name: {name}")
@@ -83,13 +83,15 @@ class TransactionDetector(AsyncCoreSentry):
                 if name == "transactions":
                     channel_inst.on_transaction = self.on_transaction
                 channel_task = asyncio.create_task(channel_inst.run(), name=name)
-                channels.append(channel_task)
+                tasks.append(channel_task)
             # Outputs
             for name in self.outputs.channels:
                 self.logger.info(f"Starting channel, name: {name}")
                 channel_inst = getattr(self.outputs, name)
-                channel_task = asyncio.create_task(getattr(self.outputs, name).run(), name=name)
-                channels.append(channel_task)
-            await asyncio.gather(*channels)
+                channel_task = asyncio.create_task(channel_inst.run(), name=name)
+                tasks.append(channel_task)
+            # Metrics
+
+            await asyncio.gather(*tasks)
         finally:
             self.logger.info("Transaction Detector Processing completed")
