@@ -33,7 +33,7 @@ def test_metric_counter_set_and_get():
 
     for i in data:
         for j in i["values"]:
-            c.set(i["labels"], j)
+            c.set(labels=i["labels"], value=j)
             assert c.get(i["labels"]) == j, "Incorrect metric value"
 
     assert len(data) == len(c.values), "Incorrect counter metric values"
@@ -48,7 +48,7 @@ def test_metric_counter_get_no_labels():
     data = {"labels": {}, "values": range(100)}
 
     for i in data["values"]:
-        c.set(data["labels"], i)
+        c.set(labels=data["labels"], value=i)
 
     assert len(c.values) == 1, "Incorrect number of counter metrics"
     assert max(data["values"]) == c.get(data["labels"]), "Incorrect counter metric values"
@@ -60,7 +60,7 @@ def test_metric_counter_inc():
     labels = {"country": "sp", "device": "desktop"}
 
     for i in range(iterations):
-        c.inc(labels)
+        c.inc(labels=labels)
 
     assert c.get(labels) == iterations, "Incorrect counter metric value"
 
@@ -71,7 +71,7 @@ def test_metric_counter_add():
     labels = {"country": "sp", "device": "desktop"}
 
     for i in range(iterations):
-        c.add(labels, i)
+        c.add(labels=labels, value=i)
 
     assert c.get(labels) == sum(range(iterations)), "Incorrect counter metric value"
 
@@ -81,7 +81,7 @@ def test_metric_counter_negative_add():
     labels = {"country": "sp", "device": "desktop"}
 
     with pytest.raises(ValueError) as err:
-        c.add(labels, -1)
+        c.add(labels=labels, value=-1)
 
     assert str(err.value) == "Counters can't decrease", "Incorrect behavior, counter can't descrease"
 
@@ -101,7 +101,7 @@ def test_metric_counter_dump_all():
 
     for i in data:
         for j in i["values"]:
-            c.set(i["labels"], j)
+            c.set(labels=i["labels"], value=j)
 
     timestamp = int(time.time() * 1000)
     metrics_dump = c.dump()
