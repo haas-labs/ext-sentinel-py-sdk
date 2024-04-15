@@ -73,7 +73,7 @@ class PrometheusFormattter:
         for metric in db.all():
             lines.extend(self.format_metric(metric))
 
-        return LINE_SEPARATOR_FMT.join(lines).encode("utf-8")
+        return LINE_SEPARATOR_FMT.join(lines)
 
     def format_metric(self, metric: MetricDBRecord) -> List[str]:
         """
