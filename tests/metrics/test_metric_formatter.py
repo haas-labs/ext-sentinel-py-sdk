@@ -1,11 +1,8 @@
-from pprint import pprint
-
-
 from sentinel.metrics.types import MetricsTypes
 from sentinel.metrics.core import MetricDatabase
 from sentinel.metrics.formatter import PrometheusFormattter
 
-from metric_samples import db_with_metrics, get_sample
+from metric_samples import get_sample
 
 
 def test_metric_formatter_init():
@@ -16,18 +13,18 @@ def test_metric_formatter_init():
 def test_metric_formatter_group_metrics():
     db = MetricDatabase()
 
-    counter_metric = get_sample(kind=MetricsTypes.counter, current_time=True)
-    db.update(counter_metric)
+    metric = get_sample(kind=MetricsTypes.counter, current_time=True)
+    db.update(metric)
 
-    counter_metric = get_sample(kind=MetricsTypes.counter, current_time=True)
-    counter_metric.timestamp += 10
-    db.update(counter_metric)
+    metric = get_sample(kind=MetricsTypes.counter, current_time=True)
+    metric.timestamp += 10
+    db.update(metric)
 
-    counter_metric = get_sample(kind=MetricsTypes.counter, current_time=True)
-    counter_metric.timestamp += 10
-    db.update(counter_metric)
+    metric = get_sample(kind=MetricsTypes.counter, current_time=True)
+    metric.timestamp += 10
+    db.update(metric)
 
-    last_ts = counter_metric.timestamp
+    last_ts = metric.timestamp
 
     formatter = PrometheusFormattter()
     metrics = formatter.group_metrics(db)
@@ -42,9 +39,9 @@ def test_metric_formatter_group_metrics():
 def test_metric_formatter_format_enum():
     db = MetricDatabase()
 
-    counter_metric = get_sample(kind=MetricsTypes.stateset, current_time=True)
-    ts = counter_metric.timestamp
-    db.update(counter_metric)
+    metric = get_sample(kind=MetricsTypes.stateset, current_time=True)
+    ts = metric.timestamp
+    db.update(metric)
     formatter = PrometheusFormattter()
     lines = formatter.format(db)
     assert lines == "\n".join(
@@ -54,15 +51,15 @@ def test_metric_formatter_format_enum():
             'test_enum_metric{"component":"A","module":"A"} running ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect enum text format"
 
 
 def test_metric_formatter_format_info():
     db = MetricDatabase()
 
-    counter_metric = get_sample(kind=MetricsTypes.info, current_time=True)
-    ts = counter_metric.timestamp
-    db.update(counter_metric)
+    metric = get_sample(kind=MetricsTypes.info, current_time=True)
+    ts = metric.timestamp
+    db.update(metric)
     formatter = PrometheusFormattter()
     lines = formatter.format(db)
     assert lines == "\n".join(
@@ -73,15 +70,15 @@ def test_metric_formatter_format_info():
             'test_info_metric_build_time{"component":"A","module":"A"} 2024-04-13T12:34:00 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect info text format"
 
 
 def test_metric_formatter_format_counter():
     db = MetricDatabase()
 
-    counter_metric = get_sample(kind=MetricsTypes.counter, current_time=True)
-    ts = counter_metric.timestamp
-    db.update(counter_metric)
+    metric = get_sample(kind=MetricsTypes.counter, current_time=True)
+    ts = metric.timestamp
+    db.update(metric)
     formatter = PrometheusFormattter()
     lines = formatter.format(db)
     assert lines == "\n".join(
@@ -91,15 +88,15 @@ def test_metric_formatter_format_counter():
             'test_counter_metric{"component":"A","module":"A"} 10 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format"
 
 
 def test_metric_formatter_format_gauge():
     db = MetricDatabase()
 
-    gauge_metric = get_sample(kind=MetricsTypes.gauge, current_time=True)
-    ts = gauge_metric.timestamp
-    db.update(gauge_metric)
+    metric = get_sample(kind=MetricsTypes.gauge, current_time=True)
+    ts = metric.timestamp
+    db.update(metric)
     formatter = PrometheusFormattter()
     lines = formatter.format(db)
     assert lines == "\n".join(
@@ -109,15 +106,15 @@ def test_metric_formatter_format_gauge():
             'test_gauge_metric{"component":"A","module":"A"} 10 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect gauge text format"
 
 
 def test_metric_formatter_format_summary():
     db = MetricDatabase()
 
-    summary_metric = get_sample(kind=MetricsTypes.summary, current_time=True)
-    ts = summary_metric.timestamp
-    db.update(summary_metric)
+    metric = get_sample(kind=MetricsTypes.summary, current_time=True)
+    ts = metric.timestamp
+    db.update(metric)
     formatter = PrometheusFormattter()
     lines = formatter.format(db)
     assert lines == "\n".join(
@@ -132,15 +129,15 @@ def test_metric_formatter_format_summary():
             'test_summary_metric_quantile{"component":"A","module":"A","quantile":0.99} 12.766 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect summary text format"
 
 
 def test_metric_formatter_format_histogram():
     db = MetricDatabase()
 
-    histogram_metric = get_sample(kind=MetricsTypes.histogram, current_time=True)
-    ts = histogram_metric.timestamp
-    db.update(histogram_metric)
+    metric = get_sample(kind=MetricsTypes.histogram, current_time=True)
+    ts = metric.timestamp
+    db.update(metric)
     formatter = PrometheusFormattter()
     lines = formatter.format(db)
     assert lines == "\n".join(
@@ -163,4 +160,4 @@ def test_metric_formatter_format_histogram():
             'test_histogram_metric_sum{"component":"A","module":"A"} +Inf ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format"
