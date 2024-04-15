@@ -98,8 +98,6 @@ async def test_local_label_db_update(tmpdir):
     await label_db.update()
     await label_db.update()
 
-    print(label_db._addresses)
-
     assert not label_db.has_tag(
         suspicious_account_address, "faked_tag"
     ), "Suspicious account has faked tag in the Label DB"
