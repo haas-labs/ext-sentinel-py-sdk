@@ -1,10 +1,14 @@
+import time
 import asyncio
+
 from typing import Dict
 from aiohttp import web
 
 from sentinel.metrics.core import MetricQueue
 from sentinel.models.project import ProjectSettings
 from sentinel.sentry.core import AsyncCoreSentry
+from sentinel.metrics.core import MetricDatabase
+from sentinel.metrics.formatter import PrometheusFormattter
 
 
 class MetricServer(AsyncCoreSentry):
@@ -38,6 +42,14 @@ class MetricServer(AsyncCoreSentry):
             schedule=schedule,
             settings=settings,
         )
+        self._db = MetricDatabase(retention_period=self.parameters.get("retention_period", 30))
+        self._retention_period = self.parameters.get("retention_period", 30) * 1000  # convert to milliseconds
+
+    def current_time(self) -> int:
+        """
+        return current time in milliseconds
+        """
+        return int(time.time())
 
     async def create_web_server(self) -> web.TCPSite:
         srv = web.Application(logger=self.logger)
@@ -62,9 +74,16 @@ class MetricServer(AsyncCoreSentry):
             self.logger.info("Metric Server completed")
 
     async def process(self):
+        last_cleanup_time = self.current_time()
         while True:
             metrics = await self.metrics_queue.receive()
             self.logger.info(f"Processing metrics: {metrics}")
+            self._db.update(metrics)
+
+            # cleanup outdated metrics in database by retention period
+            current_time = self.current_time()
+            if (current_time - last_cleanup_time) > self._retention_period:
+                self._db.clean()
 
     async def handle_health(self, request: web.Request) -> web.Response:
         """
@@ -113,4 +132,5 @@ class MetricServer(AsyncCoreSentry):
         """
         Metrics Endpoint
         """
-        return web.Response(text="Metrics Server")
+        metrics = PrometheusFormattter().format(self._db)
+        return web.Response(text=metrics)
