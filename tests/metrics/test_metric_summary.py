@@ -32,7 +32,7 @@ def test_metric_summary_add():
 
     for i in data:
         for j in i["values"]:
-            s.add(i["labels"], j)
+            s.add(labels=i["labels"], value=j)
 
     for i in data:
         assert s.values[i["labels"]].count == len(i["values"]), "Incorrect summary metric values"
@@ -44,9 +44,9 @@ def test_metric_summary_get():
     values = [3, 5.2, 4, 13]
 
     for i in values:
-        s.add(labels, i)
+        s.add(labels=labels, value=i)
 
-    data = s.get(labels)
+    data = s.get(labels=labels)
     expected_data = {
         "sum": 25.2,
         "count": 4,
@@ -64,7 +64,7 @@ def test_metric_summary_get():
     values = [3, 5.2, 13, 4]
 
     for i in values:
-        s.add(labels, i)
+        s.add(labels=labels, value=i)
 
     assert len(s.values) == 2, "Incorrect list of values"
     assert s.get(labels) == expected_data, "Incorrect summary metrics data"
@@ -76,7 +76,7 @@ def test_metric_summary_wrong_types():
     values = ["3", (1, 2), {"1": 2}, True]
     for i in values:
         with pytest.raises(TypeError) as err:
-            s.add(labels, i)
+            s.add(labels=labels, value=i)
         assert str(err.value) == "Summary only works with digits (int, float)", "Incorrect error message"
 
 
@@ -86,7 +86,7 @@ def test_metric_summary_dump():
     values = [3, 5.2, 4, 13]
 
     for i in values:
-        s.add(labels, i)
+        s.add(labels=labels, value=i)
 
     expected_data = [
         {

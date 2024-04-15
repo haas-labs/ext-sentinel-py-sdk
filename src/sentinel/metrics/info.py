@@ -13,8 +13,8 @@ class Info(Collector):
         """
         Get info metric value
         """
-        return self.get_value(labels)
+        return self.get_value(labels=labels)
 
     def set(self, value: InfoValueType, labels: LabelsType = None) -> None:
         """Set info metric value"""
-        self.set_value(labels, value)
+        self.set_value(labels=labels, value=value)
