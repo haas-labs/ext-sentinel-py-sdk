@@ -17,10 +17,6 @@ def test_metric_gauge_init():
     assert g.doc == DEFAULT_DATA["doc"], "Incorrect gauge metric doc"
     assert g.labels == DEFAULT_DATA["labels"], "Incorrect gauge metric labels"
 
-    # TODO check metrics automatically got registered
-    # collector_name = self.default_data["name"]
-    # self.assertIn(collector_name, REGISTRY.collectors)
-
 
 def test_metric_gauge_set_and_get():
     g = Gauge(**DEFAULT_DATA)
@@ -31,8 +27,8 @@ def test_metric_gauge_set_and_get():
     )
     for i in data:
         for j in i["values"]:
-            g.set(i["labels"], j)
-            assert g.get(i["labels"]) == j, "Incorrect metric value"
+            g.set(labels=i["labels"], value=j)
+            assert g.get(labels=i["labels"]) == j, "Incorrect metric value"
 
     assert len(data) == len(g.values), "Incorrect gauge metric values"
 
@@ -42,7 +38,7 @@ def test_metric_gauge_without_labels():
     data = {"labels": {}, "values": range(100)}
 
     for i in data["values"]:
-        g.set(data["labels"], i)
+        g.set(labels=data["labels"], value=i)
 
     assert len(g.values) == 1, "Incorrect gauge metric values"
     assert max(data["values"]) == g.get(data["labels"]), "Incorrect gauge metric values"
@@ -55,22 +51,22 @@ def test_metric_gauge_inc():
 
     for i in range(iterations):
         g.inc(labels)
-        assert g.get(labels) == i + 1, "Incorrect gauge metric value after inc"
+        assert g.get(labels=labels) == i + 1, "Incorrect gauge metric value after inc"
 
-    assert g.get(labels) == iterations, "Incorrect gauge metric value after all inc"
+    assert g.get(labels=labels) == iterations, "Incorrect gauge metric value after all inc"
 
 
 def test_metric_gauge_dec():
     g = Gauge(**DEFAULT_DATA)
     labels = {"max": "10T", "dev": "sdc"}
     iterations = 100
-    g.set(labels, iterations)
+    g.set(labels=labels, value=iterations)
 
     for i in range(iterations):
-        g.dec(labels)
-        assert g.get(labels) == iterations - (i + 1), "Incorrect gauge metric value after inc"
+        g.dec(labels=labels)
+        assert g.get(labels=labels) == iterations - (i + 1), "Incorrect gauge metric value after inc"
 
-    assert g.get(labels) == 0, "Incorrect gauge metric value after all dec"
+    assert g.get(labels=labels) == 0, "Incorrect gauge metric value after all dec"
 
 
 def test_metric_gauge_add():
@@ -79,14 +75,14 @@ def test_metric_gauge_add():
     iterations = 100
 
     for i in range(iterations):
-        g.add(labels, i)
+        g.add(labels=labels, value=i)
 
-    assert g.get(labels) == sum(range(iterations)), "Incorrect gauge metric value"
+    assert g.get(labels=labels) == sum(range(iterations)), "Incorrect gauge metric value"
 
     for i in range(iterations):
-        g.add(labels, -i)
+        g.add(labels=labels, value=-i)
 
-    assert g.get(labels) == 0, "Incorrect gauge metric value"
+    assert g.get(labels=labels) == 0, "Incorrect gauge metric value"
 
 
 def test_metric_gauge_sub():
@@ -95,14 +91,14 @@ def test_metric_gauge_sub():
     iterations = 100
 
     for i in range(iterations):
-        g.sub(labels, -i)
+        g.sub(labels=labels, value=-i)
 
-    assert g.get(labels) == sum(range(iterations)), "Incorrect gauge metric value"
+    assert g.get(labels=labels) == sum(range(iterations)), "Incorrect gauge metric value"
 
     for i in range(iterations):
-        g.sub(labels, i)
+        g.sub(labels=labels, value=i)
 
-    assert g.get(labels) == 0, "Incorrect gauge metric value"
+    assert g.get(labels=labels) == 0, "Incorrect gauge metric value"
 
 
 def test_metric_gauge_dump_all():
@@ -111,7 +107,7 @@ def test_metric_gauge_dump_all():
     iterations = 100
 
     for i in range(iterations):
-        g.inc(labels)
+        g.inc(labels=labels)
 
     expected_data = ({"labels": labels, "values": 100},)
 
