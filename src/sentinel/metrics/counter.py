@@ -11,22 +11,22 @@ CounterValueType = Union[int, float]
 class Counter(Collector):
     kind = MetricsTypes.counter
 
-    def get(self, labels: LabelsType) -> CounterValueType:
+    def get(self, labels: LabelsType=None) -> CounterValueType:
         """Get the Counter value matching an arbitrary group of labels.
 
         :raises: KeyError if an item with matching labels is not present.
         """
         return self.get_value(labels)
 
-    def set(self, labels: LabelsType, value: CounterValueType) -> None:
+    def set(self, value: CounterValueType, labels: LabelsType=None) -> None:
         """Set the counter to an arbitrary value."""
         self.set_value(labels, value)
 
-    def inc(self, labels: LabelsType) -> None:
+    def inc(self, labels: LabelsType=None) -> None:
         """Increments the counter by 1."""
-        self.add(labels, 1)
+        self.add(labels=labels, value=1)
 
-    def add(self, labels: LabelsType, value: CounterValueType) -> None:
+    def add(self, value: CounterValueType, labels: LabelsType=None) -> None:
         """Add the given value to the counter.
 
         :raises: ValueError if the value is negative. Counters can only
@@ -42,4 +42,4 @@ class Counter(Collector):
             current = 0
 
         current = cast(Union[float, int], current)  # typing check, no runtime behaviour.
-        self.set_value(labels, current + value)
+        self.set_value(labels=labels, value=current + value)
