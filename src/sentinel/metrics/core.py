@@ -53,8 +53,10 @@ class MetricDatabase:
 
     def update(self, metric: MetricModel) -> None:
         for v in metric.values:
-            labels = metric.labels.copy()
-            labels.update(v.pop("labels", {}))
+            labels = metric.labels.copy() if isinstance(metric.labels, dict) else {}
+            value_labels = v.pop("labels", {})
+            if isinstance(value_labels, dict):
+                labels.update(value_labels)
             metric_record = MetricDBRecord(
                 kind=metric.kind,
                 name=metric.name,
