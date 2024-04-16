@@ -10,23 +10,24 @@ class SimpleTxMetricsDetector(TransactionDetector):
     name = "SimpleTxMetricsDetector"
 
     async def on_init(self):
-        self.metrics.register(
-            Counter(name="transactions_total", doc="Total number of transactions", labels={"detector": self.name})
-        )
-        self.metrics.register(
-            Counter(
-                name="transactions_with_zero_value_total",
-                doc="Total number of transactions with zero value",
-                labels={"detector": self.name},
+        if self.metrics:
+            self.metrics.register(
+                Counter(name="transactions_total", doc="Total number of transactions", labels={"detector": self.name})
             )
-        )
-        self.metrics.register(
-            Counter(
-                name="transactions_with_value_gt_zero_total",
-                doc="Total number of transactions with zero value",
-                labels={"detector": self.name},
+            self.metrics.register(
+                Counter(
+                    name="transactions_with_zero_value_total",
+                    doc="Total number of transactions with zero value",
+                    labels={"detector": self.name},
+                )
             )
-        )
+            self.metrics.register(
+                Counter(
+                    name="transactions_with_value_gt_zero_total",
+                    doc="Total number of transactions with zero value",
+                    labels={"detector": self.name},
+                )
+            )
 
     async def on_transaction(self, transaction: Transaction) -> None:
         """
