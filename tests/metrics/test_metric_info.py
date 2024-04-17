@@ -21,9 +21,9 @@ def test_metric_info_set_and_get():
     i = Info(**DEFAULT_DATA)
     labels = {"component": "comp_b"}
     COMP_B_DATA = {"version": "0.1.0", "build_time": "2024-04-13 12:34:00"}
-    i.set(labels, COMP_B_DATA)
+    i.set(labels=labels, value=COMP_B_DATA)
 
-    info_details = i.get(labels)
+    info_details = i.get(labels=labels)
     assert info_details["version"] == COMP_B_DATA["version"], "Incorrect component version"
     assert info_details["build_time"] == COMP_B_DATA["build_time"], "Incorrect component build time"
 
@@ -32,7 +32,7 @@ def test_metric_info_dump():
     i = Info(**DEFAULT_DATA)
     labels = {"component": "comp_b"}
     COMP_B_DATA = {"version": "0.1.0", "build_time": "2024-04-13 12:34:00"}
-    i.set(labels, COMP_B_DATA)
+    i.set(labels=labels, value=COMP_B_DATA)
 
     expected_data = [{"labels": labels, "values": COMP_B_DATA}]
 

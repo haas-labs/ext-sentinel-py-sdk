@@ -19,13 +19,13 @@ class Enum(Collector):
             raise ValueError(f"No states provided for Enum metric: {name}")
         self.states = states
 
-    def get(self, labels: LabelsType) -> str:
+    def get(self, labels: LabelsType = None) -> str:
         """
         Get enum metric value
         """
         return self.states[self.get_value(labels)]
 
-    def set(self, labels: LabelsType, value: str) -> None:
+    def set(self, value: str, labels: LabelsType = None) -> None:
         """
         Set enum metric state.
         """

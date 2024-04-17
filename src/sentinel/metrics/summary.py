@@ -3,7 +3,7 @@
 import statistics
 from collections import deque
 from dataclasses import dataclass
-from typing import cast, Optional, Dict, List, Union
+from typing import cast, Optional, Dict, Union
 
 from sentinel.metrics.collector import Collector
 from sentinel.metrics.types import MetricsTypes, LabelsType
@@ -37,7 +37,7 @@ class Summary(Collector):
         super().__init__(name, doc, labels=labels)
         self.max_values = max_values
 
-    def add(self, labels: LabelsType, value: SummaryValueType) -> None:
+    def add(self, value: SummaryValueType, labels: LabelsType = None) -> None:
         """Add a single observation to the summary"""
 
         value = cast(Union[float, int], value)  # typing check, no runtime behaviour.
@@ -45,7 +45,7 @@ class Summary(Collector):
             raise TypeError("Summary only works with digits (int, float)")
 
         try:
-            metric: SummaryMetric = self.get_value(labels)
+            metric: SummaryMetric = self.get_value(labels=labels)
         except KeyError:
             # Initialize metric
             metric = SummaryMetric(sum=0.0, count=0, values=deque(maxlen=self.max_values))
@@ -53,13 +53,13 @@ class Summary(Collector):
         metric.count += 1
         metric.sum += value
         metric.values.append(value)
-        self.set_value(labels, metric)
+        self.set_value(labels=labels, value=metric)
 
     # https://prometheus.io/docs/instrumenting/writing_clientlibs/#summary
     # A summary MUST have the ``observe`` methods
     observe = add
 
-    def get(self, labels: LabelsType) -> Dict[Union[float, str], SummaryValueType]:
+    def get(self, labels: LabelsType = None) -> Dict[Union[float, str], SummaryValueType]:
         """
         Get a dict of values, containing the sum, count and quantiles,
         matching an arbitrary group of labels.
@@ -68,7 +68,7 @@ class Summary(Collector):
         """
         return_data = dict()
 
-        metric: SummaryMetric = self.get_value(labels)
+        metric: SummaryMetric = self.get_value(labels=labels)
 
         data = list(metric.values)
         return_data["count"] = metric.count

@@ -98,7 +98,8 @@ class CoreSentry(multiprocessing.Process):
         self.databases = SentryDatabases(
             ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
         )
-        self.metrics = Registry()
+        if self.metrics_queue is not None:
+            self.metrics = Registry()
 
     def time_to_run(self) -> datetime:
         if self.schedule is None:

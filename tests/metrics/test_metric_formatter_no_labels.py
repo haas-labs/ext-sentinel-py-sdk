@@ -21,7 +21,7 @@ def test_metric_formatter_format_enum_no_root_labels():
             'test_enum_metric{"module":"A"} running ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect enum text format w/o root labels"
 
 
 def test_metric_formatter_format_enum_no_value_labels():
@@ -40,7 +40,7 @@ def test_metric_formatter_format_enum_no_value_labels():
             'test_enum_metric{"component":"A"} running ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect enum text format w/o value labels"
 
 
 def test_metric_formatter_format_enum_no_labels():
@@ -60,7 +60,7 @@ def test_metric_formatter_format_enum_no_labels():
             "test_enum_metric running " + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect enum text format w/o labels"
 
 
 def test_metric_formatter_format_info_no_root_labels():
@@ -80,7 +80,7 @@ def test_metric_formatter_format_info_no_root_labels():
             'test_info_metric_build_time{"module":"A"} 2024-04-13T12:34:00 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect info text format w/o root labels"
 
 
 def test_metric_formatter_format_info_no_value_labels():
@@ -100,7 +100,7 @@ def test_metric_formatter_format_info_no_value_labels():
             'test_info_metric_build_time{"component":"A"} 2024-04-13T12:34:00 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect info text format w/o value labels"
 
 
 def test_metric_formatter_format_info_no_labels():
@@ -121,7 +121,7 @@ def test_metric_formatter_format_info_no_labels():
             "test_info_metric_build_time 2024-04-13T12:34:00 " + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect info text format w/o labels"
 
 
 def test_metric_formatter_format_counter_no_root_labels():
@@ -140,7 +140,7 @@ def test_metric_formatter_format_counter_no_root_labels():
             'test_counter_metric{"module":"A"} 10 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format w/o root labels"
 
 
 def test_metric_formatter_format_counter_no_value_labels():
@@ -159,7 +159,7 @@ def test_metric_formatter_format_counter_no_value_labels():
             'test_counter_metric{"component":"A"} 10 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format w/o value labels"
 
 
 def test_metric_formatter_format_counter_no_labels():
@@ -179,7 +179,7 @@ def test_metric_formatter_format_counter_no_labels():
             "test_counter_metric 10 " + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format w/o labels"
 
 
 def test_metric_formatter_format_gauge_no_root_labels():
@@ -198,7 +198,7 @@ def test_metric_formatter_format_gauge_no_root_labels():
             'test_gauge_metric{"module":"A"} 10 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect gauge text format w/o root labels"
 
 
 def test_metric_formatter_format_gauge_no_value_labels():
@@ -217,7 +217,7 @@ def test_metric_formatter_format_gauge_no_value_labels():
             'test_gauge_metric{"component":"A"} 10 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect gauge text format w/o value labels"
 
 
 def test_metric_formatter_format_gauge_no_labels():
@@ -237,7 +237,7 @@ def test_metric_formatter_format_gauge_no_labels():
             "test_gauge_metric 10 " + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format w/o labels"
 
 
 def test_metric_formatter_format_summary_no_root_labels():
@@ -261,7 +261,7 @@ def test_metric_formatter_format_summary_no_root_labels():
             'test_summary_metric_quantile{"module":"A","quantile":0.99} 12.766 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect summary text format w/o root labels"
 
 
 def test_metric_formatter_format_summary_no_value_labels():
@@ -285,7 +285,7 @@ def test_metric_formatter_format_summary_no_value_labels():
             'test_summary_metric_quantile{"component":"A","quantile":0.99} 12.766 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect summary text format w/o value labels"
 
 
 def test_metric_formatter_format_summary_no_labels():
@@ -310,7 +310,7 @@ def test_metric_formatter_format_summary_no_labels():
             'test_summary_metric_quantile{"quantile":0.99} 12.766 ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect summary text format w/o labels"
 
 
 def test_metric_formatter_format_histogram_no_root_labels():
@@ -342,7 +342,7 @@ def test_metric_formatter_format_histogram_no_root_labels():
             'test_histogram_metric_sum{"module":"A"} +Inf ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect histogram text format w/o root labels"
 
 
 def test_metric_formatter_format_histogram_no_value_labels():
@@ -374,10 +374,10 @@ def test_metric_formatter_format_histogram_no_value_labels():
             'test_histogram_metric_sum{"component":"A"} +Inf ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect histogram text format w/o value labels"
 
 
-def test_metric_formatter_format_histogram_no_root_labels():
+def test_metric_formatter_format_histogram_no_labels():
     db = MetricDatabase()
 
     metric = get_sample(kind=MetricsTypes.histogram, current_time=True)
@@ -407,4 +407,4 @@ def test_metric_formatter_format_histogram_no_root_labels():
             'test_histogram_metric_sum +Inf ' + f"{ts}",
             "",
         ]
-    ).encode("utf-8"), "Incorrect counter text format"
+    ), "Incorrect counter text format w/o labels"

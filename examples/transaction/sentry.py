@@ -1,6 +1,6 @@
 import time
-from collections import Counter
 
+from sentinel.metrics.counter import Counter
 from sentinel.models.event import Event, Blockchain
 from sentinel.models.transaction import Transaction
 from sentinel.sentry.transaction import TransactionDetector
@@ -10,22 +10,37 @@ class SimpleTxMetricsDetector(TransactionDetector):
     name = "SimpleTxMetricsDetector"
 
     async def on_init(self):
-        self.metrics = Counter()
+        if self.metrics:
+            self.metrics.register(
+                Counter(name="transactions_total", doc="Total number of transactions", labels={"detector": self.name})
+            )
+            self.metrics.register(
+                Counter(
+                    name="transactions_with_zero_value_total",
+                    doc="Total number of transactions with zero value",
+                    labels={"detector": self.name},
+                )
+            )
+            self.metrics.register(
+                Counter(
+                    name="transactions_with_value_gt_zero_total",
+                    doc="Total number of transactions with zero value",
+                    labels={"detector": self.name},
+                )
+            )
 
     async def on_transaction(self, transaction: Transaction) -> None:
         """
         Handle transactions with value > 0
         """
-        if len(self.metrics) > 0 and self.metrics["total tx"] % 1000 == 0:
-            self.logger.info(self.metrics)
+        self.metrics.get("transactions_total").inc()
 
         match transaction.value:
             case 0:
-                self.metrics["total tx with 0 value"] += 1
+                self.metrics.get("transactions_with_zero_value_total").inc()
             case value if value > 0:
-                self.metrics["total tx with value > 0"] += 1
+                self.metrics.get("transactions_with_value_gt_zero_total").inc()
 
-        self.metrics["total tx"] += 1
         if transaction.value == 0:
             return
 
@@ -39,6 +54,6 @@ class SimpleTxMetricsDetector(TransactionDetector):
                 metadata={
                     "tx_hash": transaction.hash,
                     "value": transaction.value,
-                }
+                },
             )
         )

@@ -11,26 +11,26 @@ GaugeValueType = Union[int, float]
 class Gauge(Collector):
     kind = MetricsTypes.gauge
 
-    def set(self, labels: LabelsType, value: GaugeValueType) -> None:
+    def set(self, value: GaugeValueType, labels: LabelsType = None) -> None:
         """Set the gauge to an arbitrary value."""
-        self.set_value(labels, value)
+        self.set_value(labels=labels, value=value)
 
-    def get(self, labels: LabelsType) -> GaugeValueType:
+    def get(self, labels: LabelsType = None) -> GaugeValueType:
         """Get the gauge value matching an arbitrary group of labels.
 
         :raises: KeyError if an item with matching labels is not present.
         """
-        return self.get_value(labels)
+        return self.get_value(labels=labels)
 
-    def inc(self, labels: LabelsType) -> None:
+    def inc(self, labels: LabelsType = None) -> None:
         """Increments the gauge by 1."""
-        self.add(labels, 1)
+        self.add(labels=labels, value=1)
 
-    def dec(self, labels: LabelsType) -> None:
+    def dec(self, labels: LabelsType = None) -> None:
         """Decrement the gauge by 1."""
-        self.add(labels, -1)
+        self.add(labels=labels, value=-1)
 
-    def add(self, labels: LabelsType, value: GaugeValueType) -> None:
+    def add(self, value: GaugeValueType, labels: LabelsType = None) -> None:
         """Add the given value to the Gauge.
 
         The value can be negative, resulting in a decrease of the gauge.
@@ -38,17 +38,17 @@ class Gauge(Collector):
         value = cast(Union[float, int], value)  # typing check, no runtime behaviour.
 
         try:
-            current = self.get_value(labels)
+            current = self.get_value(labels=labels)
         except KeyError:
             current = 0
         current = cast(Union[float, int], current)  # typing check, no runtime behaviour.
 
-        self.set_value(labels, current + value)
+        self.set_value(labels=labels, value=current + value)
 
-    def sub(self, labels: LabelsType, value: GaugeValueType) -> None:
+    def sub(self, value: GaugeValueType, labels: LabelsType = None) -> None:
         """Subtract the given value from the Gauge.
 
         The value can be negative, resulting in an increase of the gauge.
         """
         value = cast(Union[float, int], value)  # typing check, no runtime behaviour.
-        self.add(labels, -value)
+        self.add(labels=labels, value=-value)

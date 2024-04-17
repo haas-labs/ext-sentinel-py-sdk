@@ -83,7 +83,7 @@ class Histogram(Collector):
         super().__init__(name, doc, labels=labels)
         self.upper_bounds = buckets
 
-    def add(self, labels: LabelsType, value: HistogramValueTypes) -> None:
+    def add(self, value: HistogramValueTypes, labels: LabelsType = None) -> None:
         """Add a single observation to the histogram"""
 
         value = cast(Union[float, int], value)  # typing check, no runtime behaviour.
@@ -91,20 +91,20 @@ class Histogram(Collector):
             raise TypeError("Histogram only works with digits (int, float)")
 
         try:
-            h = self.get_value(labels)
+            h = self.get_value(labels=labels)
             h = cast(HistogramStruct, h)  # typing check, no runtime behaviour.
         except KeyError:
             # Initialize histogram aggregator
             h = HistogramStruct(*self.upper_bounds)
-            self.set_value(labels, h)
+            self.set_value(labels=labels, value=h)
 
-        h.observe(float(value))
+        h.observe(value=float(value))
 
     # https://prometheus.io/docs/instrumenting/writing_clientlibs/#histogram
     # A histogram MUST have the ``observe`` methods
     observe = add
 
-    def get(self, labels: LabelsType) -> Dict[Union[float, str], HistogramValueTypes]:
+    def get(self, labels: LabelsType = None) -> Dict[Union[float, str], HistogramValueTypes]:
         """
         Get a dict of values, containing the sum, count and buckets,
         matching an arbitrary group of labels.
@@ -113,7 +113,7 @@ class Histogram(Collector):
         """
         return_data = OrderedDict()  # type: Dict[Union[float, str], HistogramValueTypes]
 
-        h = self.get_value(labels)
+        h = self.get_value(labels=labels)
         h = cast(HistogramStruct, h)  # typing check, no runtime behaviour.
 
         for upper_bound, cumulative_count in h.buckets.items():

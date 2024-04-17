@@ -38,7 +38,7 @@ def test_metric_histogram_init():
 def test_metric_histogram_wrong_labels():
     h = Histogram(**DEFAULT_DATA)
     with pytest.raises(ValueError) as err:
-        h.set_value({"le": 2}, 1)
+        h.set_value(labels={"le": 2}, value=1)
     assert str(err.value) == "Invalid label name: le", "Incorrect error message"
 
 
@@ -50,7 +50,7 @@ def test_metric_histogram_insufficient_buckets():
     # created when needing so any exception only occurs when an new
     # observation is performed.
     with pytest.raises(Exception) as err:
-        h.observe(None, 3.0)
+        h.observe(value=3.0)
     assert str(err.value) == "Must have at least two buckets", "Incorrect error message"
 
 
@@ -62,16 +62,15 @@ def test_metric_histogram_unsorted_buckets():
     # created when needing so any exception only occurs when an new
     # observation is performed.
     with pytest.raises(Exception) as err:
-        h.observe(None, 3.0)
+        h.observe(value=3.0)
     assert str(err.value) == "Buckets not in sorted order", "Incorrect error message"
 
 
 def test_metric_histogram_expected_values():
     h = Histogram(**DEFAULT_DATA)
-    labels = None
 
-    h.observe(labels, 7)
-    results = h.get(labels)
+    h.observe(value=7)
+    results = h.get()
     assert results[5.0] == 0, "Incorrect historgram metric value"
     assert results[10.0] == 1, "Incorrect historgram metric value"
     assert results[15.0] == 1, "Incorrect historgram metric value"
@@ -79,8 +78,8 @@ def test_metric_histogram_expected_values():
     assert results["count"] == 1, "Incorrect historgram metric value"
     assert results["sum"] == 7.0, "Incorrect historgram metric value"
 
-    h.observe(labels, 7.5)
-    results = h.get(labels)
+    h.observe(value=7.5)
+    results = h.get()
     assert results[5.0] == 0, "Incorrect historgram metric value"
     assert results[10.0] == 2, "Incorrect historgram metric value"
     assert results[15.0] == 2, "Incorrect historgram metric value"
@@ -88,8 +87,8 @@ def test_metric_histogram_expected_values():
     assert results["count"] == 2, "Incorrect historgram metric value"
     assert results["sum"] == 14.5, "Incorrect historgram metric value"
 
-    h.observe(labels, POS_INF)
-    results = h.get(labels)
+    h.observe(value=POS_INF)
+    results = h.get()
     assert results[5.0] == 0, "Incorrect historgram metric value"
     assert results[10.0] == 2, "Incorrect historgram metric value"
     assert results[15.0] == 2, "Incorrect historgram metric value"
@@ -102,26 +101,25 @@ def test_metric_histogram_get():
     h = Histogram(**DEFAULT_DATA)
     labels = {"path": "/"}
     for i in INPUT_VALUES:
-        h.observe(labels, i)
-    data = h.get(labels)
+        h.observe(labels=labels, value=i)
+    data = h.get(labels=labels)
     assert data == EXPECTED_DATA, "Unexpected data"
 
 
 def test_metric_histogram_add_get_without_labels():
     h = Histogram(**DEFAULT_DATA)
-    labels = None
     for i in INPUT_VALUES:
-        h.observe(labels, i)
+        h.observe(value=i)
     assert len(h.values) == 1, "Incorrect histogram metric data"
-    assert h.get(labels) == EXPECTED_DATA, "Unexpected data"
+    assert h.get() == EXPECTED_DATA, "Unexpected data"
 
 
 def test_metric_histogram_dump_all():
     h = Histogram(**DEFAULT_DATA)
     labels = {"max": "10T", "dev": "sdc"}
-    h.observe(labels, 7)
-    h.observe(labels, 7.5)
-    h.observe(labels, POS_INF)
+    h.observe(labels=labels, value=7)
+    h.observe(labels=labels, value=7.5)
+    h.observe(labels=labels, value=POS_INF)
 
     expected_data = [{"labels": labels, "values": {5.0: 0, 10.0: 2, 15.0: 2, POS_INF: 3, "count": 3, "sum": POS_INF}}]
 

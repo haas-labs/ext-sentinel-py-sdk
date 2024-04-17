@@ -32,9 +32,9 @@ function deployment-tools() {
 
     echo "[INFO] Install development tools and libs" \
         && ${PREFIX}pip install \
-            build \
-            twine \
-            hatch
+            build==1.2.1 \
+            twine==5.0.0 \
+            hatch==1.9.4
 
 }
 
@@ -42,10 +42,10 @@ function dev-tools() {
 
     echo "[INFO] Install development tools and libs" \
         && ${PREFIX}pip install \
-            ruff \
-            pytest \
-            pytest-asyncio \
-            pytest-cov
+            ruff==0.3.7 \
+            pytest==8.1.1 \
+            pytest-asyncio==0.23.6 \
+            pytest-cov==5.0.0
 }
 
 function sentinel() {
