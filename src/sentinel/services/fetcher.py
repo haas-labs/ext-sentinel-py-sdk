@@ -25,7 +25,6 @@ from sentinel.formats.mappings import (
 from sentinel.utils.logger import get_logger
 
 
-
 JSONRPC_VERSION = "2.0"
 HEADERS = {
     "Content-Type": "application/json",
@@ -362,3 +361,25 @@ class Fetcher:
     #     return self.fetch(JsonRpcRequest(self.endpoint,
     #                                      method='trace_call',
     #                                      params=[{"to": to_address }]))
+
+    def get_code(self, addr: Union[str, List[str]]) -> Iterator[Dict]:
+        """ 
+        returns code by address or address list
+        """
+        def _get_code(addr: str) -> Dict:
+            return self.fetch(
+                JsonRpcRequest(
+                    self.endpoint,
+                    method="eth_getCode",
+                    params=[addr, "latest"],
+                )
+            )
+        if isinstance(addr, str):
+            yield _get_code(addr)
+
+        elif isinstance(addr, list):
+            for _addr in addr:
+                code_data = _get_code(_addr)
+                if not code_data:
+                    continue
+                yield code_data
