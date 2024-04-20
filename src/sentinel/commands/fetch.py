@@ -12,7 +12,6 @@ from sentinel.services.fetcher import Fetcher
 from sentinel.commands.common import SentinelCommand
 
 
-
 class DatasetType(Enum):
     """
     Dataset Types
@@ -23,6 +22,7 @@ class DatasetType(Enum):
     trace = "trace"
     trace_transaction = "trace_transaction"
     debug_trace_transaction = "debug_trace_transaction"
+    code = "code"
 
     def __str__(self) -> str:
         return self.value
@@ -52,36 +52,39 @@ class Command(SentinelCommand):
         fetcher = Fetcher(endpoint=args.rpc)
 
         try:
-            if args.dataset == DatasetType.block:
-                self.handle_blocks(
-                    fetcher=fetcher,
-                    source_path=args.from_file,
-                    target_path=args.to_file,
-                )
-
-            elif args.dataset == DatasetType.transaction:
-                self.handle_transactions(
-                    fetcher=fetcher,
-                    source_path=args.from_file,
-                    target_path=args.to_file,
-                )
-
-            elif args.dataset == DatasetType.trace_transaction:
-                self.handle_trace_transactions(
-                    fetcher=fetcher,
-                    source_path=args.from_file,
-                    target_path=args.to_file,
-                )
-
-            elif args.dataset == DatasetType.debug_trace_transaction:
-                self.handle_debug_trace_transactions(
-                    fetcher=fetcher,
-                    source_path=args.from_file,
-                    target_path=args.to_file,
-                )
-
-            else:
-                logger.error(f"Unknown dataset: {args.dataset}")
+            match args.dataset:
+                case DatasetType.block:
+                    self.handle_blocks(
+                        fetcher=fetcher,
+                        source_path=args.from_file,
+                        target_path=args.to_file,
+                    )
+                case DatasetType.transaction:
+                    self.handle_transactions(
+                        fetcher=fetcher,
+                        source_path=args.from_file,
+                        target_path=args.to_file,
+                    )
+                case DatasetType.trace_transaction:
+                    self.handle_trace_transactions(
+                        fetcher=fetcher,
+                        source_path=args.from_file,
+                        target_path=args.to_file,
+                    )
+                case DatasetType.debug_trace_transaction:
+                    self.handle_debug_trace_transactions(
+                        fetcher=fetcher,
+                        source_path=args.from_file,
+                        target_path=args.to_file,
+                    )
+                case DatasetType.code:
+                    self.handle_code(
+                        fetcher=fetcher,
+                        source_path=args.from_file,
+                        target_path=args.to_file,
+                    )
+                case _:
+                    logger.error(f"Unknown dataset: {args.dataset}")
         except KeyboardInterrupt:
             logger.warning("Interrupted by user")
 
@@ -136,5 +139,18 @@ class Command(SentinelCommand):
             try:
                 for trace in fetcher.get_debug_trace_transaction(tx_requests):
                     target.write(f"{json.dumps(trace)}\n")
+            finally:
+                target.close()
+
+    def handle_code(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
+        """
+        Handle Code
+        """
+        with source_path.open("r") as source:
+            requests = [addr.strip() for addr in source.readlines() if addr != ""]
+            target = target_path.open("w") if target_path else sys.stdout
+            try:
+                for code in fetcher.get_code(requests):
+                    target.write(f"{code}\n")
             finally:
                 target.close()
