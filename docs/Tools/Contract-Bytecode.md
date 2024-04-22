@@ -26,3 +26,7 @@ Optional metadata can be included in the bytecode, typically used for debugging 
 
 Sometimes, additional metadata such as Swarm or IPFS hash may be included, especially if you're using tools like Truffle or Remix for contract development. This metadata helps in verifying the contract's source code and other related information.
 
+## References
+
+- [ethereum-dasm: ethereum evm bytecode disassembler with static- and dynamic-analysis and function signature lookup](https://github.com/tintinweb/ethereum-dasm/tree/master)
+- 
