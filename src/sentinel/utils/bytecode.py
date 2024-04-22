@@ -1,5 +1,8 @@
+from typing import List
+
 import cbor2
 
+from web3 import Web3
 from pydantic import BaseModel
 
 
@@ -13,7 +16,7 @@ class Metadata(BaseModel):
     # Previous versions were using "bzzr0" instead of "bzzr1"
     bzzr0: str = ""
     # If any experimental features that affect code generation are used
-    solc: str = ""
+    solc: List[int] = []
     experimental: bool = False
 
 
@@ -36,6 +39,15 @@ class Bytecode:
         return ipfs.hex()
 
     @property
+    def contract(self) -> bytes:
+        length = int(self._bytecode[-4:], 16)
+        return self._bytecode[: -(2 * length + 4)]
+
+    @property
+    def contract_hash(self) -> bytes:
+        return Web3.keccak(hexstr=self.contract)
+
+    @property
     def metadata(self) -> Metadata:
         """
         return metadata details
@@ -55,7 +67,7 @@ class Bytecode:
             ipfs=self.get_ipfs_hash(attrs.get("ipfs", b"")),
             bzzr0=attrs.get("bzzr0", b"").hex(),
             bzzr1=attrs.get("bzzr1", b"").hex(),
-            solc=attrs.get("solc", b"").hex(),
+            solc=list(attrs.get("solc", b"")),
         )
 
         return self._metadata

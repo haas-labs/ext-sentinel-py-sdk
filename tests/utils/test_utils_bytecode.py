@@ -40,4 +40,4 @@ def test_bytecode_extract_metadata():
     assert (
         metadata.ipfs == "1220752c1a7264033a67519f23022e2c375079c74dab80b9c0492dc8a9a57c332c63"
     ), "Incorrect IPFS value"
-    assert metadata.solc == "000812", "Incorrect SOLC value"
+    assert metadata.solc == [0, 8, 18], "Incorrect SOLC value"
