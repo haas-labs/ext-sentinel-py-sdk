@@ -5,6 +5,8 @@ import cbor2
 from web3 import Web3
 from pydantic import BaseModel
 
+from sentinel.utils.base58 import b58encode
+
 
 class Metadata(BaseModel):
     data: str
@@ -36,7 +38,7 @@ class Bytecode:
         """
         convert bytes into IPFS hash
         """
-        return ipfs.hex()
+        return b58encode(ipfs)
 
     @property
     def contract(self) -> bytes:
