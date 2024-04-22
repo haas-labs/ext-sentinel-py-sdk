@@ -38,6 +38,6 @@ def test_bytecode_extract_metadata():
     ), "Incorrect metadata raw data"
     assert metadata.length == 51, "Incorrect metadata length"
     assert (
-        metadata.ipfs == "1220752c1a7264033a67519f23022e2c375079c74dab80b9c0492dc8a9a57c332c63"
+        metadata.ipfs == "QmWE3R3YMFsqA6mZTtAY8xgPeqh2xnQMuMR7cRk95atati"
     ), "Incorrect IPFS value"
     assert metadata.solc == [0, 8, 18], "Incorrect SOLC value"
