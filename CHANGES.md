@@ -1,5 +1,42 @@
 # Change Log
 
+## v0.4.3
+
+Feature
+
+- add new chain definitions (#240)
+- use base58 for IPFS hash (#239)
+- handle CGRP token bytecode (#237)
+- get contract bytecode and hash, use solc version in format of int list
+- extract metadata from contract bytecode (#236)
+- add base64 encode/decode utils
+- add bytecode metadata parser
+- add cbor2 package for parsing bytecode metadata fields
+- add fetch code command option (#235)
+- integrate metrics db with metrics server (#234)
+- add metrics handling where no labels (#233)
+- add metric formatter (#232)
+- add prometheus text formatter and tests
+- activate telemetry for simple tx detector (#230)
+- add metric registry in core sentry
+- add telemetry settings (#229)
+- add metrics sending via queue (#227)
+- add sentry metrics serializer (#226)
+- add sentry metrics registry (#225)
+- add sentry metrics collectors (#224)
+- add  metrics sentry and queue (#223)
+
+Documentation
+
+- update contract bytecode and tools
+- add contract bytecode details
+- add Contract Metadata details
+- add settings for telemetry activation and configuration
+
+Tests
+
+- add pytest benchmark
+
 ## v0.4.2
 
 Fix
