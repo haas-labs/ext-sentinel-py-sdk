@@ -133,7 +133,7 @@ class LabelDB(CommonLabelDB):
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
             response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=parameters)
-        if response.status_code != 201:
+        if response.status_code != 200:
             self.logger.error(
                 f"Cannot add address to label DB, status: {response.status_code}, "
                 + f"network: {self._network}, address: {address}, parameters: {parameters}, "
