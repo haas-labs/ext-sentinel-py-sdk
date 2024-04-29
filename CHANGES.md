@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.4.4
+
+Refactoring
+
+- handle HTTP code 200 for creating/update Label DB records
+
 ## v0.4.3
 
 Feature
