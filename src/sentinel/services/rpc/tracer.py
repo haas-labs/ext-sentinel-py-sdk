@@ -6,11 +6,6 @@ from sentinel.utils.logger import get_logger
 
 
 JSONRPC_VERSION = "2.0"
-SUPPORTED_NETWORKS = [
-    "ethereum",
-    "bsc",
-    "arbitrum",
-]
 HEADERS = {
     "Content-Type": "application/json",
 }
@@ -49,10 +44,6 @@ class Tracer:
         Tracer Init
         """
         self.logger = get_logger(__name__)
-
-        if network not in SUPPORTED_NETWORKS:
-            raise RuntimeError(f"Unsupported network: {network}")
-
         self.endpoint = endpoint
         self.network = network
         self.timeout = timeout
