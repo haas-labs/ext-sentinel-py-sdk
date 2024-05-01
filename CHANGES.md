@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.4.5
+
+Refactoring
+
+- Remove check supported networks in tracer (#245)
+
 ## v0.4.4
 
 Refactoring
