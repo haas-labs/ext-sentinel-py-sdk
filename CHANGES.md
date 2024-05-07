@@ -4,6 +4,12 @@
 
 Feature
 
+- Update python packages
+
+## v0.4.6
+
+Feature
+
 - Implement Async Fetcher
 
 ## v0.4.5
