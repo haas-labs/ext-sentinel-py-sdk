@@ -2,7 +2,7 @@ import httpx
 
 from rich.progress import Progress
 
-from typing import List, Dict, Iterator, Union
+from typing import List, Dict, Iterator, Union, AsyncIterator
 
 from sentinel.utils.dicts import (
     dicts_merge,
@@ -68,18 +68,17 @@ class Fetcher:
         self.logger = get_logger(__name__)
         self.endpoint = endpoint
 
-    def fetch(self, request: JsonRpcRequest) -> Dict:
+    async def fetch(self, request: JsonRpcRequest) -> Dict:
         """
         Fetch data by request
         """
-        response = httpx.post(
-            self.endpoint,
-            headers=HEADERS,
-            json=request.data,
-            timeout=DEFAULT_CONNECTION_TIMEOUT,
+        async with httpx.AsyncClient(
             verify=False,
+            headers=HEADERS,
+            timeout=DEFAULT_CONNECTION_TIMEOUT,
             follow_redirects=True,
-        )
+        ) as httpx_async_client:
+            response = await httpx_async_client.post(self.endpoint, json=request.data)
         if response.status_code == 200:
             data = response.json()
             if data.get("error", None):
@@ -91,7 +90,7 @@ class Fetcher:
             self.logger.error(response.content)
             return None
 
-    def get_block_transactions(self, block_numbers: List[str]) -> Iterator[Dict]:
+    async def get_block_transactions(self, block_numbers: List[str]) -> AsyncIterator[Dict]:
         """
         Get Block Transactions
 
@@ -103,7 +102,7 @@ class Fetcher:
         with Progress() as progress:
             fetching_blocks = progress.add_task("Fetching block transactions", total=len(block_numbers))
             for blk_nm in block_numbers:
-                block_data = self.get_block_by_number(blk_nm)
+                block_data = await self.get_block_by_number(blk_nm)
                 transactions = block_data.get("transactions", [])
                 block_data["transaction_count"] = len(transactions)
                 block_data = dict_fields_filter(block_data, JSONRPC_BLOCK_FIELD_IGNORE_LIST)
@@ -116,11 +115,11 @@ class Fetcher:
                 for tx_hash in transactions:
                     progress.update(fetching_transactions, advance=1)
 
-                    tx_data = self.get_transaction_by_hash(tx_hash)
+                    tx_data = await self.get_transaction_by_hash(tx_hash)
                     if not tx_data:
                         continue
 
-                    tx_receipt_data = self.get_transaction_receipt_by_hash(tx_hash)
+                    tx_receipt_data = await self.get_transaction_receipt_by_hash(tx_hash)
                     tx_data["logs"] = []
                     for log_data in tx_receipt_data.pop("logs", []):
                         log_data = dict_fields_filter(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST)
@@ -144,7 +143,7 @@ class Fetcher:
 
                 progress.update(fetching_blocks, advance=1)
 
-    def get_transactions(self, tx_hashes: List[str]) -> Iterator[Dict]:
+    async def get_transactions(self, tx_hashes: List[str]) -> AsyncIterator[Dict]:
         """
         Get Transactions Data
 
@@ -158,11 +157,11 @@ class Fetcher:
                 self.logger.error("The hash field required for fetching transaction data")
                 continue
 
-            tx_data = self.get_transaction_by_hash(tx_hash)
+            tx_data = await self.get_transaction_by_hash(tx_hash)
             if not tx_data:
                 continue
 
-            tx_receipt_data = self.get_transaction_receipt_by_hash(tx_hash)
+            tx_receipt_data = await self.get_transaction_receipt_by_hash(tx_hash)
             tx_data["logs"] = []
             for log_data in tx_receipt_data.pop("logs", []):
                 log_data = dict_fields_filter(log_data, JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST)
@@ -173,7 +172,7 @@ class Fetcher:
             if tx_receipt_data:
                 tx_data = dicts_merge(tx_data, tx_receipt_data)
 
-            block_data = self.get_block_by_hash(tx_data.get("blockHash"))
+            block_data = await self.get_block_by_hash(tx_data.get("blockHash"))
             block_data["transaction_count"] = len(block_data.get("transactions", []))
             block_data = dict_fields_filter(block_data, JSONRPC_BLOCK_FIELD_IGNORE_LIST)
             block_data = dict_fields_mapping(block_data, JSONRPC_BLOCK_FIELD_MAPPINGS)
@@ -231,11 +230,11 @@ class Fetcher:
         transaction["block_timestamp"] = int(transaction["block_timestamp"], 0)
         return transaction
 
-    def get_block_by_number(self, block_number: str, transaction_detail_flag: bool = False) -> Dict:
+    async def get_block_by_number(self, block_number: str, transaction_detail_flag: bool = False) -> Dict:
         """
         returns block data by number
         """
-        return self.fetch(
+        return await self.fetch(
             JsonRpcRequest(
                 self.endpoint,
                 method="eth_getBlockByNumber",
@@ -243,11 +242,11 @@ class Fetcher:
             )
         )
 
-    def get_block_by_hash(self, block_hash: str, transaction_detail_flag: bool = False) -> Dict:
+    async def get_block_by_hash(self, block_hash: str, transaction_detail_flag: bool = False) -> Dict:
         """
         returns block data by hash
         """
-        return self.fetch(
+        return await self.fetch(
             JsonRpcRequest(
                 self.endpoint,
                 method="eth_getBlockByHash",
@@ -255,11 +254,11 @@ class Fetcher:
             )
         )
 
-    def get_transaction_by_hash(self, transaction_hash: str) -> Dict:
+    async def get_transaction_by_hash(self, transaction_hash: str) -> Dict:
         """
         returns transaction data by hash
         """
-        return self.fetch(
+        return await self.fetch(
             JsonRpcRequest(
                 self.endpoint,
                 method="eth_getTransactionByHash",
@@ -267,11 +266,11 @@ class Fetcher:
             )
         )
 
-    def get_transaction_receipt_by_hash(self, transaction_hash: str) -> Dict:
+    async def get_transaction_receipt_by_hash(self, transaction_hash: str) -> Dict:
         """
         returns transaction receipt data by hash
         """
-        return self.fetch(
+        return await self.fetch(
             JsonRpcRequest(
                 self.endpoint,
                 method="eth_getTransactionReceipt",
@@ -279,11 +278,11 @@ class Fetcher:
             )
         )
 
-    def get_block_trace(self, block_number: str) -> Dict:
+    async def get_block_trace(self, block_number: str) -> Dict:
         """
         returns block trace
         """
-        return self.fetch(JsonRpcRequest(self.endpoint, method="trace_block", params=[block_number]))
+        return await self.fetch(JsonRpcRequest(self.endpoint, method="trace_block", params=[block_number]))
 
     # TODO update the code
     # def get_transaction_trace(self, transaction_hash: str) -> Dict:
@@ -294,13 +293,13 @@ class Fetcher:
     #                                      method='trace_transaction',
     #                                      params=[transaction_hash]))
 
-    def get_trace_transaction(self, tx_hash: Union[str, List[str]]) -> Iterator[Dict]:
+    async def get_trace_transaction(self, tx_hash: Union[str, List[str]]) -> AsyncIterator[Dict]:
         """
         returns transaction trace
         """
 
-        def get_trace(tx_hash: str) -> Dict:
-            return self.fetch(
+        async def get_trace(tx_hash: str) -> Dict:
+            return await self.fetch(
                 JsonRpcRequest(
                     self.endpoint,
                     method="trace_transaction",
@@ -311,22 +310,22 @@ class Fetcher:
             )
 
         if isinstance(tx_hash, str):
-            yield get_trace(tx_hash)
+            yield await get_trace(tx_hash)
 
         elif isinstance(tx_hash, list):
             for tx in tx_hash:
-                trace_data = get_trace(tx)
+                trace_data = await get_trace(tx)
                 if not trace_data:
                     continue
                 yield trace_data
 
-    def get_debug_trace_transaction(self, tx_hash: Union[str, List[str]]) -> Iterator[Dict]:
+    async def get_debug_trace_transaction(self, tx_hash: Union[str, List[str]]) -> AsyncIterator[Dict]:
         """
         returns transaction trace
         """
 
-        def get_trace(tx_hash: str) -> Dict:
-            return self.fetch(
+        async def get_trace(tx_hash: str) -> Dict:
+            return await self.fetch(
                 JsonRpcRequest(
                     self.endpoint,
                     method="debug_traceTransaction",
@@ -335,11 +334,11 @@ class Fetcher:
             )
 
         if isinstance(tx_hash, str):
-            yield get_trace(tx_hash)
+            yield await get_trace(tx_hash)
 
         elif isinstance(tx_hash, list):
             for tx in tx_hash:
-                trace_data = get_trace(tx)
+                trace_data = await get_trace(tx)
                 if not trace_data:
                     continue
                 yield trace_data
@@ -362,24 +361,26 @@ class Fetcher:
     #                                      method='trace_call',
     #                                      params=[{"to": to_address }]))
 
-    def get_code(self, addr: Union[str, List[str]]) -> Iterator[Dict]:
-        """ 
+    async def get_code(self, addr: Union[str, List[str]]) -> AsyncIterator[Dict]:
+        """
         returns code by address or address list
         """
-        def _get_code(addr: str) -> Dict:
-            return self.fetch(
+
+        async def _get_code(addr: str) -> Dict:
+            return await self.fetch(
                 JsonRpcRequest(
                     self.endpoint,
                     method="eth_getCode",
                     params=[addr, "latest"],
                 )
             )
+
         if isinstance(addr, str):
-            yield _get_code(addr)
+            yield await _get_code(addr)
 
         elif isinstance(addr, list):
             for _addr in addr:
-                code_data = _get_code(_addr)
+                code_data = await _get_code(_addr)
                 if not code_data:
                     continue
                 yield code_data

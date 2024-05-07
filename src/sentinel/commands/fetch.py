@@ -1,5 +1,6 @@
 import sys
 import json
+import asyncio
 import pathlib
 
 from argparse import ArgumentParser, Namespace
@@ -46,6 +47,9 @@ class Command(SentinelCommand):
         parser.add_argument("--to-file", type=pathlib.Path, help="Store results into file")
 
     def run(self, opts: List[str], args: Namespace) -> None:
+        asyncio.run(self._run(opts=opts, args=args))
+
+    async def _run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
 
         logger.info(f"Fetch {args.dataset} data via JSON-RPC endpont: {args.rpc}")
@@ -54,31 +58,31 @@ class Command(SentinelCommand):
         try:
             match args.dataset:
                 case DatasetType.block:
-                    self.handle_blocks(
+                    await self.handle_blocks(
                         fetcher=fetcher,
                         source_path=args.from_file,
                         target_path=args.to_file,
                     )
                 case DatasetType.transaction:
-                    self.handle_transactions(
+                    await self.handle_transactions(
                         fetcher=fetcher,
                         source_path=args.from_file,
                         target_path=args.to_file,
                     )
                 case DatasetType.trace_transaction:
-                    self.handle_trace_transactions(
+                    await self.handle_trace_transactions(
                         fetcher=fetcher,
                         source_path=args.from_file,
                         target_path=args.to_file,
                     )
                 case DatasetType.debug_trace_transaction:
-                    self.handle_debug_trace_transactions(
+                    await self.handle_debug_trace_transactions(
                         fetcher=fetcher,
                         source_path=args.from_file,
                         target_path=args.to_file,
                     )
                 case DatasetType.code:
-                    self.handle_code(
+                    await self.handle_code(
                         fetcher=fetcher,
                         source_path=args.from_file,
                         target_path=args.to_file,
@@ -88,7 +92,7 @@ class Command(SentinelCommand):
         except KeyboardInterrupt:
             logger.warning("Interrupted by user")
 
-    def handle_blocks(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
+    async def handle_blocks(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle fetch block transactions
         """
@@ -96,12 +100,12 @@ class Command(SentinelCommand):
             block_nums = [blk_nm.strip() for blk_nm in source.readlines() if blk_nm != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
-                for transaction in fetcher.get_block_transactions(block_nums):
+                async for transaction in fetcher.get_block_transactions(block_nums):
                     target.write(f"{json.dumps(transaction)}\n")
             finally:
                 target.close()
 
-    def handle_transactions(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
+    async def handle_transactions(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle fetch transactions
         """
@@ -109,12 +113,12 @@ class Command(SentinelCommand):
             tx_hashes = [tx.strip() for tx in source.readlines() if tx.strip() != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
-                for transaction in fetcher.get_transactions(tx_hashes):
+                async for transaction in fetcher.get_transactions(tx_hashes):
                     target.write(f"{json.dumps(transaction)}\n")
             finally:
                 target.close()
 
-    def handle_trace_transactions(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
+    async def handle_trace_transactions(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle Trace Transactions
         """
@@ -122,12 +126,12 @@ class Command(SentinelCommand):
             tx_requests = [tx.strip() for tx in source.readlines() if tx != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
-                for trace in fetcher.get_trace_transaction(tx_requests):
+                async for trace in fetcher.get_trace_transaction(tx_requests):
                     target.write(f"{json.dumps(trace)}\n")
             finally:
                 target.close()
 
-    def handle_debug_trace_transactions(
+    async def handle_debug_trace_transactions(
         self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path
     ) -> None:
         """
@@ -137,12 +141,12 @@ class Command(SentinelCommand):
             tx_requests = [tx.strip() for tx in source.readlines() if tx != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
-                for trace in fetcher.get_debug_trace_transaction(tx_requests):
+                async for trace in fetcher.get_debug_trace_transaction(tx_requests):
                     target.write(f"{json.dumps(trace)}\n")
             finally:
                 target.close()
 
-    def handle_code(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
+    async def handle_code(self, fetcher: Fetcher, source_path: pathlib.Path, target_path: pathlib.Path) -> None:
         """
         Handle Code
         """
@@ -150,7 +154,7 @@ class Command(SentinelCommand):
             requests = [addr.strip() for addr in source.readlines() if addr != ""]
             target = target_path.open("w") if target_path else sys.stdout
             try:
-                for code in fetcher.get_code(requests):
+                async for code in fetcher.get_code(requests):
                     target.write(f"{code}\n")
             finally:
                 target.close()
