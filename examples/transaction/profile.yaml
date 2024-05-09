@@ -1,6 +1,9 @@
 imports:
 - ../profiles/inputs.yaml
 
+settings:
+  TELEMETRY_ENABLED: true
+
 sentries:
 
 - name: SimpleTxMetricsDetector
