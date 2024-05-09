@@ -19,7 +19,8 @@ class InboundKafkaChannel(KafkaChannel):
         """
         Run Inbound Kafka Channel
         """
-        self.logger.info(f"{self.name} -> Subscribing to Kafka topics: {self.topics}")
+        group_id = self.config.get("group_id", "unspecified")
+        self.logger.info(f"{self.name} -> Subscribing to Kafka topics: {self.topics}, group id: {group_id}")
         self.consumer = KafkaConsumer(*self.topics, **self.config)
 
         self.logger.info(f"{self.name} -> Starting consuming messages fromn Kafka channel: {self.name}")
