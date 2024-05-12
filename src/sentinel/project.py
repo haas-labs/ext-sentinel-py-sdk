@@ -1,5 +1,4 @@
 import pathlib
-
 from typing import Dict
 
 from sentinel.models.project import ProjectSettings

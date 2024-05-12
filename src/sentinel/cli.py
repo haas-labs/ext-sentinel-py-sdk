@@ -1,12 +1,7 @@
-import sys
-import pathlib
 import argparse
-
+import pathlib
+import sys
 from typing import List
-
-from sentinel.utils.logger import logger
-from sentinel.models.project import ProjectSettings
-from sentinel.utils.settings import load_project_settings
 
 from sentinel.commands.common import (
     get_command,
@@ -14,6 +9,10 @@ from sentinel.commands.common import (
     print_commands,
     print_unknown_command,
 )
+from sentinel.models.project import ProjectSettings
+from sentinel.utils.logger import logger
+from sentinel.utils.settings import load_project_settings
+
 
 def execute(argv: List[str] = None):
     # Add current directory to python path

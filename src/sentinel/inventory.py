@@ -1,15 +1,13 @@
 import pathlib
-
-from typing import Dict, List
 from logging.config import dictConfig
+from typing import Dict, List
 
 from rich import box
-from rich.table import Table
 from rich.console import Console
-
+from rich.table import Table
+from sentinel.models.project import ComponentType, ProjectSettings
 from sentinel.utils.logger import logger
-from sentinel.models.project import ProjectSettings, ComponentType
-from sentinel.utils.settings import load_project_settings, IncorrectFileFormat, IncorrectSettingsFormat
+from sentinel.utils.settings import IncorrectFileFormat, IncorrectSettingsFormat, load_project_settings
 
 
 class Inventory:

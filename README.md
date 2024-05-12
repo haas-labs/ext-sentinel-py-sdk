@@ -18,6 +18,10 @@ Sentinel supports all blockchain networks supported by [Extractor](https://extra
 
 - [Installation Guides](/docs/Install/Install.md)
 
+## Development
+
+- [VSCode Configuration](/docs/Development/VSCode-Configuration.md)
+
 ## How to use Sentinel commands
 
 Sentinel Python SDK includes command line interface for launching processes. After the installation steps described above, you should be able to run `sentinel` command in your terminal or VS Code shell. 
