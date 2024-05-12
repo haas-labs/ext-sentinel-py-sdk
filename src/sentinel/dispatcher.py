@@ -1,20 +1,16 @@
-import time
 import multiprocessing as mp
-
-from typing import List
-from datetime import datetime, timezone
-
+import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import List
 
-from sentinel.version import VERSION
-
-from sentinel.project import ProjectSettings
-
-from sentinel.utils.logger import logger
+from sentinel.metrics.core import MetricQueue
 from sentinel.models.sentry import Sentry
+from sentinel.project import ProjectSettings
 from sentinel.sentry.core import CoreSentry
 from sentinel.utils.imports import import_by_classpath
-from sentinel.metrics.core import MetricQueue
+from sentinel.utils.logger import logger
+from sentinel.version import VERSION
 
 
 @dataclass
@@ -62,7 +58,6 @@ class Dispatcher:
                 s.restart = False
             instance = SentryInstance(settings=s)
             self._sentry_instances.append(instance)
-
 
     @property
     def active_sentries(self):
