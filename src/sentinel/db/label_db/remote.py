@@ -1,10 +1,8 @@
+from typing import Dict, List
+
 import httpx
 
-from typing import List, Dict
-
-from .common import CommonLabelDB
-from .common import LabelDBRecord
-
+from .common import CommonLabelDB, LabelDBRecord
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
