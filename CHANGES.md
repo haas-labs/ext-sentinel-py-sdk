@@ -1,6 +1,18 @@
 # Change Log
 
-## v0.4.6
+## 0.4.8
+
+Feature
+
+- Local and remote blacklist db (#254)
+- Kafka group id in logs (#251)
+
+Documentation
+
+- Add details about required vscode extentions (#253)
+- Add recommended vscode configuration (#252)
+
+## v0.4.7
 
 Feature
 
