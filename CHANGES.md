@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.9
+
+Feature
+
+- Add database name for blacklist db 
+
 ## 0.4.8
 
 Feature
