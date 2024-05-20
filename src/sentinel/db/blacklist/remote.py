@@ -1,4 +1,5 @@
 from sentinel.db.label_db.remote import LabelDB
 
 
-class BlacklistDB(LabelDB): ...
+class BlacklistDB(LabelDB):
+    name = "blacklist"
