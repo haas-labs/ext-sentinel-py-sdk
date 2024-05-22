@@ -1,6 +1,6 @@
 import logging
-
 from typing import Union
+
 # from rich.logging import RichHandler
 
 
@@ -8,7 +8,7 @@ class Logger:
     def __init__(self, name: str, log_level: Union[str, int] = logging.INFO):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(log_level)
-        format = "%(asctime)s.%(msecs)03d (%(name)s) [%(levelname)s] %(message)s"
+        format = "%(asctime)s.%(msecs)03d [%(levelname)s] (%(name)s) %(message)s"
 
         # Create a handler for writing to console
         console_handler = logging.StreamHandler()
@@ -52,26 +52,5 @@ def get_logger(name: str, log_level: Union[str, int] = logging.INFO) -> Logger:
     logger = Logger(name=name, log_level=log_level)
     return logger
 
+
 logger = Logger(name=__name__, log_level=logging.INFO)
-
-# def get_logger(name: str, log_level: Union[str, int] = logging.INFO, rich: bool = False) -> logging.Logger:
-#     """
-#     return Logger with required formatting
-#     """
-#     if isinstance(log_level, str):
-#         log_level = getattr(logging, log_level)
-#     logger = logging.getLogger(name)
-
-#     handlers = [logging.StreamHandler()]
-
-#     format = "%(asctime)s.%(msecs)03d (%(name)s/%(module)s:%(lineno)d) [%(levelname)s] %(message)s"
-#     if rich:
-#         format = "%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) %(message)s"
-#         handlers.append(RichHandler(rich_tracebacks=True))
-
-#     for handler in handlers:
-#         handler.setFormatter(fmt=logging.Formatter(fmt=format, datefmt="%Y-%m-%dT%H:%M:%S"))
-#         logger.addHandler(handler)
-
-#     logger.setLevel(log_level)
-#     return logger
