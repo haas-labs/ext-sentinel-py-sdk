@@ -1,19 +1,17 @@
 """The CLI Common Command"""
 
-import os
 import inspect
 import logging
-
-from typing import List, Dict
-from pkgutil import iter_modules
+import os
+from argparse import ArgumentParser, Namespace
 from importlib import import_module
 from logging.config import dictConfig
+from pkgutil import iter_modules
+from typing import Dict, List
 
-from argparse import ArgumentParser, Namespace
-
-from sentinel.version import VERSION
 from sentinel.models.project import ProjectSettings
 from sentinel.utils.settings import load_extra_vars
+from sentinel.version import VERSION
 
 
 class SentinelCommand:
@@ -97,22 +95,6 @@ class SentinelCommand:
         Entry point for running commands
         """
         SentinelCommand.overwrite_logging_settings(args.log_level)
-
-        # if args.rich_logging:
-        #     logging.basicConfig(
-        #         level=args.log_level,
-        #         format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) %(message)s",
-        #         # format="%(asctime)s.%(msecs)03d (%(name)s) %(message)s",
-        #         datefmt="%Y-%m-%dT%H:%M:%S",
-        #         handlers=[RichHandler(rich_tracebacks=True)],
-        #     )
-        # else:
-        #     logging.basicConfig(
-        #         level=args.log_level,
-        #         format="%(asctime)s.%(msecs)03d (%(processName)s/%(name)s:%(lineno)d) [%(levelname)s] %(message)s",
-        #         datefmt="%Y-%m-%dT%H:%M:%S",
-        #     )
-
         self.extra_vars = load_extra_vars(args.vars)
 
         # Update env var from file
