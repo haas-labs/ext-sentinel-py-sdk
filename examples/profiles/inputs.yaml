@@ -16,6 +16,13 @@ inputs:
     topics: 
     - {{ env['KAFKA_INBOUND_BSC_TX_TOPIC'] }}
 
+- id: hacken/cloud/kafka/events
+  type: sentinel.channels.kafka.events.InboundEventsChannel
+  parameters:
+    bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
+    topics: 
+    - {{ env['KAFKA_OUTBOUND_EVENT_TOPIC']}}
+
 # Websocket Transactions
 
 - id: hacken/cloud/ws/transaction/ethereum
