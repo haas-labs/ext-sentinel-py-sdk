@@ -1,0 +1,23 @@
+imports:
+- ../profiles/inputs.yaml
+
+sentries:
+
+- name: KafkaEventsMonitor
+  type: kafka_events_monitor.sentry.KafkaEventsMonitor
+  description: >
+    Kafka Events Monitor
+  parameters:
+    network: ethereum
+  inputs:
+  - hacken/cloud/kafka/events
+  outputs:
+  - kafka_events_monitor/local/fs/event
+
+outputs:
+
+- id: kafka_event_monitor/local/fs/event
+  type: sentinel.channels.fs.events.OutboundEventsChannel
+  parameters:
+    path: kafka_events_monitor/data/events/events.json
+    mode: overwrite
