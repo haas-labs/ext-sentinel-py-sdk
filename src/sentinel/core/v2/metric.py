@@ -1,14 +1,13 @@
-import time
 import asyncio
+import time
+from typing import Dict, List
 
-from typing import Dict
 from aiohttp import web
-
-from sentinel.metrics.core import MetricQueue
-from sentinel.models.project import ProjectSettings
-from sentinel.sentry.core import AsyncCoreSentry
-from sentinel.metrics.core import MetricDatabase
+from sentinel.core.v2.handler import Handler
+from sentinel.core.v2.sentry import AsyncCoreSentry
+from sentinel.metrics.core import MetricDatabase, MetricQueue
 from sentinel.metrics.formatter import PrometheusFormattter
+from sentinel.models.project import ProjectSettings
 
 
 class MetricServer(AsyncCoreSentry):
@@ -23,9 +22,7 @@ class MetricServer(AsyncCoreSentry):
         description: str = None,
         restart: bool = True,
         parameters: Dict = dict(),
-        inputs: web.List[str] = list(),
-        outputs: web.List[str] = list(),
-        databases: web.List[str] = list(),
+        handlers: List[Handler] = list(),
         metrics: MetricQueue = None,
         schedule: str = None,
         settings: ProjectSettings = None,
@@ -35,9 +32,7 @@ class MetricServer(AsyncCoreSentry):
             description=description,
             restart=restart,
             parameters=parameters,
-            inputs=inputs,
-            outputs=outputs,
-            databases=databases,
+            handlers=handlers,
             metrics=metrics,
             schedule=schedule,
             settings=settings,

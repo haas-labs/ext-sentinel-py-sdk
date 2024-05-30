@@ -16,8 +16,8 @@ from sentinel.version import VERSION
 @dataclass
 class SentryInstance:
     settings: Sentry
-    name: str = None
     pid: int = None
+    name: str = None
     restart: bool = None
     instance: CoreSentry = None
     schedule: str = None

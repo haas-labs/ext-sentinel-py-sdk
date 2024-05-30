@@ -5,27 +5,14 @@ from datetime import datetime, timezone
 from typing import Dict, List
 
 from croniter import croniter
+
+# from sentinel.core.v2.channel import SentryInputs, SentryOutputs
+# from sentinel.core.v2.db import SentryDatabases
 from sentinel.core.v2.handler import Handler
 from sentinel.metrics.core import MetricQueue
 from sentinel.metrics.registry import Registry
 from sentinel.models.project import ProjectSettings
 from sentinel.utils.logger import get_logger
-
-"""
-Core Sentry
------------
-
-Methods:
-- activate
-- run
-- time_to_run
-
-Events handlers:
-- on_init
-- on_run
-- on_schedule
-
-"""
 
 
 class CoreSentry(multiprocessing.Process):
@@ -109,19 +96,6 @@ class CoreSentry(multiprocessing.Process):
     def on_schedule(self) -> None: ...
 
 
-"""
-Async Core Sentry
------------------
-
-Methods:
-- run()
-
-Event handlers:
-- on_init
-- on_run
-"""
-
-
 class AsyncCoreSentry(CoreSentry):
     name = "AsyncCoreSentry"
     description = "Async Core Sentry"
@@ -146,6 +120,17 @@ class AsyncCoreSentry(CoreSentry):
     def activate(self) -> None:
         super().activate()
 
+        # self.inputs = SentryInputs(
+        #     sentry_name=self.name,
+        #     ids=self._inputs,
+        #     channels=self.settings.inputs if hasattr(self.settings, "inputs") else [],
+        # )
+        # self.outputs = SentryOutputs(
+        #     ids=self._outputs, channels=self.settings.outputs if hasattr(self.settings, "outputs") else []
+        # )
+        # self.databases = SentryDatabases(
+        #     ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
+        # )
         if self.metrics_queue is not None:
             self.metrics = Registry()
 
