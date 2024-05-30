@@ -1,12 +1,11 @@
 import pathlib
-
 from enum import Enum
-from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Any
+from typing import Any, Dict, List, Optional
 
-from sentinel.models.sentry import Sentry
+from pydantic import BaseModel, Field
 from sentinel.models.channel import Channel
 from sentinel.models.database import Database
+from sentinel.models.sentry import Sentry
 
 
 class ComponentType(Enum):
@@ -35,7 +34,7 @@ class Project(BaseModel):
 
 class ProjectSettings(BaseModel):
     project: Optional[Project] = None
-    envs: Optional[Dict] = Field(default_factory=dict)
+    envs: Optional[Dict[str, Any]] = Field(default_factory=dict)
     settings: Optional[Dict[str, Any]] = Field(default_factory=dict)
     sentries: Optional[List[Sentry]] = Field(default_factory=list)
     imports: Optional[List[str]] = Field(default_factory=list)
