@@ -1,18 +1,18 @@
+import json
 import os
+import pathlib
 import re
 import sys
-import json
-import yaml
-import jinja2
-import pathlib
-
 from typing import Dict, List
 
+import jinja2
+import yaml
 from jinja2.ext import Extension as JinjaExtension
 
-from sentinel.utils.logger import get_logger
+# candidate for deprecation
 from sentinel.models.project import ProjectSettings
-
+from sentinel.models.settings import Settings
+from sentinel.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -70,7 +70,7 @@ def load_extra_vars(extra_vars: List[str] = list()) -> Dict:
     return extra_vars_result
 
 
-def load_settings(content: str) -> Dict:
+def load_settings_from_yaml(content: str) -> Dict:
     """
     Load settings from YAML file
     """
@@ -99,13 +99,13 @@ def load_project_settings(path: pathlib.Path, env: str = "local", extra_vars: Di
     config_dir = path.parent
     settings_content = apply_extra_settings(path=path, settings=extra_vars)
 
-    settings = load_settings(settings_content)
+    settings = load_settings_from_yaml(settings_content)
 
     for config in settings.get("imports", []):
         config_path = (config_dir / pathlib.Path(config)).resolve()
         if not config_path.exists():
             raise IOError(f"The import path does not exist, {config_path}")
-        config_content = load_settings(apply_extra_settings(config_path, settings=extra_vars))
+        config_content = load_settings_from_yaml(apply_extra_settings(config_path, settings=extra_vars))
         logger.info(f"Importing settings from {config_path}")
         for section in config_content.keys():
             if section in settings.keys():
@@ -113,6 +113,31 @@ def load_project_settings(path: pathlib.Path, env: str = "local", extra_vars: Di
             else:
                 settings[section] = config_content[section]
     return ProjectSettings(**settings)
+
+
+def load_settings(path: pathlib.Path, env: str = "local", extra_vars: Dict = dict()) -> Settings:
+    """
+    Load project settings from a path
+    """
+    if not path.exists():
+        raise IOError(f"The path does not exist, {path}")
+    config_dir = path.parent
+    settings_content = apply_extra_settings(path=path, settings=extra_vars)
+
+    settings = load_settings_from_yaml(settings_content)
+
+    for config in settings.get("imports", []):
+        config_path = (config_dir / pathlib.Path(config)).resolve()
+        if not config_path.exists():
+            raise IOError(f"The import path does not exist, {config_path}")
+        config_content = load_settings_from_yaml(apply_extra_settings(config_path, settings=extra_vars))
+        logger.info(f"Importing settings from {config_path}")
+        for section in config_content.keys():
+            if section in settings.keys():
+                settings[section].extend(config_content[section])
+            else:
+                settings[section] = config_content[section]
+    return Settings(**settings)
 
 
 def apply_extra_settings(path: pathlib.Path, settings: Dict) -> str:
