@@ -1,25 +1,14 @@
 from typing import Any, List
 
+from sentinel.core.v2.handler import Handler
 from sentinel.utils.imports import import_by_classpath
 from sentinel.utils.logger import logger
 
 
-class Channel:
-    name: str = "unspecified"
-
+class Channel(Handler):
     def __init__(self, name: str, record_type: str, **kwargs) -> None:
-        """
-        Channel Init
-        """
-        self.name = name
+        super().__init__(name=name, **kwargs)
         _, self.record_type = import_by_classpath(record_type)
-        self.config = kwargs.copy()
-
-    async def run(self) -> None:
-        """
-        Run Channel processing
-        """
-        raise NotImplementedError()
 
 
 class InboundChannel(Channel):
@@ -45,7 +34,7 @@ class SentryChannels:
             logger.info(f"{channel_type.capitalize()} channel(-s) activation: {ids}")
         for channel in channels:
             if channel.id in ids:
-                self._load_channel(channel)
+                self.init(channel)
 
         if len(self._channels) != len(ids):
             raise RuntimeError(f"Channels mismatch, expected: {sorted(ids)}, activated: {sorted(self._channels)}")
@@ -54,7 +43,7 @@ class SentryChannels:
     def channels(self):
         return self._channels
 
-    def _load_channel(self, channel: Channel) -> None:
+    def init(self, channel: Channel) -> None:
         try:
             ch_parameters = channel.parameters
             # Add sentry name to a channel for using inside of channel.
