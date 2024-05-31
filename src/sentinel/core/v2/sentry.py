@@ -11,7 +11,7 @@ from croniter import croniter
 from sentinel.core.v2.handler import Handler
 from sentinel.metrics.core import MetricQueue
 from sentinel.metrics.registry import Registry
-from sentinel.models.project import ProjectSettings
+from sentinel.models.sentry import Sentry
 from sentinel.utils.logger import get_logger
 
 
@@ -36,7 +36,6 @@ class CoreSentry(multiprocessing.Process):
         restart: bool = True,
         parameters: Dict = dict(),
         schedule: str = None,
-        settings: ProjectSettings = None,
     ) -> None:
         """
         The parent process starts a fresh Python interpreter process. The child process will
@@ -58,26 +57,37 @@ class CoreSentry(multiprocessing.Process):
         self.restart = restart
 
         self.parameters = parameters.copy()
-        self.settings = settings
 
         self.schedule = schedule
         self.run_on_schedule = False
+
+    @classmethod
+    def from_settings(cls, settings: Sentry):
+        # inputs=settings.inputs,
+        # outputs=settings.outputs,
+        # databases=settings.databases,
+        # metrics=self.metrics,
+
+        return cls(
+            name=settings.name,
+            description=settings.description,
+            restart=settings.restart,
+            parameters=settings.parameters,
+            schedule=settings.schedule,
+        )
 
     def run(self) -> None:
         """
         Method representing sentry's activity
         """
-        self.activate()
+        self.init()
         self.on_init()
         if self.run_on_schedule:
             self.on_schedule()
         self.on_run()
 
-    def activate(self) -> None:
-        """
-        Activate Sentry periphery
-        """
-        self.logger = get_logger(name=self.logger_name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
+    def init(self) -> None:
+        self.logger = get_logger(name=self.logger_name, log_level=self.parameters.get("log_level", logging.INFO))
 
     def time_to_run(self) -> datetime:
         if self.schedule is None:
@@ -109,16 +119,15 @@ class AsyncCoreSentry(CoreSentry):
         restart: bool = True,
         metrics: MetricQueue = None,
         schedule: str = None,
-        settings: ProjectSettings = None,
     ) -> None:
-        super().__init__(name, description, restart, parameters, schedule, settings)
+        super().__init__(name, description, restart, parameters, schedule)
 
         self.handlers = handlers
         self.metrics = None
         self.metrics_queue = metrics
 
-    def activate(self) -> None:
-        super().activate()
+    def init(self) -> None:
+        super().init()
 
         # self.inputs = SentryInputs(
         #     sentry_name=self.name,
@@ -152,7 +161,7 @@ class AsyncCoreSentry(CoreSentry):
         """
         Method representing async sentry's activity
         """
-        self.activate()
+        self.init()
 
         try:
             asyncio.run(self._run())
