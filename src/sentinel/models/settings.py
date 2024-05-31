@@ -41,7 +41,7 @@ class Project(BaseModel):
 
 
 class Settings(BaseModel):
-    project: Optional[Project] = None
+    project: Optional[Project] = Project(name="default")
     sentries: Optional[List[Sentry]] = Field(default_factory=list)
     imports: Optional[List[str]] = Field(default_factory=list)
     inputs: Optional[List[Channel]] = Field(default_factory=list)
