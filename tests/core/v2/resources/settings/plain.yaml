@@ -1,0 +1,42 @@
+project:
+  name: Plain Project Configuration
+
+
+sentries:
+
+- name: eth://UserLoggerSentry
+  type: sentry.logger.UserLoggerSentry
+  parameters:
+    network: ethereum
+  inputs:
+  - local/fs/transaction
+  outputs:
+  - local/fs/Event
+  databases:
+  - local/address
+
+# Sentry Input Definitions
+
+inputs:
+
+- id: local/fs/transaction
+  type: sentinel.channels.fs.transactions.InboundTransactionsChannel
+  parameters:
+    path: ./data/transactions.json
+
+outputs:
+
+- id: local/fs/event
+  type: sentinel.channels.fs.common.OutboundFileChannel
+  parameters:
+    record_type: sentinel.models.event.Event
+    path: ./events/events.json
+    mode: overwrite
+
+databases:
+
+- id: local/address
+  type: sentinel.db.address.local.AddressDB
+  description: Monitored Addresses
+  parameters:
+    path: ./data/address.list 
