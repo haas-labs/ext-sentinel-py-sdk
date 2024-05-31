@@ -1,6 +1,9 @@
 project:
   name: Project with multiple imports
   description: Project with multiple imports
+  config:
+    monitoring_enabled: true
+    monitoring_port: 9090
 
 imports:
 - profiles/sentries.yaml
