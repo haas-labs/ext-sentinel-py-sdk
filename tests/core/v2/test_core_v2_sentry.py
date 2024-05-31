@@ -1,4 +1,5 @@
 from sentinel.core.v2.sentry import AsyncCoreSentry, CoreSentry
+from sentinel.models.sentry import Sentry
 
 """
 Core Sentry
@@ -20,6 +21,36 @@ def test_sentry_core_init():
     sentry.join()
 
     assert not sentry.is_alive(), "Sentry process is still alive"
+
+
+def test_sentry_from_settings():
+    sentry = CoreSentry.from_settings(settings=Sentry(name="TestSentry", type="sentinel.core.v2.CoreSentry"))
+    assert isinstance(sentry, CoreSentry), "Incorrect sentry type"
+    assert sentry.name == "TestSentry", "Incorrect Sentry name"
+
+
+def test_sentry_run():
+    class TestSentry(CoreSentry):
+        def init(self) -> None:
+            super().init()
+            self.on_init_flag = False
+            self.on_run_flag = False
+            self.on_schedule_flag = False
+
+        def on_init(self):
+            self.on_init_flag = True
+
+        def on_run(self):
+            self.on_run_flag = True
+
+        def on_schedule(self):
+            self.on_schedule_flag = True
+
+    sentry = TestSentry()
+    sentry.run()
+    assert sentry.on_init_flag is True, "Incorrect on_init flag"
+    assert sentry.on_run_flag is True, "Incorrect on_run flag"
+    assert sentry.on_schedule_flag is False, "Incorrect on_schedule flag"
 
 
 """

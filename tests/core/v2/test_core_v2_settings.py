@@ -24,8 +24,8 @@ def test_core_settings_plain_format():
     sentries = settings.sentries
     assert len(sentries) == 1, "Incorrect sentries list, expected one sentry"
     sentry = sentries[0]
-    assert sentry.name == "eth://UserLoggerSentry", "Incorrect sentry name"
-    assert sentry.type == "sentry.logger.UserLoggerSentry", "Incorrect sentry type"
+    assert sentry.name == "eth://CoreSentry", "Incorrect sentry name"
+    assert sentry.type == "sentinel.core.v2.sentry.CoreSentry", "Incorrect sentry type"
     assert sentry.restart is True, "Incorrect sentry restart flag"
     assert sentry.schedule is None, "Incorrect sentry schedule"
     assert sentry.parameters == {"network": "ethereum"}, "Incorrect sentry parameters"

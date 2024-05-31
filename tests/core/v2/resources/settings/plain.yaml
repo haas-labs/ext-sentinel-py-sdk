@@ -4,8 +4,8 @@ project:
 
 sentries:
 
-- name: eth://UserLoggerSentry
-  type: sentry.logger.UserLoggerSentry
+- name: eth://CoreSentry
+  type: sentinel.core.v2.sentry.CoreSentry
   parameters:
     network: ethereum
   inputs:
