@@ -14,15 +14,15 @@
 - [Info](/docs/Metrics/Info.md)
 - [Enum](/docs/Metrics/Enum.md)
 
-## Settings
+## Project Config
 
-### TELEMETRY_ENABLED
+### Monitoring Enabled
 
 Default: False
 
 A boolean which specifies if the telemetry will be enabled
 
-### TELEMETRY_PORT
+### Monitoring Port
 
 Default: 9090
 

@@ -1,0 +1,15 @@
+project:
+  name: Project with multiple imports
+  description: Project with multiple imports
+  config:
+    monitoring_enabled: true
+    monitoring_port: 9090
+
+imports:
+- profiles/sentries.yaml
+- profiles/local-inputs.yaml
+- profiles/cloud-inputs.yaml
+- profiles/local-outputs.yaml
+- profiles/cloud-outputs.yaml
+- profiles/local-databases.yaml
+- profiles/cloud-databases.yaml

@@ -1,0 +1,15 @@
+sentries:
+
+- id: sentry/user_logger/ethereum
+  name: eth://UserLoggerSentry
+  type: sentry.logger.UserLoggerSentry
+  schedule: "*/5 * * * *"
+  restart: false
+  parameters:
+    network: ethereum
+  inputs:
+  - local/fs/transaction
+  outputs:
+  - local/fs/vent
+  databases:
+  - local/address

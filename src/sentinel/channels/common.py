@@ -1,3 +1,5 @@
+# The module will be deprecated after migration to Sentinel Core v2
+
 from typing import Any
 
 from sentinel.utils.imports import import_by_classpath

@@ -1,0 +1,7 @@
+outputs:
+
+- id: cloud/event
+  type: sentinel.channels.kafka.event.OutboundEventsChannel
+  parameters:
+    bootstrap_servers:
+    - example.cloud
