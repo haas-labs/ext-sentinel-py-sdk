@@ -49,7 +49,7 @@ class Dispatcher:
         self.activate_monitoring()
 
         # prepare the list of sentries for launch
-        self._sentry_instances: List[SentryInstance] = self.sentry_instances_from_settings()
+        self.instances: List[SentryInstance] = self.sentry_instances_from_settings()
 
     def sentry_instances_from_settings(self) -> List[SentryInstance]:
         instances = []
@@ -65,16 +65,15 @@ class Dispatcher:
 
     @property
     def active_sentries(self):
-        return [s for s in self._sentry_instances if s.instance is not None and s.instance.is_alive()]
+        return [s for s in self.instances if s.instance is not None and s.instance.is_alive()]
 
     @property
     def restarting_sentries(self):
-        return [s for s in self._sentry_instances if s.restart]
+        return [s for s in self.instances if s.restart]
 
     @property
     def scheduled_sentries(self):
-        print(self._sentry_instances)
-        return [s for s in self._sentry_instances if s.schedule is not None]
+        return [s for s in self.instances if s.schedule is not None]
 
     @property
     def processing_completed(self):
@@ -107,7 +106,7 @@ class Dispatcher:
         self.settings.sentries.append(
             Sentry(
                 name="MetricServer",
-                type="sentinel.sentry.metric.MetricServer",
+                type="sentinel.core.v2.metric.MetricServer",
                 parameters={"port": monitoring_port},
                 restart=True,
             )
@@ -129,11 +128,11 @@ class Dispatcher:
     def _log_sentries_stats(self) -> None:
         logger.info(
             "Sentries: "
-            + f"{len(self._sentry_instances)} total, "
+            + f"{len(self.instances)} total, "
             + f"{len(self.active_sentries)} active, "
             + f"{len(self.restarting_sentries)} restarting, "
             + f"{len(self.scheduled_sentries)} scheduled, "
-            + f"{len(self._sentry_instances) - len(self.active_sentries)} finished"
+            + f"{len(self.instances) - len(self.active_sentries)} finished"
         )
 
     def run_sentry(self, sentry: SentryInstance) -> SentryInstance:
@@ -144,18 +143,7 @@ class Dispatcher:
         # Sentry init
         try:
             _, sentry_class = import_by_classpath(settings.type)
-            sentry.instance = sentry_class(
-                name=settings.name,
-                description=settings.description,
-                restart=settings.restart,
-                parameters=settings.parameters,
-                inputs=settings.inputs,
-                outputs=settings.outputs,
-                databases=settings.databases,
-                metrics=self.metrics,
-                schedule=settings.schedule,
-                settings=self.settings,
-            )
+            sentry.instance = sentry_class.from_settings(settings)
         except RuntimeError as err:
             logger.error(f"{settings.type} initialization issue, {err}")
             return None
@@ -163,19 +151,27 @@ class Dispatcher:
         if settings.schedule:
             current_datetime = datetime.now(tz=timezone.utc).replace(second=0).replace(microsecond=0)
             time_to_run = sentry.instance.time_to_run()
-            # logger.info(
-            #     f"Time to run: {time_to_run['curr_date']}, last launch time: {sentry.launch_time}, current datetime: {current_datetime}"
-            # )
             if time_to_run["curr_date"] == sentry.launch_time or time_to_run["curr_date"] != current_datetime:
                 return sentry
             sentry.instance.run_on_schedule = True
 
         sentry.instance.start()
         sentry.launch_time = datetime.now(tz=timezone.utc).replace(microsecond=0).replace(second=0)
-        return self.update_senty_instance_opts(sentry)
+        return self._update_instance_opts(sentry)
 
-    def update_senty_instance_opts(self) -> None:
-        for _id, sentry in enumerate(self._sentry_instances):
+    def _update_instance_opts(self, sentry: Sentry) -> SentryInstance:
+        if sentry.instance is not None:
+            sentry.pid = sentry.instance.pid
+            if sentry.instance.is_alive():
+                sentry.status = "started"
+            else:
+                sentry.status = "stopped"
+                sentry.exitcode = sentry.instance.exitcode
+                sentry.instance = None
+        return sentry
+
+    def _update_instances_status(self) -> None:
+        for _id, sentry in enumerate(self.instances):
             # ignore active and running instances
             if sentry.instance is not None and sentry.instance.is_alive():
                 continue
@@ -184,19 +180,10 @@ class Dispatcher:
             # sentry.restart = sentry.settings.restart
             # sentry.schedule = sentry.settings.schedule
 
-            if sentry.instance is not None:
-                sentry.pid = sentry.instance.pid
-                if sentry.instance.is_alive():
-                    sentry.status = "started"
-                else:
-                    sentry.status = "stopped"
-                    sentry.exitcode = sentry.instance.exitcode
-                    sentry.instance = None
-
-            self._sentry_instances[_id] = sentry
+            self.instances[_id] = self._update_instance_opts(sentry)
 
     def _rerun_inactive_sentries(self):
-        for _id, sentry in enumerate(self._sentry_instances):
+        for _id, sentry in enumerate(self.instances):
             # ignore running sentries
             if sentry.instance is not None:
                 continue
@@ -208,7 +195,7 @@ class Dispatcher:
             if sentry.status == "stopped" and sentry.restart:
                 logger.warning(f"Detected inactive sentry ({sentry.name}), restarting...")
 
-            self._sentry_instances[_id] = self.run_sentry(sentry)
+            self.instances[_id] = self.run_sentry(sentry)
 
     def run(self) -> None:
         self._log_intro()
@@ -216,16 +203,13 @@ class Dispatcher:
         try:
             while True:
                 self._rerun_inactive_sentries()
+                self._update_instances_status()
                 self._log_sentries_stats()
-
-                # update instance options for finished sentry(-ies)
-                self.update_senty_instance_opts()
 
                 # Stop processing if no active sentries
                 if self.processing_completed:
                     logger.info("No active sentries")
                     break
-
                 time.sleep(STATE_CHECK_TIME_INTERVAL)
 
         except KeyboardInterrupt:
