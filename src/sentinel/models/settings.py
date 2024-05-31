@@ -1,6 +1,6 @@
 import pathlib
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 from sentinel.models.channel import Channel
@@ -25,17 +25,23 @@ class ComponentType(Enum):
         return self.value
 
 
+class Config(BaseModel):
+    # Activate monitoring
+    monitoring_enabled: bool = False
+    # Monitoring port for metrics and health check
+    monitoring_port: int = 9090
+
+
 class Project(BaseModel):
     name: str
     description: Optional[str] = ""
     path: Optional[pathlib.Path] = None
     label: Optional[Dict[str, str]] = Field(default_factory=dict)
+    config: Optional[Config] = Config()
 
 
 class Settings(BaseModel):
     project: Optional[Project] = None
-    envs: Optional[Dict[str, Any]] = Field(default_factory=dict)
-    settings: Optional[Dict[str, Any]] = Field(default_factory=dict)
     sentries: Optional[List[Sentry]] = Field(default_factory=list)
     imports: Optional[List[str]] = Field(default_factory=list)
     inputs: Optional[List[Channel]] = Field(default_factory=list)
