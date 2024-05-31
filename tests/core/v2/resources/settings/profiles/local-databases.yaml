@@ -1,0 +1,9 @@
+databases:
+
+- id: local/address
+  type: sentinel.db.address.local.AddressDB
+  description: >
+    Monitored Addresses
+  parameters:
+    path: ./data/address.list 
+
