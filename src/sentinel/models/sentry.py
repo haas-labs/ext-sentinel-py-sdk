@@ -1,5 +1,8 @@
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, List, Any
+from sentinel.models.channel import Channel
+from sentinel.models.database import Database
 
 
 class Sentry(BaseModel):
@@ -17,9 +20,9 @@ class Sentry(BaseModel):
     # Sentry Parameters
     parameters: Optional[Dict] = Field(default_factory=dict)
 
-    inputs: Optional[List[str]] = Field(default_factory=list)
-    outputs: Optional[List[str]] = Field(default_factory=list)
-    databases: Optional[List[str]] = Field(default_factory=list)
+    inputs: Optional[List[str | Channel]] = Field(default_factory=list)
+    outputs: Optional[List[str | Channel]] = Field(default_factory=list)
+    databases: Optional[List[str | Database]] = Field(default_factory=list)
 
     # labels allow to mark a senty for specific purposes.
     # For example: label a senty for specific env only, prod or dev
