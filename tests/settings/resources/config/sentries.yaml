@@ -10,6 +10,6 @@ sentries:
   inputs:
   - local/fs/transaction
   outputs:
-  - local/fs/vent
+  - local/fs/event
   databases:
   - local/address
