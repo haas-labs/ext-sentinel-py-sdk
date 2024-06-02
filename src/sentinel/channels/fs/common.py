@@ -1,15 +1,13 @@
-import os
-import json
-import time
 import asyncio
+import json
+import os
 import pathlib
-import aiofiles
-
+import time
 from typing import Any, Dict
 
-from sentinel.utils.logger import get_logger
+import aiofiles
 from sentinel.channels.common import InboundChannel, OutboundChannel
-
+from sentinel.utils.logger import get_logger
 
 DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE = 1000
 
@@ -29,7 +27,7 @@ class InboundFileChannel(InboundChannel):
         @param time_interval: int - the time interface between
                                     messages in seconfs, default: 0
         """
-        super().__init__(name, record_type, **kwargs)
+        super().__init__(name=name, record_type=record_type, **kwargs)
         self.logger = get_logger(__name__)
 
         self.path = path
@@ -69,10 +67,13 @@ class OutboundFileChannel(OutboundChannel):
         self.logger = get_logger(__name__)
 
         self.buffering = buffering
-        self.msg_queue = asyncio.Queue(maxsize=DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE)
+        if path is None or path == "":
+            raise ValueError(f"The 'path' parameter is missing or specified incorrectly, path: {path}")
         self.path = pathlib.Path(path) if isinstance(path, str) else path
-        os.makedirs(self.path.parent, exist_ok=True)
         self.filemode = "a" if mode == "append" else "w"
+        os.makedirs(self.path.parent, exist_ok=True)
+
+        self.msg_queue = asyncio.Queue(maxsize=DEFAULT_INTERNAL_PRODUCER_QUEUE_SIZE)
 
     async def run(self):
         """
