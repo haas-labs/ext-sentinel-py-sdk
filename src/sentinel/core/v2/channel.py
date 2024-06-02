@@ -1,13 +1,15 @@
 from typing import Any, List
 
-from sentinel.core.v2.handler import Handler
+from sentinel.core.v2.handler import FlowType, Handler
+from sentinel.core.v2.instance import load_instance
+from sentinel.models.channel import Channel as ChannelModel
 from sentinel.utils.imports import import_by_classpath
-from sentinel.utils.logger import logger
+from sentinel.utils.logger import get_logger
 
 
 class Channel(Handler):
-    def __init__(self, name: str, record_type: str, **kwargs) -> None:
-        super().__init__(name=name, **kwargs)
+    def __init__(self, id: str, flow_type: FlowType, name: str, record_type: str, **kwargs) -> None:
+        super().__init__(id=id, flow_type=flow_type, name=name, **kwargs)
         _, self.record_type = import_by_classpath(record_type)
 
 
@@ -25,46 +27,19 @@ class OutboundChannel(Channel):
     async def send(self, message: Any) -> None: ...
 
 
-class SentryChannels:
-    def __init__(self, channel_type: str, ids: List[str], channels: List[Channel], sentry_name: str = None) -> None:
-        self.sentry_name = sentry_name
-        self._channels: List[str] = []
+class Channels:
+    def __init__(self, channels: List[ChannelModel]) -> None:
+        self.logger = get_logger(__name__)
 
-        if len(ids) > 0:
-            logger.info(f"{channel_type.capitalize()} channel(-s) activation: {ids}")
         for channel in channels:
-            if channel.id in ids:
-                self.init(channel)
-
-        if len(self._channels) != len(ids):
-            raise RuntimeError(f"Channels mismatch, expected: {sorted(ids)}, activated: {sorted(self._channels)}")
-
-    @property
-    def channels(self):
-        return self._channels
-
-    def init(self, channel: Channel) -> None:
-        try:
-            ch_parameters = channel.parameters
-            # Add sentry name to a channel for using inside of channel.
-            # For example, to make custom group id in inbound Kafka channel
-            if self.sentry_name is not None:
-                ch_parameters["sentry_name"] = self.sentry_name
-
-            logger.info(f"Initializing channel: channel id: {channel.id}, type: {channel.type}")
-            _, ch_class = import_by_classpath(channel.type)
-            ch_instance = ch_class(name=ch_class.name, **ch_parameters)
-            setattr(self, ch_instance.name, ch_instance)
-            self._channels.append(ch_instance.name)
-        except AttributeError as err:
-            logger.error(f"Channel initialization issue, channel: {channel.id}, error: {err}")
-
-
-class SentryInputs(SentryChannels):
-    def __init__(self, sentry_name: str, ids: List[str], channels: List[Channel]) -> None:
-        super().__init__(sentry_name=sentry_name, channel_type="inputs", ids=ids, channels=channels)
-
-
-class SentryOutputs(SentryChannels):
-    def __init__(self, ids: List[str], channels: List[Channel]) -> None:
-        super().__init__(channel_type="outputs", ids=ids, channels=channels)
+            try:
+                self.logger.info(f"Initializing channel: {channel.id}, type: {channel.type}")
+                channel_instance: Channel = load_instance(id=channel.id, settings=channels)
+                setattr(self, channel_instance.name, channel_instance)
+            except (ValueError, AttributeError) as err:
+                error_details = {
+                    "id": channel.id,
+                    "settings": channel.model_dump_json(),
+                    "error": err,
+                }
+                self.logger.error(f"Channel initialization issue, {error_details}")
