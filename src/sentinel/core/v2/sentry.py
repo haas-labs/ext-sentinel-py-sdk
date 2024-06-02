@@ -1,18 +1,26 @@
 import asyncio
 import logging
 import multiprocessing
+from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Dict, List
+from typing import Dict
 
 from croniter import croniter
-
-# from sentinel.core.v2.channel import SentryInputs, SentryOutputs
-# from sentinel.core.v2.db import SentryDatabases
-from sentinel.core.v2.handler import Handler
+from sentinel.core.v2.channel import Channels
+from sentinel.core.v2.db import Databases
+from sentinel.core.v2.handler import FlowType
+from sentinel.core.v2.settings import Settings
 from sentinel.metrics.core import MetricQueue
 from sentinel.metrics.registry import Registry
 from sentinel.models.sentry import Sentry
 from sentinel.utils.logger import get_logger
+
+
+@dataclass
+class ScheduleDates:
+    previous: datetime
+    current: datetime
+    next: datetime
 
 
 class CoreSentry(multiprocessing.Process):
@@ -36,6 +44,7 @@ class CoreSentry(multiprocessing.Process):
         restart: bool = True,
         parameters: Dict = dict(),
         schedule: str = None,
+        settings: Settings = Settings(),
         **kwargs,
     ) -> None:
         """
@@ -58,24 +67,27 @@ class CoreSentry(multiprocessing.Process):
         self.restart = restart
 
         self.parameters = parameters.copy()
+        self.settings = settings
+
+        self.databases = None
 
         self.schedule = schedule
+
+        # TODO add handling of run_on_schedule flag
         self.run_on_schedule = False
+
         self.kwargs = kwargs
 
     @classmethod
-    def from_settings(cls, settings: Sentry):
-        # inputs=settings.inputs,
-        # outputs=settings.outputs,
-        # databases=settings.databases,
-        # metrics=self.metrics,
-
+    def from_settings(cls, settings: Sentry, **kwargs):
         return cls(
             name=settings.name,
             description=settings.description,
             restart=settings.restart,
             parameters=settings.parameters,
             schedule=settings.schedule,
+            settings=settings,
+            **kwargs,
         )
 
     def run(self) -> None:
@@ -90,16 +102,15 @@ class CoreSentry(multiprocessing.Process):
 
     def init(self) -> None:
         self.logger = get_logger(name=self.logger_name, log_level=self.parameters.get("log_level", logging.INFO))
+        self.databases = Databases(self.settings.databases)
 
-    def time_to_run(self) -> datetime:
+    def time_to_run(self) -> ScheduleDates:
         if self.schedule is None:
-            return False
+            return None
         cron = croniter(self.schedule, datetime.now(tz=timezone.utc))
-        return {
-            "prev_date": cron.get_prev(datetime),
-            "curr_date": cron.get_current(datetime),
-            "next_date": cron.get_next(datetime),
-        }
+        return ScheduleDates(
+            previous=cron.get_prev(datetime), current=cron.get_current(datetime), next=cron.get_next(datetime)
+        )
 
     def on_init(self) -> None: ...
 
@@ -116,44 +127,57 @@ class AsyncCoreSentry(CoreSentry):
         self,
         name: str = None,
         description: str = None,
-        handlers: List[Handler] = list(),
-        parameters: Dict = dict(),
         restart: bool = True,
-        metrics: MetricQueue = None,
         schedule: str = None,
+        parameters: Dict = dict(),
+        metrics: MetricQueue = None,
+        settings: Settings = Settings(),
         **kwargs,
     ) -> None:
         super().__init__(
             nmae=name, description=description, restart=restart, parameters=parameters, schedule=schedule, **kwargs
         )
 
-        self.handlers = handlers
+        self.handlers = None
         self.metrics = None
         self.metrics_queue = metrics
+        self.settings = settings
+        self.kwargs = kwargs
+
+    @classmethod
+    def from_settings(cls, settings: Sentry, **kwargs):
+        metrics_queue = kwargs.pop("metrics_queue", None)
+
+        return cls(
+            name=settings.name,
+            description=settings.description,
+            restart=settings.restart,
+            schedule=settings.schedule,
+            parameters=settings.parameters,
+            metrics=metrics_queue,
+            settings=settings,
+            **kwargs,
+        )
 
     def init(self) -> None:
         super().init()
 
-        # self.inputs = SentryInputs(
-        #     sentry_name=self.name,
-        #     ids=self._inputs,
-        #     channels=self.settings.inputs if hasattr(self.settings, "inputs") else [],
-        # )
-        # self.outputs = SentryOutputs(
-        #     ids=self._outputs, channels=self.settings.outputs if hasattr(self.settings, "outputs") else []
-        # )
-        # self.databases = SentryDatabases(
-        #     ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
-        # )
-        if self.metrics_queue is not None:
+        if self.kwargs.get("metrics_queue", None) is not None:
             self.metrics = Registry()
+
+        for input in self.settings.inputs:
+            input.flow_type = FlowType.inbound
+        self.inputs = Channels(channels=self.settings.inputs)
+
+        for output in self.settings.outputs:
+            output.flow_type = FlowType.outbound
+        self.outputs = Channels(channels=self.settings.outputs)
 
     async def _run(self) -> None:
         """
         Sentry processing itself
         """
         await self.on_init()
-
         try:
             self.logger.info(f"Starting sentry process, {self.name}")
 
