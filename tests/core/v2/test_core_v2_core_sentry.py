@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sentinel.core.v2.sentry import CoreSentry
 from sentinel.models.sentry import Sentry
 from sentinel.utils.logger import Logger
@@ -55,3 +57,17 @@ def test_sentry_run():
     assert sentry.on_init_flag is True, "Incorrect on_init flag"
     assert sentry.on_run_flag is True, "Incorrect on_run flag"
     assert sentry.on_schedule_flag is False, "Incorrect on_schedule flag"
+
+
+def test_sentry_time_to_run():
+    sentry = CoreSentry.from_settings(
+        settings=Sentry(name="TestSentry", type="sentinel.core.v2.CoreSentry", schedule="5 * * * *")
+    )
+    schedule_dates = sentry.time_to_run()
+    assert isinstance(schedule_dates.previous, datetime), "Incorrect previous schedule datetime type"
+    assert isinstance(schedule_dates.current, datetime), "Incorrect current schedule datetime type"
+    assert isinstance(schedule_dates.next, datetime), "Incorrect next schedule datetime type"
+
+    sentry = CoreSentry.from_settings(settings=Sentry(name="TestSentry", type="sentinel.core.v2.CoreSentry"))
+    schedule_dates = sentry.time_to_run()
+    assert schedule_dates is None, "Incorrect schedule dates"
