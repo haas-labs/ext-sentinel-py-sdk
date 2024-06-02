@@ -36,6 +36,7 @@ class CoreSentry(multiprocessing.Process):
         restart: bool = True,
         parameters: Dict = dict(),
         schedule: str = None,
+        **kwargs,
     ) -> None:
         """
         The parent process starts a fresh Python interpreter process. The child process will
@@ -60,6 +61,7 @@ class CoreSentry(multiprocessing.Process):
 
         self.schedule = schedule
         self.run_on_schedule = False
+        self.kwargs = kwargs
 
     @classmethod
     def from_settings(cls, settings: Sentry):
@@ -119,8 +121,11 @@ class AsyncCoreSentry(CoreSentry):
         restart: bool = True,
         metrics: MetricQueue = None,
         schedule: str = None,
+        **kwargs,
     ) -> None:
-        super().__init__(name, description, restart, parameters, schedule)
+        super().__init__(
+            nmae=name, description=description, restart=restart, parameters=parameters, schedule=schedule, **kwargs
+        )
 
         self.handlers = handlers
         self.metrics = None
