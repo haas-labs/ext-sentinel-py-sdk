@@ -40,7 +40,6 @@ class SentinelCommand:
         """
         group = parser.add_argument_group(title="global options")
         group.add_argument(
-            "-L",
             "--log-level",
             metavar="LEVEL",
             default=logging.INFO,

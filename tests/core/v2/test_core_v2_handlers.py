@@ -1,10 +1,10 @@
-from sentinel.core.v2.handler import Handler
+from sentinel.core.v2.handler import FlowType, Handler
 
 
 def test_core_handler_init():
-    handler = Handler()
+    handler = Handler(id="base/handler", flow_type=FlowType.inbound)
     assert isinstance(handler, Handler), "Incorrect handler type"
-    assert handler.name == "unspecified", "Incorrect handler name"
+    assert handler.name == "BaseHandler", "Incorrect handler name"
 
-    handler = Handler(name="TestHandler")
+    handler = Handler(id="base/handler", flow_type=FlowType.inbound, name="TestHandler")
     assert handler.name == "TestHandler", "Incorrect handler name"

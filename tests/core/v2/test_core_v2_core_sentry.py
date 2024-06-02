@@ -1,5 +1,8 @@
-from sentinel.core.v2.sentry import AsyncCoreSentry, CoreSentry
+from datetime import datetime
+
+from sentinel.core.v2.sentry import CoreSentry
 from sentinel.models.sentry import Sentry
+from sentinel.utils.logger import Logger
 
 """
 Core Sentry
@@ -16,6 +19,9 @@ def test_sentry_core_init():
     assert (
         sentry.parameters.get("monitored_contracts") == monitored_contracts
     ), "Incorrect monitored contracts parameter value"
+
+    sentry.init()
+    assert isinstance(sentry.logger, Logger), "Incorrect logger type"
 
     sentry.start()
     sentry.join()
@@ -53,16 +59,15 @@ def test_sentry_run():
     assert sentry.on_schedule_flag is False, "Incorrect on_schedule flag"
 
 
-"""
-Async Core Sentry
-"""
+def test_sentry_time_to_run():
+    sentry = CoreSentry.from_settings(
+        settings=Sentry(name="TestSentry", type="sentinel.core.v2.CoreSentry", schedule="5 * * * *")
+    )
+    schedule_dates = sentry.time_to_run()
+    assert isinstance(schedule_dates.previous, datetime), "Incorrect previous schedule datetime type"
+    assert isinstance(schedule_dates.current, datetime), "Incorrect current schedule datetime type"
+    assert isinstance(schedule_dates.next, datetime), "Incorrect next schedule datetime type"
 
-
-def test_sentry_async_core_init():
-    sentry = AsyncCoreSentry()
-    assert isinstance(sentry, AsyncCoreSentry), "Incorrect async core sentry type"
-
-    sentry.start()
-    sentry.join()
-
-    assert not sentry.is_alive(), "Sentry process is still alive"
+    sentry = CoreSentry.from_settings(settings=Sentry(name="TestSentry", type="sentinel.core.v2.CoreSentry"))
+    schedule_dates = sentry.time_to_run()
+    assert schedule_dates is None, "Incorrect schedule dates"

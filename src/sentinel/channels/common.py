@@ -12,7 +12,7 @@ class Channel:
         """
         Channel Init
         """
-        self.name = name
+        self.name = name if name is not None else self.name
         _, self.record_type = import_by_classpath(record_type)
         self.config = kwargs.copy()
 
