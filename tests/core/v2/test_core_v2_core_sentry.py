@@ -1,5 +1,6 @@
-from sentinel.core.v2.sentry import AsyncCoreSentry, CoreSentry
+from sentinel.core.v2.sentry import CoreSentry
 from sentinel.models.sentry import Sentry
+from sentinel.utils.logger import Logger
 
 """
 Core Sentry
@@ -16,6 +17,9 @@ def test_sentry_core_init():
     assert (
         sentry.parameters.get("monitored_contracts") == monitored_contracts
     ), "Incorrect monitored contracts parameter value"
+
+    sentry.init()
+    assert isinstance(sentry.logger, Logger), "Incorrect logger type"
 
     sentry.start()
     sentry.join()
@@ -51,18 +55,3 @@ def test_sentry_run():
     assert sentry.on_init_flag is True, "Incorrect on_init flag"
     assert sentry.on_run_flag is True, "Incorrect on_run flag"
     assert sentry.on_schedule_flag is False, "Incorrect on_schedule flag"
-
-
-"""
-Async Core Sentry
-"""
-
-
-def test_sentry_async_core_init():
-    sentry = AsyncCoreSentry()
-    assert isinstance(sentry, AsyncCoreSentry), "Incorrect async core sentry type"
-
-    sentry.start()
-    sentry.join()
-
-    assert not sentry.is_alive(), "Sentry process is still alive"
