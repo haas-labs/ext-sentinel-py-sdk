@@ -14,6 +14,14 @@ TYPES_MAPPING = {
 
 
 def load_instance(type: str, id: str, settings: Settings) -> CoreSentry | AsyncCoreSentry:
+    """
+    Load sentry instance
+
+    Parameters:
+    @type: str, possible values: sentry, input, output, database
+    @id: str, component identificator
+    @settings: Settings, profile settings
+    """
     settings_section = TYPES_MAPPING.get(type, None)
     if settings_section is None:
         known_types = ", ".join(TYPES_MAPPING.keys())
