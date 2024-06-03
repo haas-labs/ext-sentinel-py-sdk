@@ -173,16 +173,32 @@ class AsyncCoreSentry(CoreSentry):
             output.flow_type = FlowType.outbound
         self.outputs = Channels(channels=self.settings.outputs)
 
+        # Metrics
+        # if self.metrics_queue is not None:
+        #     self.logger.info("Starting channel, name: metrics")
+        #     self.metrics = MetricChannel(
+        #         name="metrics",
+        #         record_type="sentinel.metrics.collector.MetricModel",
+        #         metric_queue=self.metrics_queue,
+        #     )
+
     async def _run(self) -> None:
         """
         Sentry processing itself
         """
         await self.on_init()
+        handlers = list()
         try:
-            self.logger.info(f"Starting sentry process, {self.name}")
+            self.logger.info(f"Starting sentry process, name: {self.name}")
+            for input in self.inputs:
+                channel_handler = asyncio.create_task(input.run(), name=input.name)
+                handlers.append(channel_handler)
+            for output in self.outputs:
+                channel_handler = asyncio.create_task(output.run(), name=output.name)
+                handlers.append(channel_handler)
+            # TODO add Metrics Handler
 
-            # TODO extend this method with required async activities
-            # await asyncio.gather(*activities)
+            await asyncio.gather(*handlers)
         finally:
             self.logger.info("Processing completed")
 
