@@ -1,17 +1,13 @@
 import asyncio
-
 from typing import Dict, List
 
-from sentinel.sentry.core import AsyncCoreSentry
-
-from sentinel.metrics.core import MetricQueue
-from sentinel.metrics.collector import MetricModel
-from sentinel.channels.metric.core import MetricChannel
-
+# from sentinel.channels.metric.core import MetricChannel
 from sentinel.definitions import BLOCKCHAIN
-
-from sentinel.models.transaction import Transaction
+from sentinel.metrics.collector import MetricModel
+from sentinel.metrics.core import MetricQueue
 from sentinel.models.project import ProjectSettings
+from sentinel.models.transaction import Transaction
+from sentinel.sentry.core import AsyncCoreSentry
 
 """
 Transaction Detector uses for detection different cases in transaction stream.
