@@ -4,9 +4,14 @@
 
 - [Health check](/docs/Metrics/Healthcheck.md)
 
-## Metrics
+## Components
 
 - [Collector](/docs/Metrics/Collector.md)
+- [Registry](/docs/Metrics/Registry.md)
+- [Metrics Channel]()
+- [Metrics Server]()
+
+## Metrics
 
 - [Counter Metric](/docs/Metrics/Counter.md)
 - [Gauge Metric](/docs/Metrics/Gauge.md)
