@@ -20,7 +20,9 @@ class Channel(BaseModel):
 
 
 class ChannelHandler(Handler):
-    def __init__(self, id: str, flow_type: FlowType, name: str, record_type: str, **kwargs) -> None:
+    name = "channel_handler"
+
+    def __init__(self, id: str, flow_type: FlowType, record_type: str, name: str = None, **kwargs) -> None:
         super().__init__(id=id, flow_type=flow_type, name=name, **kwargs)
         _, self.record_type = import_by_classpath(record_type)
 
@@ -28,12 +30,18 @@ class ChannelHandler(Handler):
 class InboundChannel(ChannelHandler):
     name = "inbound_channel"
 
+    def __init__(self, id: str, record_type: str, name: str = None, **kwargs) -> None:
+        super().__init__(id=id, flow_type=FlowType.inbound, record_type=record_type, name=name, **kwargs)
+
     # Handle inbound message
     async def on_message(self, message: Any) -> None: ...
 
 
 class OutboundChannel(ChannelHandler):
     name = "outbound_channel"
+
+    def __init__(self, id: str, record_type: str, name: str = None, **kwargs) -> None:
+        super().__init__(id=id, flow_type=FlowType.outbound, record_type=record_type, name=name, **kwargs)
 
     # Sending a message to a channel
     async def send(self, message: Any) -> None: ...
