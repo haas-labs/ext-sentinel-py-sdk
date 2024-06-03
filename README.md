@@ -46,6 +46,10 @@ The role of the detector is to identify various events that have occurred in blo
 - [Balance Monitor](examples/balance_monitor/README.md)
 - [Extrctor Attack Detectors](https://github.com/haas-labs/ext-sentinel-detectors-py)
 
+## Metrics
+
+- [Metrics](/docs/Metrics/Index.md)
+
 ## Tutorials
 
 - [Profile](/docs/Tutorials/Profile.md)
