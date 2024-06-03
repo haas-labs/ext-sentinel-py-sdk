@@ -1,21 +1,11 @@
 # Based on https://github.com/claws/aioprometheus
 
-from typing import Dict, List, Iterator
+from typing import Dict, Iterator
 
-from sentinel.metrics.collector import Collector
-from sentinel.metrics.collector import MetricModel
+from sentinel.metrics.collector import Collector, MetricModel
 
 
 class Registry:
-    """
-    A container to hold metrics collectors.
-
-    Collectors in the registry must comply with the Collector interface
-    which means that they inherit from the base Collector object and implement
-    a no-argument method called 'get_all' that returns a list of Metric
-    instance objects.
-    """
-
     def __init__(self) -> None:
         self.collectors: Dict[str, Collector] = {}
 
@@ -23,8 +13,8 @@ class Registry:
         """
         Register a collector into the container.
 
-        The registry provides a container that can be used to access all
-        metrics when exposing them into a specific format.
+        The registry provides a container that can be used to access all metrics
+        when exposing them into a specific format.
 
         :param collector: A collector to register in the registry.
 

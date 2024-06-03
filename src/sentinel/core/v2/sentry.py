@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Dict
 
 from croniter import croniter
+from sentinel.channels.metric.core import OutboundMetricChannel
 from sentinel.core.v2.channel import Channels
 from sentinel.core.v2.db import Databases
 from sentinel.core.v2.handler import FlowType
@@ -138,8 +139,8 @@ class AsyncCoreSentry(CoreSentry):
             nmae=name, description=description, restart=restart, parameters=parameters, schedule=schedule, **kwargs
         )
 
-        self.handlers = None
         self.metrics = None
+        self.metrics_registry = None
         self.metrics_queue = metrics
         self.settings = settings
         self.kwargs = kwargs
@@ -162,8 +163,11 @@ class AsyncCoreSentry(CoreSentry):
     def init(self) -> None:
         super().init()
 
-        if self.kwargs.get("metrics_queue", None) is not None:
-            self.metrics = Registry()
+        # Metrics
+        if self.metrics_queue is not None:
+            self.metrics_registry = Registry()
+            self.logger.info("Starting channel, name: metrics")
+            self.metrics = OutboundMetricChannel(id="metrics/publisher", metric_queue=self.metrics_queue)
 
         for input in self.settings.inputs:
             input.flow_type = FlowType.inbound
@@ -172,15 +176,6 @@ class AsyncCoreSentry(CoreSentry):
         for output in self.settings.outputs:
             output.flow_type = FlowType.outbound
         self.outputs = Channels(channels=self.settings.outputs)
-
-        # Metrics
-        # if self.metrics_queue is not None:
-        #     self.logger.info("Starting channel, name: metrics")
-        #     self.metrics = MetricChannel(
-        #         name="metrics",
-        #         record_type="sentinel.metrics.collector.MetricModel",
-        #         metric_queue=self.metrics_queue,
-        #     )
 
     async def _run(self) -> None:
         """
@@ -196,7 +191,9 @@ class AsyncCoreSentry(CoreSentry):
             for output in self.outputs:
                 channel_handler = asyncio.create_task(output.run(), name=output.name)
                 handlers.append(channel_handler)
-            # TODO add Metrics Handler
+            if self.metrics is not None:
+                metrics_handler = asyncio.create_task(self.metrics.run(), name=self.metrics.name)
+                handlers.append(metrics_handler)
 
             await asyncio.gather(*handlers)
         finally:
