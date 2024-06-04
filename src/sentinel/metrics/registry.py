@@ -30,6 +30,7 @@ class Registry:
             raise ValueError(f"A collector for {collector.name} is already registered")
 
         self.collectors[collector.name] = collector
+        setattr(self, collector.name, collector)
 
     def deregister(self, name: str) -> None:
         """
@@ -41,6 +42,7 @@ class Registry:
 
         :raises: KeyError if collector is not already registered.
         """
+        delattr(self, name)
         del self.collectors[name]
 
     def get(self, name: str) -> Collector:
