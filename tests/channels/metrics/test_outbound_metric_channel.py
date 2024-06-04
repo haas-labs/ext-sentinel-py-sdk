@@ -3,16 +3,19 @@ from sentinel.channels.metric.core import OutboundMetricChannel
 from sentinel.core.v2.channel import Channel
 from sentinel.metrics.collector import MetricModel, MetricsTypes
 from sentinel.metrics.core import MetricQueue
+from sentinel.metrics.registry import Registry
 
 
 def test_outbound_metric_channel_init():
-    channel = OutboundMetricChannel(id="metrics/publisher", name="metrics", metric_queue=MetricQueue())
+    channel = OutboundMetricChannel(
+        id="metrics/publisher", name="metrics", metric_queue=MetricQueue(), registry=Registry()
+    )
     assert isinstance(channel, OutboundMetricChannel), "Incorrect channel type"
 
 
 def test_outbound_metric_channel_from_settings():
     channel = OutboundMetricChannel.from_settings(
-        settings=Channel(id="metrics/publisher", type=""), metric_queue=MetricQueue()
+        settings=Channel(id="metrics/publisher", type=""), metric_queue=MetricQueue(), registry=Registry()
     )
     assert isinstance(channel, OutboundMetricChannel), "Incorrect channel type"
 
@@ -20,6 +23,7 @@ def test_outbound_metric_channel_from_settings():
 @pytest.mark.asyncio
 async def test_outbound_metric_channel_send():
     queue = MetricQueue()
+    registry = Registry()
     total_requests = MetricModel(
         kind=MetricsTypes.counter, name="total_requests", doc="Total requests", timestamp=0, values=0
     )
@@ -29,6 +33,7 @@ async def test_outbound_metric_channel_send():
             type="",
         ),
         metric_queue=queue,
+        registry=registry,
     )
     await channel.send(total_requests)
 
@@ -39,6 +44,7 @@ async def test_outbound_metric_channel_send():
 @pytest.mark.asyncio
 async def test_outbound_metric_channel_send_incorrect_metric_type():
     queue = MetricQueue()
+    registry = Registry()
     total_requests = {
         "kind": MetricsTypes.counter,
         "name": "total_requests",
@@ -46,7 +52,7 @@ async def test_outbound_metric_channel_send_incorrect_metric_type():
         "timestamp": 0,
         "values": 0,
     }
-    channel = OutboundMetricChannel(id="metrics/publisher", metric_queue=queue)
+    channel = OutboundMetricChannel(id="metrics/publisher", metric_queue=queue, registry=registry)
     with pytest.raises(RuntimeError) as err:
         await channel.send(total_requests)
     assert (
