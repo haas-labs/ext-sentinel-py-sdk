@@ -108,4 +108,4 @@ async def test_async_core_sentry_run(tmpdir):
     sentry.init()
 
     await sentry.on_init()
-    await sentry._run()
+    await sentry.processing()
