@@ -65,6 +65,7 @@ class CoreSentry(multiprocessing.Process):
         self.description = (
             description.strip() if description is not None else " ".join(self.description.split()).strip()
         )
+
         self.restart = restart
 
         self.parameters = parameters.copy()
@@ -177,7 +178,7 @@ class AsyncCoreSentry(CoreSentry):
             output.flow_type = FlowType.outbound
         self.outputs = Channels(channels=self.settings.outputs)
 
-    async def _run(self) -> None:
+    async def processing(self) -> None:
         """
         Sentry processing itself
         """
@@ -206,7 +207,7 @@ class AsyncCoreSentry(CoreSentry):
         self.init()
 
         try:
-            asyncio.run(self._run())
+            asyncio.run(self.processing())
         except KeyboardInterrupt:
             self.logger.warning("Interrupted by user")
 

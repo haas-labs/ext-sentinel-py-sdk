@@ -1,11 +1,11 @@
 from typing import Dict, List
 
 from pydantic import BaseModel
-
+from sentinel.core.v2.settings import Settings
 from sentinel.metrics.core import MetricQueue
-from sentinel.models.project import ProjectSettings
 from sentinel.models.transaction import Transaction
-from sentinel.sentry.transaction import TransactionDetector
+from sentinel.sentry.v2.transaction import TransactionDetector
+
 
 class Block(BaseModel):
     """
@@ -29,25 +29,21 @@ class BlockTxDetector(TransactionDetector):
         name: str = None,
         description: str = None,
         restart: bool = True,
-        parameters: Dict = dict(),
-        inputs: List[str] = list(),
-        outputs: List[str] = list(),
-        databases: List[str] = list(),
-        metrics: MetricQueue = None,
         schedule: str = None,
-        settings: ProjectSettings = None,
+        parameters: Dict = dict(),
+        metrics: MetricQueue = None,
+        settings: Settings = Settings(),
+        **kwargs,
     ) -> None:
         super().__init__(
             name=name,
             description=description,
             restart=restart,
-            parameters=parameters,
-            inputs=inputs,
-            outputs=outputs,
-            databases=databases,
-            metrics=metrics,
             schedule=schedule,
+            parameters=parameters,
+            metrics=metrics,
             settings=settings,
+            **kwargs,
         )
 
         # Blocks stack size
@@ -56,8 +52,9 @@ class BlockTxDetector(TransactionDetector):
         # Block storage
         self._blocks = dict()
 
-    # Handle Block Transactions
-    async def on_block(self, transactions: List[Transaction]) -> None: ...
+    @property
+    def blocks_buffer(self) -> List[Dict]:
+        return [{"blk_id": _id, "blk_size": blk.size, "txs": len(blk.txs)} for _id, blk in self._blocks.items()]
 
     def _remove_outdated_blocks(self) -> None:
         """
@@ -118,3 +115,6 @@ class BlockTxDetector(TransactionDetector):
         for _tx_index in range(block_size):
             txs.append(block.txs[_tx_index])
         await self.on_block(txs)
+
+    # Handle Block Transactions
+    async def on_block(self, transactions: List[Transaction]) -> None: ...
