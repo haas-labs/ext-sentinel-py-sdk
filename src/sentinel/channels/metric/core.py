@@ -45,13 +45,9 @@ class OutboundMetricChannel(OutboundChannel):
 
     async def run(self):
         while True:
+            for metric in self._registry.dump_all():
+                await self._queue.send(metrics=metric)
             await asyncio.sleep(self._push_interval)
-
-    async def send(self, metric: MetricModel) -> None:
-        if not isinstance(metric, MetricModel):
-            raise RuntimeError(f"Incorrect metric type, founded: {type(metric)}, expected: MetricModel")
-        else:
-            await self._queue.send(metrics=metric)
 
 
 class InboundMetricChannel(InboundChannel):
