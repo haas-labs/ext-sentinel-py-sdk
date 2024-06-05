@@ -1,8 +1,7 @@
-from aiokafka.structs import ConsumerRecord
 from aiokafka import AIOKafkaConsumer as KafkaConsumer
-
-from sentinel.utils.logger import get_logger
+from aiokafka.structs import ConsumerRecord
 from sentinel.channels.kafka.common import KafkaChannel
+from sentinel.utils.logger import get_logger
 
 
 class InboundKafkaChannel(KafkaChannel):
