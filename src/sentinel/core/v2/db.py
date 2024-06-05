@@ -26,7 +26,7 @@ class Databases:
         for db in databases:
             try:
                 self.logger.info(f"Initializing database: {db.id}, type: {db.type}")
-                db_instance = load_instance(id=db.id, settings=databases)
+                db_instance = load_instance(settings=db)
                 setattr(self, db_instance.name, db_instance)
             except AttributeError as err:
                 self.logger.error(f"Database initialization issue, id: {db.id}, error: {err}")
