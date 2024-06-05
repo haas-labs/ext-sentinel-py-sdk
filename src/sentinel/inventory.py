@@ -5,13 +5,14 @@ from typing import Dict, List
 from rich import box
 from rich.console import Console
 from rich.table import Table
-from sentinel.models.project import ComponentType, ProjectSettings
+from sentinel.core.v2.settings import Settings
+from sentinel.models.project import ComponentType
 from sentinel.utils.logger import logger
-from sentinel.utils.settings import IncorrectFileFormat, IncorrectSettingsFormat, load_project_settings
+from sentinel.utils.settings import IncorrectFileFormat, IncorrectSettingsFormat, load_settings
 
 
 class Inventory:
-    def __init__(self, settings: ProjectSettings, extra_vars: Dict = dict()) -> None:
+    def __init__(self, settings: Settings, extra_vars: Dict = dict()) -> None:
         self.settings = settings
         self.extra_vars = extra_vars.copy()
 
@@ -39,7 +40,7 @@ class Inventory:
         for p in self.settings.project.path.glob("**/*.y*ml"):
             p = p.relative_to(self.settings.project.path)
             try:
-                settings = load_project_settings(p, extra_vars=self.extra_vars)
+                settings = load_settings(p, extra_vars=self.extra_vars)
                 match ctype:
                     case ComponentType.project:
                         self.extract_projects(p, settings)
@@ -73,7 +74,7 @@ class Inventory:
             case ComponentType.database:
                 self.show(data=self.databases)
 
-    def extract_projects(self, path: pathlib.Path, settings: ProjectSettings) -> List[Dict]:
+    def extract_projects(self, path: pathlib.Path, settings: Settings) -> List[Dict]:
         project = settings.project
         if project is not None:
             project = {
@@ -84,7 +85,7 @@ class Inventory:
             if project not in self.projects:
                 self.projects.append(project)
 
-    def extract_sentries(self, path: pathlib.Path, settings: ProjectSettings) -> List[Dict]:
+    def extract_sentries(self, path: pathlib.Path, settings: Settings) -> List[Dict]:
         for sentry in settings.sentries:
             sentry = {
                 "name": sentry.name if sentry.name is not None else "",
@@ -95,19 +96,19 @@ class Inventory:
             if sentry not in self.sentries:
                 self.sentries.append(sentry)
 
-    def extract_inputs(self, path: pathlib.Path, settings: ProjectSettings) -> List[Dict]:
+    def extract_inputs(self, path: pathlib.Path, settings: Settings) -> List[Dict]:
         for input in settings.inputs:
             input = {"id": input.id, "type": input.type}
             if input not in self.inputs:
                 self.inputs.append(input)
 
-    def extract_outputs(self, path: pathlib.Path, settings: ProjectSettings) -> List[Dict]:
+    def extract_outputs(self, path: pathlib.Path, settings: Settings) -> List[Dict]:
         for output in settings.outputs:
             output = {"id": output.id, "type": output.type}
             if output not in self.outputs:
                 self.outputs.append(output)
 
-    def extract_databases(self, path: pathlib.Path, settings: ProjectSettings) -> List[Dict]:
+    def extract_databases(self, path: pathlib.Path, settings: Settings) -> List[Dict]:
         for db in settings.databases:
             db = {"id": db.id, "type": db.type}
             if db not in self.databases:
