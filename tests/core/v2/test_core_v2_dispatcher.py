@@ -54,3 +54,55 @@ def test_core_dispatcher_active_monitoring():
 def test_core_dispatcher_run():
     dispatcher = Dispatcher(settings=load_settings(pathlib.Path("tests/core/v2/resources/settings/plain.yaml")))
     # dispatcher.run()
+
+
+# def test_sentry_dispatcher_discovery():
+#     """
+#     Dispatcher Init
+#     """
+#     settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/simple-sentinel-project.yml"))
+#     dispatcher = Dispatcher(settings)
+
+#     assert isinstance(dispatcher, Dispatcher), "Incorrect dispatcher type"
+
+
+# def test_sentry_dispatcher_init_components():
+#     """
+#     Dispatcher Components Init
+#     """
+#     settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/simple-sentinel-project.yml"))
+#     dispatcher = Dispatcher(settings)
+
+#     assert isinstance(dispatcher, Dispatcher), "Incorrect dispatcher type"
+#     # TODO the test case is incomplete, this work needs to be done
+
+# def test_sentry_dispatcher_telemetry_disabled():
+#     """
+#     Dispatcher Components Init
+#     """
+#     settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/simple-sentinel-project.yml"))
+#     dispatcher = Dispatcher(settings)
+
+#     assert isinstance(dispatcher, Dispatcher), "Incorrect dispatcher type"
+#     assert dispatcher.settings.settings.get("TELEMETRY_ENABLED", False) is False, "Expected disabled telemetry"
+#     assert (
+#         len([s for s in dispatcher.settings.sentries if s.name == "MetricServer"]) == 0
+#     ), "Unexpected enabled MetricServer"
+#     assert dispatcher.metrics is None, "Unexpect to have metric queue enabled"
+
+# def test_sentry_dispatcher_telemetry_enabled():
+#     """
+#     Dispatcher Components Init
+#     """
+#     settings = SentinelProject().parse(pathlib.Path("tests/dispatcher/resources/with-telemetry-enabled.yml"))
+#     dispatcher = Dispatcher(settings)
+
+#     assert isinstance(dispatcher, Dispatcher), "Incorrect dispatcher type"
+#     assert dispatcher.settings.settings.get("TELEMETRY_ENABLED") is True, "Expected enabled telemetry"
+#     assert dispatcher.settings.settings.get("TELEMETRY_PORT") == 9090, "Expected telemetry port equals 9090"
+#     assert (
+#         len([s for s in dispatcher.settings.sentries if s.name == "MetricServer"]) == 1
+#     ), "Missed enabled MetricServer"
+#     assert dispatcher.metrics is not None and isinstance(
+#         dispatcher.metrics, MetricQueue
+#     ), "Expect to have metric queue enabled"
