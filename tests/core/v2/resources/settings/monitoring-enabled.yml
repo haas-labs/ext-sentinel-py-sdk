@@ -1,0 +1,11 @@
+project:
+  name: Project A
+  description: Testing project settings structure on Project A example
+  config:
+    monitoting_enabled: true
+    monitoring_port: 9090
+
+sentries:
+
+- name: AsyncCoreSentry
+  type: sentinel.sentry.core.AsyncCoreSentry
