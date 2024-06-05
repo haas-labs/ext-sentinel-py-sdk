@@ -1,16 +1,18 @@
+project:
+  name: Transaction Detector
+  description: Transaction Detector provided as example of consuming transactions and collecting metrics
+  config:
+    monitoring_enabled: true
+
 imports:
 - ../profiles/inputs.yaml
 
-settings:
-  TELEMETRY_ENABLED: true
-
 sentries:
 
-- name: SimpleTxMetricsDetector
-  type: transaction.sentry.SimpleTxMetricsDetector
+- name: TxMetricsDetector
+  type: transaction.sentry.TxMetricsDetector
   description: >
-    The example of simple transactions detector for logging 
-    transactions where a value more than 0
+    The example of simple transactions detector for consiming transaction and collecting metrics around it
   parameters:
     network: ethereum
   inputs:
