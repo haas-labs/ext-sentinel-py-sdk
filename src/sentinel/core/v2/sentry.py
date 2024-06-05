@@ -179,12 +179,12 @@ class AsyncCoreSentry(CoreSentry):
         # Inputs
         for input in self.settings.inputs:
             input.flow_type = FlowType.inbound
-        self.inputs = Channels(channels=self.settings.inputs)
+        self.inputs = Channels(channels=self.settings.inputs, sentry_name=self.name)
 
         # Outputs
         for output in self.settings.outputs:
             output.flow_type = FlowType.outbound
-        self.outputs = Channels(channels=self.settings.outputs)
+        self.outputs = Channels(channels=self.settings.outputs, sentry_name=self.name)
 
     async def processing(self) -> None:
         """

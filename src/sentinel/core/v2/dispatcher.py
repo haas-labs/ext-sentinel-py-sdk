@@ -45,7 +45,7 @@ class Dispatcher:
 
         logger.info(f"Sentinel SDK version: {VERSION}")
 
-        self.metrics = None
+        self._metrics_queue = None
         self.activate_monitoring()
 
         # prepare the list of sentries for launch
@@ -98,11 +98,12 @@ class Dispatcher:
         """
         monitoring_enabled = self.project.config.monitoring_enabled
         monitoring_port = self.project.config.monitoring_port
+
         if not monitoring_enabled:
             return
 
-        logger.info(f"Enabling monitoring, metric server port: {monitoring_port}")
-        self.metrics = MetricQueue()
+        logger.info(f"Monitoring: enabled, metric server port: {monitoring_port}")
+        self._metrics_queue = MetricQueue()
         self.settings.sentries.append(
             Sentry(
                 name="MetricServer",
@@ -143,7 +144,7 @@ class Dispatcher:
         # Sentry init
         try:
             _, sentry_class = import_by_classpath(settings.type)
-            sentry.instance = sentry_class.from_settings(settings)
+            sentry.instance = sentry_class.from_settings(settings, metrics_queue=self._metrics_queue)
         except RuntimeError as err:
             logger.error(f"{settings.type} initialization issue, {err}")
             return None

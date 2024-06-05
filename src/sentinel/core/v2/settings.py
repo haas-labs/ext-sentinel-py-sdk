@@ -55,6 +55,9 @@ class Settings(BaseModel):
         return None
 
     def enrich_sentries(self):
+        """
+        Update inputs/outputs/databases ids with definitions instead of ids
+        """
         for sentry in self.sentries:
             for ni, input in enumerate(sentry.inputs):
                 if not isinstance(input, str):
@@ -76,3 +79,12 @@ class Settings(BaseModel):
                 database_details = self.search(type="databases", id=database)
                 if database_details is not None:
                     sentry.databases[nd] = database_details
+
+    def cleanup(self):
+        """
+        Usually used to remove inputs/outputs/databases definitions
+        after sentry configuration enrichment (enrich_rentries)
+        """
+        self.inputs = []
+        self.outputs = []
+        self.databases = []

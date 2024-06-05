@@ -48,9 +48,10 @@ class OutboundChannel(ChannelHandler):
 
 
 class Channels:
-    def __init__(self, channels: List[ChannelModel]) -> None:
+    def __init__(self, channels: List[ChannelModel], **kwargs) -> None:
         self.logger = get_logger(__name__)
         self.names = list()
+        self.kwargs = kwargs
 
         self.init(channels=channels)
 
@@ -58,7 +59,7 @@ class Channels:
         for channel in channels:
             try:
                 self.logger.info(f"Initializing channel: {channel.id}, type: {channel.type}")
-                channel_instance: ChannelHandler = load_instance(id=channel.id, settings=channels)
+                channel_instance: ChannelHandler = load_instance(settings=channel, **self.kwargs)
                 setattr(self, channel_instance.name, channel_instance)
                 self.names.append(channel_instance.name)
             except (ValueError, AttributeError) as err:

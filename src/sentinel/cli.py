@@ -11,7 +11,7 @@ from sentinel.commands.common import (
 )
 from sentinel.models.project import ProjectSettings
 from sentinel.utils.logger import logger
-from sentinel.utils.settings import load_project_settings
+from sentinel.utils.settings import load_settings
 
 
 def execute(argv: List[str] = None):
@@ -23,7 +23,7 @@ def execute(argv: List[str] = None):
     settings = ProjectSettings()
     if sentinel_settings_path.exists():
         logger.info(f"Checking settings from {sentinel_settings_path}")
-        settings = load_project_settings(sentinel_settings_path)
+        settings = load_settings(sentinel_settings_path)
         settings.project.path = sentinel_settings_path.parent
 
     argv = argv or sys.argv
