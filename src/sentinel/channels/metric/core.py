@@ -15,7 +15,7 @@ class OutboundMetricChannel(OutboundChannel):
     def __init__(
         self,
         id: str,
-        metric_queue: MetricQueue,
+        queue: MetricQueue,
         registry: Registry,
         push_interval: int = DEFAULT_PUSH_INTERVAL,
         name: str = None,
@@ -25,20 +25,20 @@ class OutboundMetricChannel(OutboundChannel):
         self.logger = get_logger(__name__)
         self._push_interval = push_interval
 
-        assert metric_queue is not None, "Undefined metrics queue"
-        self._queue = metric_queue
+        assert queue is not None, "Undefined metrics queue"
+        self._queue = queue
 
         assert registry is not None, "Undefined registry"
         self._registry = registry
 
     @classmethod
     def from_settings(cls, settings: Channel, **kwargs):
-        metric_queue = kwargs.pop("metric_queue", None)
+        queue = kwargs.pop("queue", None)
         registry = kwargs.pop("registry", None)
         return cls(
             id=settings.id,
             name=settings.name,
-            metric_queue=metric_queue,
+            queue=queue,
             registry=registry,
             **kwargs,
         )
@@ -53,19 +53,19 @@ class OutboundMetricChannel(OutboundChannel):
 class InboundMetricChannel(InboundChannel):
     name = "metrics"
 
-    def __init__(self, id: str, metric_queue: MetricQueue, name: str = None, stop_after: int = 0, **kwargs) -> None:
+    def __init__(self, id: str, queue: MetricQueue, name: str = None, stop_after: int = 0, **kwargs) -> None:
         super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
-        self._queue = metric_queue
+        self._queue = queue
         self.logger = get_logger(__name__)
         self.stop_after = stop_after
 
     @classmethod
     def from_settings(cls, settings: Channel, **kwargs):
-        metric_queue = kwargs.pop("metric_queue", None)
+        queue = kwargs.pop("queue", None)
         return cls(
             id=settings.id,
             name=settings.name,
-            metric_queue=metric_queue,
+            queue=queue,
             stop_after=settings.parameters.get("stop_after", 0),
             **kwargs,
         )
