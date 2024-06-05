@@ -140,9 +140,9 @@ class AsyncCoreSentry(CoreSentry):
             nmae=name, description=description, restart=restart, parameters=parameters, schedule=schedule, **kwargs
         )
 
-        self.metrics = None
-        self.metrics_registry = None
-        self.metrics_queue = metrics
+        self._metrics_registry = None
+        self._metrics_channel = None
+        self._metrics_queue = metrics
         self.settings = settings
         self.kwargs = kwargs
 
@@ -161,19 +161,27 @@ class AsyncCoreSentry(CoreSentry):
             **kwargs,
         )
 
+    @property
+    def metrics(self) -> Registry:
+        return self._metrics_registry
+
     def init(self) -> None:
         super().init()
 
         # Metrics
-        if self.metrics_queue is not None:
-            self.metrics_registry = Registry()
+        if self._metrics_queue is not None:
+            self._metrics_registry = Registry()
             self.logger.info("Starting channel, name: metrics")
-            self.metrics = OutboundMetricChannel(id="metrics/publisher", metric_queue=self.metrics_queue)
+            self._metrics_channel = OutboundMetricChannel(
+                id="metrics/publisher", queue=self._metrics_queue, registry=self.metrics
+            )
 
+        # Inputs
         for input in self.settings.inputs:
             input.flow_type = FlowType.inbound
         self.inputs = Channels(channels=self.settings.inputs)
 
+        # Outputs
         for output in self.settings.outputs:
             output.flow_type = FlowType.outbound
         self.outputs = Channels(channels=self.settings.outputs)
@@ -192,8 +200,8 @@ class AsyncCoreSentry(CoreSentry):
             for output in self.outputs:
                 channel_handler = asyncio.create_task(output.run(), name=output.name)
                 handlers.append(channel_handler)
-            if self.metrics is not None:
-                metrics_handler = asyncio.create_task(self.metrics.run(), name=self.metrics.name)
+            if self._metrics_channel is not None:
+                metrics_handler = asyncio.create_task(self._metrics_channel.run(), name=self._metrics_channel.name)
                 handlers.append(metrics_handler)
 
             await asyncio.gather(*handlers)
