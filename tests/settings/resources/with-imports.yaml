@@ -1,9 +1,0 @@
-project:
-  name: Project with imports
-  description: Project with imports
-
-imports:
-- config/sentries.yaml
-- config/local-inputs.yaml
-- config/local-outputs.yaml
-- config/local-databases.yaml

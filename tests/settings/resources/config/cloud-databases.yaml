@@ -1,8 +1,0 @@
-databases:
-
-- id: example/cloud/address
-  type: sentinel.db.address.remote.AddressDB
-  description: >
-    Monitored Addresses
-  parameters:
-    url: http://example.cloud/address
