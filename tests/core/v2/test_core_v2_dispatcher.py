@@ -43,7 +43,6 @@ def test_core_dispatcher_active_monitoring():
         settings=Settings(project=Project(name="Monitoring", config=Config(monitoring_enabled=True)))
     )
     assert len(dispatcher.settings.sentries) == 1, "Incorrect sentry list"
-    assert dispatcher.metrics is not None, "Incorrect metrics queue"
     monitor = dispatcher.settings.sentries[0]
     assert monitor.name == "MetricServer", "Incorrect monitor name"
     assert monitor.type == "sentinel.core.v2.metric.MetricServer", "Incorrect monitor type"

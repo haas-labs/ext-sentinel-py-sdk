@@ -1,6 +1,6 @@
 import pathlib
 
-from sentinel.models.settings import Config, Project, Settings
+from sentinel.core.v2.settings import Config, Project, Settings
 from sentinel.utils.settings import load_settings
 
 
