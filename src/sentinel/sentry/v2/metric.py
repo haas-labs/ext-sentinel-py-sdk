@@ -1,4 +1,5 @@
 import asyncio
+import signal
 import time
 from typing import Dict
 
@@ -7,6 +8,8 @@ from sentinel.core.v2.sentry import AsyncCoreSentry
 from sentinel.metrics.core import MetricDatabase, MetricQueue
 from sentinel.metrics.formatter import PrometheusFormattter
 from sentinel.models.sentry import Sentry
+
+routes = web.RouteTableDef()
 
 
 class MetricServer(AsyncCoreSentry):
@@ -17,7 +20,7 @@ class MetricServer(AsyncCoreSentry):
 
     def __init__(
         self,
-        metrics: MetricQueue,
+        metrics_queue: MetricQueue,
         name: str = None,
         description: str = None,
         restart: bool = True,
@@ -31,10 +34,10 @@ class MetricServer(AsyncCoreSentry):
             restart=restart,
             schedule=schedule,
             parameters=parameters,
-            metrics=metrics,
+            metrics_queue=metrics_queue,
             **kwargs,
         )
-        self._metrics_queue = metrics
+        self._metrics_queue = metrics_queue
         self._retention_period_secs = self.parameters.get("retention_period", 30)
         self._retention_period_msecs = self._retention_period_secs * 1000
         self._host = self.parameters.get("host", "0.0.0.0")
@@ -42,15 +45,14 @@ class MetricServer(AsyncCoreSentry):
         self._db = MetricDatabase(retention_period=self._retention_period_secs)
 
     @classmethod
-    def from_settings(cls, settings: Sentry, **kwargs):
-        queue = kwargs.pop("metrics_queue", None)
+    def from_settings(cls, settings: Sentry, metrics_queue: MetricQueue, **kwargs):
         return cls(
             name=settings.name,
             description=settings.description,
             restart=settings.restart,
             schedule=settings.schedule,
             parameters=settings.parameters,
-            metrics=queue,
+            metrics_queue=metrics_queue,
             **kwargs,
         )
 
@@ -60,58 +62,24 @@ class MetricServer(AsyncCoreSentry):
         """
         return int(time.time())
 
-    async def create_web_server(self) -> web.TCPSite:
-        srv = web.Application(logger=self.logger)
-        srv.add_routes(
-            [
-                web.get("/metrics", self.handle_metrics),
-                web.get("/health", self.handle_health),
-            ]
-        )
-        app_runner = web.AppRunner(srv)
-        await app_runner.setup()
-        return web.TCPSite(runner=app_runner, host=self._host, port=self._port)
-
-    async def handle_web_requests(self):
-        srv = web.Application(logger=self.logger)
-        srv.add_routes(
-            [
-                web.get("/metrics", self.handle_metrics),
-                web.get("/health", self.handle_health),
-            ]
-        )
-        app_runner = web.AppRunner(srv)
-        await app_runner.setup()
-        site = web.TCPSite(runner=app_runner, host=self._host, port=self._port)
-        await site.start()
-
-    async def processing(self) -> None:
-        self.init()
-        handlers = []
-        try:
-            # srv = await self.create_web_server()
-            # await srv.start()
-            web_requests_handler = asyncio.create_task(self.handle_web_requests(), name="WebRequestsHandler")
-            handlers.append(web_requests_handler)
-
-            metric_processor = asyncio.create_task(self.handle_incoming_metrics(), name="MetricsHandler")
-            handlers.append(metric_processor)
-
-            await asyncio.gather(*handlers)
-        finally:
-            self.logger.info("Metric Server completed")
-
     async def handle_incoming_metrics(self):
+        loop = asyncio.get_running_loop()
         last_cleanup_time = self.current_time()
         while True:
-            metrics = await self._metrics_queue.receive()
-            self.logger.info(metrics)
+            metrics = await loop.run_in_executor(None, self._metrics_queue.receive)
             self._db.update(metrics)
 
             # cleanup outdated metrics in database by retention period
             current_time = self.current_time()
-            if (current_time - last_cleanup_time) > self._retention_period:
+            if (current_time - last_cleanup_time) > self._retention_period_secs:
                 self._db.clean()
+                last_cleanup_time = self.current_time()
+
+    def create_web_app(self) -> web.Application:
+        app = web.Application(logger=self.logger)
+        app.router.add_get("/metrics", self.handle_metrics)
+        app.router.add_get("/health", self.handle_health)
+        return app
 
     async def handle_health(self, request: web.Request) -> web.Response:
         health_status = {
@@ -127,3 +95,32 @@ class MetricServer(AsyncCoreSentry):
         """
         metrics = PrometheusFormattter().format(self._db)
         return web.Response(text=metrics)
+
+    async def background_tasks(self, app: web.Application):
+        self.logger.info("Starting background tasks")
+        app[self.metrics_handler] = asyncio.create_task(self.handle_incoming_metrics())
+        yield
+        self.logger.info("Stopping background tasks")
+        # app[self.metrics_handler].cancel()
+        # await app[self.metrics_handler]
+        # self.logger.info("Background tasks termination completed")
+
+    def signal_handler(self, app: web.Application) -> None:
+        asyncio.ensure_future(app.shutdown())
+        asyncio.ensure_future(app.cleanup())
+
+    def run(self) -> None:
+        """
+        Method representing async sentry's activity
+        """
+        self.init()
+
+        app = self.create_web_app()
+        self.metrics_handler = web.AppKey("metrics_handler", asyncio.Task[None])
+        app.cleanup_ctx.append(self.background_tasks)
+
+        loop = asyncio.get_event_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, self.signal_handler, app)
+
+        web.run_app(app=app, host=self._host, port=self._port, ssl_context=None)
