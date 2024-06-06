@@ -30,7 +30,7 @@ def test_core_settings_plain_format():
     assert sentry.schedule is None, "Incorrect sentry schedule"
     assert sentry.parameters == {"network": "ethereum"}, "Incorrect sentry parameters"
     assert sentry.inputs == ["local/fs/transaction"], "Incorrect sentry input list"
-    assert sentry.outputs == ["local/fs/Event"], "Incorrect sentry output list"
+    assert sentry.outputs == ["local/fs/event"], "Incorrect sentry output list"
     assert sentry.databases == ["local/address"], "Incorrect sentry database list"
 
     inputs = settings.inputs

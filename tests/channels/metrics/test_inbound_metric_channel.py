@@ -11,7 +11,9 @@ def test_inbound_metric_channel_init():
 
 
 def test_inbound_metric_channel_from_settings():
-    channel = InboundMetricChannel.from_settings(settings=Channel(id="metrics/consumer", type=""), queue=MetricQueue())
+    channel = InboundMetricChannel.from_settings(
+        settings=Channel(id="metrics/consumer", type=""), metrics_queue=MetricQueue()
+    )
     assert isinstance(channel, InboundMetricChannel), "Incorrect channel type"
 
 
@@ -31,7 +33,7 @@ async def test_outbound_metric_channel_send():
     )
     channel = MetricsConsumer.from_settings(
         settings=Channel(id="metrics/consumer", type="", parameters={"stop_after": 1}),
-        queue=queue,
+        metrics_queue=queue,
     )
     await queue.send(total_requests)
     await channel.run()

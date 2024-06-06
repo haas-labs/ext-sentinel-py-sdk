@@ -1,5 +1,6 @@
 import pathlib
 
+import rich
 from sentinel.core.v2.dispatcher import Dispatcher
 from sentinel.models.sentry import Sentry
 from sentinel.models.settings import Config, Project, Settings
@@ -45,14 +46,24 @@ def test_core_dispatcher_active_monitoring():
     assert len(dispatcher.settings.sentries) == 1, "Incorrect sentry list"
     monitor = dispatcher.settings.sentries[0]
     assert monitor.name == "MetricServer", "Incorrect monitor name"
-    assert monitor.type == "sentinel.core.v2.metric.MetricServer", "Incorrect monitor type"
+    assert monitor.type == "sentinel.sentry.v2.metric.MetricServer", "Incorrect monitor type"
     assert monitor.restart is True, "Incorrect monitor restart flag"
     assert monitor.parameters == {"port": 9090}, "Incorrect monitor parameters"
 
 
-def test_core_dispatcher_run():
-    dispatcher = Dispatcher(settings=load_settings(pathlib.Path("tests/core/v2/resources/settings/plain.yaml")))
-    # dispatcher.run()
+def test_core_dispatcher_run_sentry():
+    settings = load_settings(pathlib.Path("tests/core/v2/resources/settings/plain.yaml"))
+    settings.enrich_sentries()
+
+    dispatcher = Dispatcher(settings=settings)
+    sentry_instance = dispatcher.instances[0]
+    sentry_instance = dispatcher.run_sentry(sentry=sentry_instance)
+    rich.print(sentry_instance)
+    assert sentry_instance.instance is not None, "Incorrect sentry instance"
+    assert sentry_instance.pid is not None, "Incorrect sentry instance pid"
+    assert sentry_instance.name == "eth://CoreSentry", "Incorrect sentry instance name"
+    assert sentry_instance.status == "started", "Incorrect sentry instance status"
+    assert sentry_instance.launch_time is not None, "Incorrect sentry instance launch time"
 
 
 # def test_sentry_dispatcher_discovery():
