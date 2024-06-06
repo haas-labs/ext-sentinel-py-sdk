@@ -22,7 +22,6 @@ class OutboundMetricChannel(OutboundChannel):
         **kwargs,
     ) -> None:
         super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
-        self.logger = get_logger(__name__)
         self._push_interval = push_interval
 
         assert queue is not None, "Undefined metrics queue"
@@ -42,9 +41,10 @@ class OutboundMetricChannel(OutboundChannel):
         )
 
     async def run(self):
+        self.logger = get_logger(__name__)
         while True:
             for metric in self._registry.dump_all():
-                await self._queue.send(metrics=metric)
+                self._queue.send(metrics=metric)
             await asyncio.sleep(self._push_interval)
 
 
@@ -54,7 +54,6 @@ class InboundMetricChannel(InboundChannel):
     def __init__(self, id: str, queue: MetricQueue, name: str = None, stop_after: int = 0, **kwargs) -> None:
         super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
         self._queue = queue
-        self.logger = get_logger(__name__)
         self.stop_after = stop_after
 
     @classmethod
@@ -68,11 +67,13 @@ class InboundMetricChannel(InboundChannel):
         )
 
     async def run(self):
+        self.logger = get_logger(__name__)
+
         total_metrics = 0
         while True:
             total_metrics += 1
 
-            metric = await self._queue.receive()
+            metric = self._queue.receive()
             await self.on_metric(metric)
 
             if self.stop_after > 0 and total_metrics >= self.stop_after:
