@@ -107,7 +107,7 @@ class Dispatcher:
         self.settings.sentries.append(
             Sentry(
                 name="MetricServer",
-                type="sentinel.core.v2.metric.MetricServer",
+                type="sentinel.sentry.v2.metric.MetricServer",
                 parameters={"port": monitoring_port},
                 restart=True,
             )

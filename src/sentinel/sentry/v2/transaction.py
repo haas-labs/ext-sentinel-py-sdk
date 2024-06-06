@@ -35,7 +35,7 @@ class TransactionDetector(AsyncCoreSentry):
         restart: bool = True,
         schedule: str = None,
         parameters: Dict = dict(),
-        metrics: MetricQueue = None,
+        metrics_queue: MetricQueue = None,
         settings: Settings = Settings(),
         **kwargs,
     ) -> None:
@@ -45,7 +45,7 @@ class TransactionDetector(AsyncCoreSentry):
             restart=restart,
             schedule=schedule,
             parameters=parameters,
-            metrics=metrics,
+            metrics_queue=metrics_queue,
             settings=settings,
             **kwargs,
         )

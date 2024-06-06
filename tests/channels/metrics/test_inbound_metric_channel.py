@@ -11,12 +11,14 @@ def test_inbound_metric_channel_init():
 
 
 def test_inbound_metric_channel_from_settings():
-    channel = InboundMetricChannel.from_settings(settings=Channel(id="metrics/consumer", type=""), queue=MetricQueue())
+    channel = InboundMetricChannel.from_settings(
+        settings=Channel(id="metrics/consumer", type=""), metrics_queue=MetricQueue()
+    )
     assert isinstance(channel, InboundMetricChannel), "Incorrect channel type"
 
 
 @pytest.mark.asyncio
-async def test_outbound_metric_channel_send():
+async def test_inbound_metric_channel_send():
     class MetricsConsumer(InboundMetricChannel):
         def __init__(self, id: str, queue: MetricQueue, name: str = None, **kwargs) -> None:
             super().__init__(id=id, queue=queue, name=name, **kwargs)
@@ -31,9 +33,10 @@ async def test_outbound_metric_channel_send():
     )
     channel = MetricsConsumer.from_settings(
         settings=Channel(id="metrics/consumer", type="", parameters={"stop_after": 1}),
-        queue=queue,
+        metrics_queue=queue,
     )
-    await queue.send(total_requests)
+    # await queue.send(total_requests)
+    queue.send(total_requests)
     await channel.run()
 
     assert len(channel.metrics) == 1, "Incorrect metrics number"

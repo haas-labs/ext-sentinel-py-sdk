@@ -25,10 +25,6 @@ class Handler:
         self.name = name if name is not None else self.name
         self.config = kwargs.copy()
 
-    @classmethod
-    def from_settings(cls):
-        return cls()
-
     def init(self) -> None: ...
 
     async def run(self) -> None:

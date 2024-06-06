@@ -4,7 +4,7 @@ from sentinel.sentry.v2.metric import MetricServer
 
 def test_sentry_metrics_server():
     queue = MetricQueue()
-    server = MetricServer(metrics=queue)
+    server = MetricServer(metrics_queue=queue)
     assert isinstance(server, MetricServer), "Incorrect metric server type"
 
 

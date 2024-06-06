@@ -11,6 +11,6 @@ def test_outbound_metric_channel_init():
 
 def test_outbound_metric_channel_from_settings():
     channel = OutboundMetricChannel.from_settings(
-        settings=Channel(id="metrics/publisher", type=""), queue=MetricQueue(), registry=Registry()
+        settings=Channel(id="metrics/publisher", type=""), metrics_queue=MetricQueue(), registry=Registry()
     )
     assert isinstance(channel, OutboundMetricChannel), "Incorrect channel type"

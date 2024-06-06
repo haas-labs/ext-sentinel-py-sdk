@@ -1,15 +1,13 @@
 import pytest
-
-from sentinel.metrics.core import MetricQueue
-from sentinel.metrics.types import MetricsTypes
 from sentinel.metrics.collector import MetricModel
-
-from sentinel.metrics.enum import Enum
-from sentinel.metrics.info import Info
-from sentinel.metrics.gauge import Gauge
+from sentinel.metrics.core import MetricQueue
 from sentinel.metrics.counter import Counter
+from sentinel.metrics.enum import Enum
+from sentinel.metrics.gauge import Gauge
+from sentinel.metrics.histogram import POS_INF, Histogram
+from sentinel.metrics.info import Info
 from sentinel.metrics.summary import Summary
-from sentinel.metrics.histogram import Histogram, POS_INF
+from sentinel.metrics.types import MetricsTypes
 
 
 def test_metric_queue_init():
@@ -21,8 +19,10 @@ def test_metric_queue_init():
 async def test_metric_queue_send_receive():
     TEST_METRICS = {"total_requests": 10}
     metric_queue = MetricQueue()
-    await metric_queue.send(metrics=TEST_METRICS)
-    metrics = await metric_queue.receive()
+    # await metric_queue.send(metrics=TEST_METRICS)
+    metric_queue.send(metrics=TEST_METRICS)
+    # metrics = await metric_queue.receive()
+    metrics = metric_queue.receive()
     assert metrics == TEST_METRICS, "Unexpected metric value"
 
 
@@ -39,14 +39,17 @@ async def test_metric_queue_send_receive_enum():
     )
     e.set(labels={"module": "A"}, value="running")
 
-    await metric_queue.send(metrics=e.dump())
-    metrics: MetricModel = await metric_queue.receive()
+    # await metric_queue.send(metrics=e.dump())
+    metric_queue.send(metrics=e.dump())
+    # metrics: MetricModel = await metric_queue.receive()
+    metrics: MetricModel = metric_queue.receive()
 
     assert metrics.kind == MetricsTypes.stateset.value, "Incorrect metric kind"
     assert metrics.name == "test_enum_metric", "Unexpected metric name"
     assert metrics.doc == "Test Enum Metric", "Unexpected metric doc"
     assert metrics.labels == {"component": "A"}, "Unexpected metric labels"
     assert metrics.values == [{"labels": {"module": "A"}, "values": "running"}], "Unexpected metric values"
+
 
 @pytest.mark.asyncio
 async def test_metric_queue_send_receive_info():
@@ -60,8 +63,10 @@ async def test_metric_queue_send_receive_info():
     )
     i.set(labels={"module": "A"}, value={"version": "0.1.0", "build_time": "2024-04-13 12:34:00"})
 
-    await metric_queue.send(metrics=i.dump())
-    metrics: MetricModel = await metric_queue.receive()
+    # await metric_queue.send(metrics=i.dump())
+    metric_queue.send(metrics=i.dump())
+    # metrics: MetricModel = await metric_queue.receive()
+    metrics: MetricModel = metric_queue.receive()
 
     assert metrics.kind == MetricsTypes.info.value, "Incorrect metric kind"
     assert metrics.name == "test_info_metric", "Unexpected metric name"
@@ -84,8 +89,10 @@ async def test_metric_queue_send_receive_gauge():
     )
     g.add(labels={"module": "A"}, value=10)
 
-    await metric_queue.send(metrics=g.dump())
-    metrics: MetricModel = await metric_queue.receive()
+    # await metric_queue.send(metrics=g.dump())
+    metric_queue.send(metrics=g.dump())
+    # metrics: MetricModel = await metric_queue.receive()
+    metrics: MetricModel = metric_queue.receive()
 
     assert metrics.kind == MetricsTypes.gauge.value, "Incorrect metric kind"
     assert metrics.name == "test_gauge_metric", "Unexpected metric name"
@@ -106,8 +113,10 @@ async def test_metric_queue_send_receive_counter():
     )
     c.add(labels={"module": "A"}, value=10)
 
-    await metric_queue.send(metrics=c.dump())
-    metrics: MetricModel = await metric_queue.receive()
+    # await metric_queue.send(metrics=c.dump())
+    metric_queue.send(metrics=c.dump())
+    # metrics: MetricModel = await metric_queue.receive()
+    metrics: MetricModel = metric_queue.receive()
 
     assert metrics.kind == MetricsTypes.counter.value, "Incorrect metric kind"
     assert metrics.name == "test_counter_metric", "Unexpected metric name"
@@ -131,8 +140,10 @@ async def test_metric_queue_send_receive_summary():
     s.add(labels={"module": "A"}, value=4)
     s.add(labels={"module": "A"}, value=13)
 
-    await metric_queue.send(metrics=s.dump())
-    metrics: MetricModel = await metric_queue.receive()
+    # await metric_queue.send(metrics=s.dump())
+    metric_queue.send(metrics=s.dump())
+    # metrics: MetricModel = await metric_queue.receive()
+    metrics: MetricModel = metric_queue.receive()
 
     assert metrics.kind == MetricsTypes.summary.value, "Incorrect metric kind"
     assert metrics.name == "test_summary_metric", "Unexpected metric name"
@@ -169,8 +180,10 @@ async def test_metric_queue_send_receive_histogram():
     h.observe(labels={"module": "A"}, value=7.5)
     h.observe(labels={"module": "A"}, value=POS_INF)
 
-    await metric_queue.send(metrics=h.dump())
-    metrics: MetricModel = await metric_queue.receive()
+    # await metric_queue.send(metrics=h.dump())
+    metric_queue.send(metrics=h.dump())
+    # metrics: MetricModel = await metric_queue.receive()
+    metrics: MetricModel = metric_queue.receive()
 
     assert metrics.kind == MetricsTypes.histogram.value, "Incorrect metric kind"
     assert metrics.name == "test_histogram_metric", "Unexpected metric name"
