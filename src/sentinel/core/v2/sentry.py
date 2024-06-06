@@ -132,7 +132,7 @@ class AsyncCoreSentry(CoreSentry):
         restart: bool = True,
         schedule: str = None,
         parameters: Dict = dict(),
-        metrics: MetricQueue = None,
+        metrics_queue: MetricQueue = None,
         settings: Settings = Settings(),
         **kwargs,
     ) -> None:
@@ -142,21 +142,19 @@ class AsyncCoreSentry(CoreSentry):
 
         self._metrics_registry = None
         self._metrics_channel = None
-        self._metrics_queue = metrics
+        self._metrics_queue = metrics_queue
         self.settings = settings
         self.kwargs = kwargs
 
     @classmethod
-    def from_settings(cls, settings: Sentry, **kwargs):
-        metrics_queue = kwargs.pop("metrics_queue", None)
-
+    def from_settings(cls, settings: Sentry, metrics_queue: MetricQueue, **kwargs):
         return cls(
             name=settings.name,
             description=settings.description,
             restart=settings.restart,
             schedule=settings.schedule,
             parameters=settings.parameters,
-            metrics=metrics_queue,
+            metrics_queue=metrics_queue,
             settings=settings,
             **kwargs,
         )
@@ -179,12 +177,12 @@ class AsyncCoreSentry(CoreSentry):
         # Inputs
         for input in self.settings.inputs:
             input.flow_type = FlowType.inbound
-        self.inputs = Channels(channels=self.settings.inputs, sentry_name=self.name)
+        self.inputs = Channels(channels=self.settings.inputs, logger=self.logger, sentry_name=self.name)
 
         # Outputs
         for output in self.settings.outputs:
             output.flow_type = FlowType.outbound
-        self.outputs = Channels(channels=self.settings.outputs, sentry_name=self.name)
+        self.outputs = Channels(channels=self.settings.outputs, logger=self.logger, sentry_name=self.name)
 
     async def processing(self) -> None:
         """
