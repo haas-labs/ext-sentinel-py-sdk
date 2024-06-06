@@ -51,7 +51,7 @@ def test_async_core_sentry_from_settings(tmpdir):
         ],
         databases=[],
     )
-    sentry = TestSentry.from_settings(settings=sentry_settings)
+    sentry = TestSentry.from_settings(settings=sentry_settings, metrics_queue=None)
     assert isinstance(sentry, TestSentry), "Incorrect sentry type"
 
     sentry.init()
@@ -104,7 +104,7 @@ async def test_async_core_sentry_run(tmpdir):
             )
         ],
     )
-    sentry = TestSentry.from_settings(settings=sentry_settings)
+    sentry = TestSentry.from_settings(settings=sentry_settings, metrics_queue=None)
     sentry.init()
 
     await sentry.on_init()
