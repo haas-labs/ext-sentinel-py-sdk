@@ -5,7 +5,7 @@ from sentinel.core.v2.handler import FlowType, Handler
 from sentinel.core.v2.instance import load_instance
 from sentinel.models.channel import Channel as ChannelModel
 from sentinel.utils.imports import import_by_classpath
-from sentinel.utils.logger import get_logger
+from sentinel.utils.logger import Logger
 
 
 class Channel(BaseModel):
@@ -48,8 +48,8 @@ class OutboundChannel(ChannelHandler):
 
 
 class Channels:
-    def __init__(self, channels: List[ChannelModel], **kwargs) -> None:
-        self.logger = get_logger(__name__)
+    def __init__(self, channels: List[ChannelModel], logger: Logger, **kwargs) -> None:
+        self.logger = logger
         self.names = list()
         self.kwargs = kwargs
 
