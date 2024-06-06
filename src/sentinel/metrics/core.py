@@ -1,22 +1,24 @@
+import multiprocessing
 import time
-import asyncio
-
-from typing import List, Dict, Any, Iterator
+from typing import Any, Dict, Iterator, List
 
 from pydantic import BaseModel, Field
-
 from sentinel.metrics.collector import MetricModel
 
 
 class MetricQueue:
     def __init__(self):
-        self._metrics_queue = asyncio.Queue()
+        self._metrics_queue = multiprocessing.Queue()
 
-    async def send(self, metrics: MetricModel) -> None:
-        await self._metrics_queue.put(metrics)
+    def send(self, metrics: MetricModel) -> None:
+        self._metrics_queue.put(metrics)
 
-    async def receive(self) -> MetricModel:
-        return await self._metrics_queue.get()
+    def receive(self) -> MetricModel:
+        return self._metrics_queue.get()
+
+    @property
+    def size(self) -> int:
+        return self._metrics_queue.qsize()
 
 
 class MetricDBRecord(BaseModel):
@@ -46,8 +48,9 @@ class MetricDatabase:
         return len(self._metrics)
 
     def all(self) -> Iterator[MetricDBRecord]:
+        current_time = int(time.time() * 1000)
         for metric in self._metrics:
-            if (int(time.time() * 1000) - metric.timestamp) >= self.retention_period:
+            if (current_time - metric.timestamp) >= self.retention_period:
                 continue
             yield metric
 
