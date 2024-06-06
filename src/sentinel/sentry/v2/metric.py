@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import time
 from typing import Dict
 
@@ -8,7 +7,6 @@ from sentinel.core.v2.sentry import AsyncCoreSentry
 from sentinel.metrics.core import MetricDatabase, MetricQueue
 from sentinel.metrics.formatter import PrometheusFormattter
 from sentinel.models.sentry import Sentry
-from sentinel.utils.logger import get_logger
 
 
 class MetricServer(AsyncCoreSentry):
@@ -36,6 +34,7 @@ class MetricServer(AsyncCoreSentry):
             metrics=metrics,
             **kwargs,
         )
+        self._metrics_queue = metrics
         self._retention_period_secs = self.parameters.get("retention_period", 30)
         self._retention_period_msecs = self._retention_period_secs * 1000
         self._host = self.parameters.get("host", "0.0.0.0")
@@ -44,7 +43,7 @@ class MetricServer(AsyncCoreSentry):
 
     @classmethod
     def from_settings(cls, settings: Sentry, **kwargs):
-        queue = kwargs.pop("metrics", None)
+        queue = kwargs.pop("metrics_queue", None)
         return cls(
             name=settings.name,
             description=settings.description,
@@ -61,9 +60,6 @@ class MetricServer(AsyncCoreSentry):
         """
         return int(time.time())
 
-    def init(self) -> None:
-        self.logger = get_logger(name=self.logger_name, log_level=self.parameters.get("log_level", logging.INFO))
-
     async def create_web_server(self) -> web.TCPSite:
         srv = web.Application(logger=self.logger)
         srv.add_routes(
@@ -76,20 +72,40 @@ class MetricServer(AsyncCoreSentry):
         await app_runner.setup()
         return web.TCPSite(runner=app_runner, host=self._host, port=self._port)
 
+    async def handle_web_requests(self):
+        srv = web.Application(logger=self.logger)
+        srv.add_routes(
+            [
+                web.get("/metrics", self.handle_metrics),
+                web.get("/health", self.handle_health),
+            ]
+        )
+        app_runner = web.AppRunner(srv)
+        await app_runner.setup()
+        site = web.TCPSite(runner=app_runner, host=self._host, port=self._port)
+        await site.start()
+
     async def processing(self) -> None:
         self.init()
+        handlers = []
         try:
-            srv = await self.create_web_server()
-            await srv.start()
-            metric_processor = asyncio.create_task(self.handle_incoming_metrics(), name="MetricsProcessor")
-            await asyncio.gather(metric_processor)
+            # srv = await self.create_web_server()
+            # await srv.start()
+            web_requests_handler = asyncio.create_task(self.handle_web_requests(), name="WebRequestsHandler")
+            handlers.append(web_requests_handler)
+
+            metric_processor = asyncio.create_task(self.handle_incoming_metrics(), name="MetricsHandler")
+            handlers.append(metric_processor)
+
+            await asyncio.gather(*handlers)
         finally:
             self.logger.info("Metric Server completed")
 
     async def handle_incoming_metrics(self):
         last_cleanup_time = self.current_time()
         while True:
-            metrics = await self.metrics_queue.receive()
+            metrics = await self._metrics_queue.receive()
+            self.logger.info(metrics)
             self._db.update(metrics)
 
             # cleanup outdated metrics in database by retention period
