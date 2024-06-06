@@ -32,13 +32,11 @@ class OutboundMetricChannel(OutboundChannel):
         self._registry = registry
 
     @classmethod
-    def from_settings(cls, settings: Channel, **kwargs):
-        queue = kwargs.pop("queue", None)
-        registry = kwargs.pop("registry", None)
+    def from_settings(cls, settings: Channel, metrics_queue: MetricQueue, registry: Registry, **kwargs):
         return cls(
             id=settings.id,
             name=settings.name,
-            queue=queue,
+            queue=metrics_queue,
             registry=registry,
             **kwargs,
         )
@@ -60,12 +58,11 @@ class InboundMetricChannel(InboundChannel):
         self.stop_after = stop_after
 
     @classmethod
-    def from_settings(cls, settings: Channel, **kwargs):
-        queue = kwargs.pop("queue", None)
+    def from_settings(cls, settings: Channel, metrics_queue: MetricQueue, **kwargs):
         return cls(
             id=settings.id,
             name=settings.name,
-            queue=queue,
+            queue=metrics_queue,
             stop_after=settings.parameters.get("stop_after", 0),
             **kwargs,
         )
