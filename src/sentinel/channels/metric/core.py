@@ -1,5 +1,6 @@
 import asyncio
 
+import httpx
 from sentinel.core.v2.channel import Channel, OutboundChannel
 from sentinel.metrics.registry import Registry
 from sentinel.utils.logger import get_logger
@@ -21,6 +22,7 @@ class OutboundMetricChannel(OutboundChannel):
     ) -> None:
         super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
         self._monitoring_port = monitoring_port
+        self._metric_server_url = f"http://127.0.0.1:{self._monitoring_port}"
         self._push_interval = push_interval
 
         assert registry is not None, "Undefined registry"
@@ -39,7 +41,8 @@ class OutboundMetricChannel(OutboundChannel):
     async def run(self):
         self.logger = get_logger(__name__)
         while True:
-            for metric in self._registry.dump_all():
-                # Add logic to publish metrics via HTTP interface
-                await asyncio.sleep(1)
+            async with httpx.AsyncClient() as client:
+                for metric in self._registry.dump_all():
+                    data = metric.model_dump()
+                    await client.put(url=self._metric_server_url, json=data)
             await asyncio.sleep(self._push_interval)
