@@ -1,20 +1,14 @@
 import asyncio
 import logging
 import multiprocessing
-
-from typing import Dict, List
 from datetime import datetime, timezone
+from typing import Dict, List
 
 from croniter import croniter
-
-from sentinel.utils.logger import get_logger
-
 from sentinel.models.project import ProjectSettings
-
-from sentinel.metrics.core import MetricQueue
-from sentinel.sentry.db import SentryDatabases
 from sentinel.sentry.channel import SentryInputs, SentryOutputs
-from sentinel.metrics.registry import Registry
+from sentinel.sentry.db import SentryDatabases
+from sentinel.utils.logger import get_logger
 
 
 class CoreSentry(multiprocessing.Process):
@@ -40,7 +34,6 @@ class CoreSentry(multiprocessing.Process):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
-        metrics: MetricQueue = None,
         schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
@@ -67,9 +60,6 @@ class CoreSentry(multiprocessing.Process):
         self._databases = databases
 
         self.schedule = schedule
-
-        self.metrics = None
-        self.metrics_queue = metrics
 
     def run(self) -> None:
         """
@@ -98,8 +88,6 @@ class CoreSentry(multiprocessing.Process):
         self.databases = SentryDatabases(
             ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
         )
-        if self.metrics_queue is not None:
-            self.metrics = Registry()
 
     def time_to_run(self) -> datetime:
         if self.schedule is None:

@@ -3,7 +3,6 @@ from typing import Dict, List
 
 from sentinel.definitions import BLOCKCHAIN
 from sentinel.metrics.collector import MetricModel
-from sentinel.metrics.core import MetricQueue
 from sentinel.models.project import ProjectSettings
 from sentinel.models.transaction import Transaction
 from sentinel.sentry.core import AsyncCoreSentry
@@ -37,7 +36,6 @@ class TransactionDetector(AsyncCoreSentry):
         inputs: List[str] = list(),
         outputs: List[str] = list(),
         databases: List[str] = list(),
-        metrics: MetricQueue = None,
         schedule: str = None,
         settings: ProjectSettings = None,
     ) -> None:
@@ -49,7 +47,6 @@ class TransactionDetector(AsyncCoreSentry):
             inputs=inputs,
             outputs=outputs,
             databases=databases,
-            metrics=metrics,
             schedule=schedule,
             settings=settings,
         )
@@ -93,17 +90,6 @@ class TransactionDetector(AsyncCoreSentry):
                 channel_inst = getattr(self.outputs, name)
                 channel_task = asyncio.create_task(channel_inst.run(), name=name)
                 tasks.append(channel_task)
-
-            # Metrics
-            # if self.metrics_queue is not None:
-            #     self.logger.info("Starting channel, name: metrics")
-            #     metric_inst = MetricChannel(
-            #         name="metrics",
-            #         record_type="sentinel.metrics.collector.MetricModel",
-            #         metric_queue=self.metrics_queue,
-            #     )
-            #     metric_task = asyncio.create_task(metric_inst.run(), name=name)
-            #     tasks.append(metric_task)
 
             await asyncio.gather(*tasks)
         finally:

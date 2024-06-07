@@ -5,7 +5,6 @@ from sentinel.core.v2.sentry import AsyncCoreSentry
 # from sentinel.channels.metric.core import MetricChannel
 from sentinel.core.v2.settings import Settings
 from sentinel.definitions import BLOCKCHAIN
-from sentinel.metrics.core import MetricQueue
 from sentinel.models.transaction import Transaction
 
 """
@@ -35,7 +34,8 @@ class TransactionDetector(AsyncCoreSentry):
         restart: bool = True,
         schedule: str = None,
         parameters: Dict = dict(),
-        metrics_queue: MetricQueue = None,
+        monitoring_enabled: bool = False,
+        monitoring_port: int = 9090,
         settings: Settings = Settings(),
         **kwargs,
     ) -> None:
@@ -45,7 +45,8 @@ class TransactionDetector(AsyncCoreSentry):
             restart=restart,
             schedule=schedule,
             parameters=parameters,
-            metrics_queue=metrics_queue,
+            monitoring_enabled=monitoring_enabled,
+            monitoring_port=monitoring_port,
             settings=settings,
             **kwargs,
         )

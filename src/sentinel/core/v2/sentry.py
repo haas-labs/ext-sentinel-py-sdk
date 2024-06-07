@@ -11,7 +11,6 @@ from sentinel.core.v2.channel import Channels
 from sentinel.core.v2.db import Databases
 from sentinel.core.v2.handler import FlowType
 from sentinel.core.v2.settings import Settings
-from sentinel.metrics.core import MetricQueue
 from sentinel.metrics.registry import Registry
 from sentinel.models.sentry import Sentry
 from sentinel.utils.logger import get_logger
@@ -132,29 +131,37 @@ class AsyncCoreSentry(CoreSentry):
         restart: bool = True,
         schedule: str = None,
         parameters: Dict = dict(),
-        metrics_queue: MetricQueue = None,
+        monitoring_enabled: bool = False,
+        monitoring_port: int = 9090,
         settings: Settings = Settings(),
         **kwargs,
     ) -> None:
         super().__init__(
-            nmae=name, description=description, restart=restart, parameters=parameters, schedule=schedule, **kwargs
+            name=name,
+            description=description,
+            restart=restart,
+            parameters=parameters,
+            schedule=schedule,
+            **kwargs,
         )
 
+        self.monitoring_enabled = monitoring_enabled
+        self.monitoring_port = monitoring_port
         self._metrics_registry = None
         self._metrics_channel = None
-        self._metrics_queue = metrics_queue
         self.settings = settings
         self.kwargs = kwargs
 
     @classmethod
-    def from_settings(cls, settings: Sentry, metrics_queue: MetricQueue, **kwargs):
+    def from_settings(cls, settings: Sentry, monitoring_enabled: bool = False, monitoring_port: int = 9090, **kwargs):
         return cls(
             name=settings.name,
             description=settings.description,
             restart=settings.restart,
             schedule=settings.schedule,
             parameters=settings.parameters,
-            metrics_queue=metrics_queue,
+            monitoring_enabled=monitoring_enabled,
+            monitoring_port=monitoring_port,
             settings=settings,
             **kwargs,
         )
@@ -167,11 +174,11 @@ class AsyncCoreSentry(CoreSentry):
         super().init()
 
         # Metrics
-        if self._metrics_queue is not None:
+        if self.monitoring_enabled is True:
             self._metrics_registry = Registry()
-            self.logger.info("Starting channel, name: metrics")
+            self.logger.info(f"Starting channel, name: metrics, monitoring port: {self.monitoring_port}")
             self._metrics_channel = OutboundMetricChannel(
-                id="metrics/publisher", queue=self._metrics_queue, registry=self.metrics
+                id="metrics/publisher", registry=self.metrics, monitoring_port=self.monitoring_port
             )
 
         # Inputs

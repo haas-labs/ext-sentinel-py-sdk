@@ -4,10 +4,9 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import List
 
-from sentinel.metrics.core import MetricQueue
+from sentinel.core.v2.sentry import CoreSentry
 from sentinel.models.sentry import Sentry
 from sentinel.models.settings import Settings
-from sentinel.sentry.core import CoreSentry
 from sentinel.utils.imports import import_by_classpath
 from sentinel.utils.logger import logger
 from sentinel.version import VERSION
@@ -45,7 +44,9 @@ class Dispatcher:
 
         logger.info(f"Sentinel SDK version: {VERSION}")
 
-        self._metrics_queue = None
+        self.monitoring_enabled = self.project.config.monitoring_enabled
+        self.monitoring_port = self.project.config.monitoring_port
+
         self.activate_monitoring()
 
         # prepare the list of sentries for launch
@@ -96,19 +97,16 @@ class Dispatcher:
         """
         Activate monitoring if project.config.monitoring_enabled is True
         """
-        monitoring_enabled = self.project.config.monitoring_enabled
-        monitoring_port = self.project.config.monitoring_port
 
-        if not monitoring_enabled:
+        if not self.monitoring_enabled:
             return
 
-        logger.info(f"Monitoring: enabled, metric server port: {monitoring_port}")
-        self._metrics_queue = MetricQueue()
+        logger.info(f"Monitoring: enabled, metric server port: {self.monitoring_port}")
         self.settings.sentries.append(
             Sentry(
                 name="MetricServer",
                 type="sentinel.sentry.v2.metric.MetricServer",
-                parameters={"port": monitoring_port},
+                parameters={"port": self.monitoring_port},
                 restart=True,
             )
         )
@@ -144,7 +142,9 @@ class Dispatcher:
         # Sentry init
         try:
             _, sentry_class = import_by_classpath(settings.type)
-            sentry.instance = sentry_class.from_settings(settings, metrics_queue=self._metrics_queue)
+            sentry.instance = sentry_class.from_settings(
+                settings, monitoring=self.monitoring_enabled, monitoring_port=self.monitoring_port
+            )
         except RuntimeError as err:
             logger.error(f"{settings.type} initialization issue, {err}")
             return None

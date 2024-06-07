@@ -1,8 +1,6 @@
 import asyncio
 
-from sentinel.core.v2.channel import Channel, InboundChannel, OutboundChannel
-from sentinel.metrics.collector import MetricModel
-from sentinel.metrics.core import MetricQueue
+from sentinel.core.v2.channel import Channel, OutboundChannel
 from sentinel.metrics.registry import Registry
 from sentinel.utils.logger import get_logger
 
@@ -15,28 +13,26 @@ class OutboundMetricChannel(OutboundChannel):
     def __init__(
         self,
         id: str,
-        queue: MetricQueue,
         registry: Registry,
+        monitoring_port: int = 9090,
         push_interval: int = DEFAULT_PUSH_INTERVAL,
         name: str = None,
         **kwargs,
     ) -> None:
         super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
+        self._monitoring_port = monitoring_port
         self._push_interval = push_interval
-
-        assert queue is not None, "Undefined metrics queue"
-        self._queue = queue
 
         assert registry is not None, "Undefined registry"
         self._registry = registry
 
     @classmethod
-    def from_settings(cls, settings: Channel, metrics_queue: MetricQueue, registry: Registry, **kwargs):
+    def from_settings(cls, settings: Channel, registry: Registry, monitoring_port: int = 9090, **kwargs):
         return cls(
             id=settings.id,
             name=settings.name,
-            queue=metrics_queue,
             registry=registry,
+            monitoring_port=monitoring_port,
             **kwargs,
         )
 
@@ -44,39 +40,6 @@ class OutboundMetricChannel(OutboundChannel):
         self.logger = get_logger(__name__)
         while True:
             for metric in self._registry.dump_all():
-                self._queue.send(metrics=metric)
+                # Add logic to publish metrics via HTTP interface
+                await asyncio.sleep(1)
             await asyncio.sleep(self._push_interval)
-
-
-class InboundMetricChannel(InboundChannel):
-    name = "metrics"
-
-    def __init__(self, id: str, queue: MetricQueue, name: str = None, stop_after: int = 0, **kwargs) -> None:
-        super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
-        self._queue = queue
-        self.stop_after = stop_after
-
-    @classmethod
-    def from_settings(cls, settings: Channel, metrics_queue: MetricQueue, **kwargs):
-        return cls(
-            id=settings.id,
-            name=settings.name,
-            queue=metrics_queue,
-            stop_after=settings.parameters.get("stop_after", 0),
-            **kwargs,
-        )
-
-    async def run(self):
-        self.logger = get_logger(__name__)
-
-        total_metrics = 0
-        while True:
-            total_metrics += 1
-
-            metric = self._queue.receive()
-            await self.on_metric(metric)
-
-            if self.stop_after > 0 and total_metrics >= self.stop_after:
-                break
-
-    async def on_metric(self, metric: MetricModel) -> None: ...

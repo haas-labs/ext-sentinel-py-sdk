@@ -1,24 +1,23 @@
-import multiprocessing
 import time
 from typing import Any, Dict, Iterator, List
 
 from pydantic import BaseModel, Field
 from sentinel.metrics.collector import MetricModel
 
+# TODO remove after full deprecation
+# class MetricQueue:
+#     def __init__(self):
+#         self._metrics_queue = multiprocessing.Queue()
 
-class MetricQueue:
-    def __init__(self):
-        self._metrics_queue = multiprocessing.Queue()
+#     def send(self, metrics: MetricModel) -> None:
+#         self._metrics_queue.put(metrics)
 
-    def send(self, metrics: MetricModel) -> None:
-        self._metrics_queue.put(metrics)
+#     def receive(self) -> MetricModel:
+#         return self._metrics_queue.get()
 
-    def receive(self) -> MetricModel:
-        return self._metrics_queue.get()
-
-    @property
-    def size(self) -> int:
-        return self._metrics_queue.qsize()
+#     @property
+#     def size(self) -> int:
+#         return self._metrics_queue.qsize()
 
 
 class MetricDBRecord(BaseModel):
