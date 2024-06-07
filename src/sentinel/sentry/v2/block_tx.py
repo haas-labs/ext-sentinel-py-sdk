@@ -2,7 +2,6 @@ from typing import Dict, List
 
 from pydantic import BaseModel
 from sentinel.core.v2.settings import Settings
-from sentinel.metrics.core import MetricQueue
 from sentinel.models.transaction import Transaction
 from sentinel.sentry.v2.transaction import TransactionDetector
 
@@ -31,7 +30,8 @@ class BlockTxDetector(TransactionDetector):
         restart: bool = True,
         schedule: str = None,
         parameters: Dict = dict(),
-        metrics: MetricQueue = None,
+        monitoring_enabled: bool = False,
+        monitoring_port: int = 9090,
         settings: Settings = Settings(),
         **kwargs,
     ) -> None:
@@ -41,7 +41,8 @@ class BlockTxDetector(TransactionDetector):
             restart=restart,
             schedule=schedule,
             parameters=parameters,
-            metrics=metrics,
+            monitoring_enabled=monitoring_enabled,
+            monitoring_port=monitoring_port,
             settings=settings,
             **kwargs,
         )
