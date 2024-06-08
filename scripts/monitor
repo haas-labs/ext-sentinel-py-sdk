@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+start() {
+
+    echo "[INFO] Starting monitor services"
+    docker compose start -f monitor/compose.yaml
+}
+
+stop() {
+
+    echo "[INFO] Stoping monitor services"
+}
+
+status() {
+
+    echo "[INFO] Showing the status of monitor services"
+
+}
+
+$@
