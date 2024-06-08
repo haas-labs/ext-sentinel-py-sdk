@@ -3,6 +3,7 @@ project:
   description: Transaction Detector provided as example of consuming transactions and collecting metrics
   config:
     monitoring_enabled: true
+    monitoring_port: 9091
 
 imports:
 - ../profiles/inputs.yaml
