@@ -51,11 +51,11 @@ class TransactionDetector(AsyncCoreSentry):
             **kwargs,
         )
 
-        network = parameters.get("network")
-        assert network is not None or network not in BLOCKCHAIN.keys(), f"Unknown network: {network}"
+        self.network = parameters.get("network")
+        assert self.network is not None or self.network not in BLOCKCHAIN.keys(), f"Unknown network: {self.network}"
 
-        detector_prefix = BLOCKCHAIN.get(network).network
-        self.logger_name = "://".join([detector_prefix, self.name]) if network != "" else self.name
+        detector_prefix = BLOCKCHAIN.get(self.network).network
+        self.logger_name = "://".join([detector_prefix, self.name]) if self.network != "" else self.name
 
     def init(self) -> None:
         super().init()
