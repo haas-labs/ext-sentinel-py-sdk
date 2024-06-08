@@ -143,7 +143,7 @@ class Dispatcher:
         try:
             _, sentry_class = import_by_classpath(settings.type)
             sentry.instance = sentry_class.from_settings(
-                settings, monitoring=self.monitoring_enabled, monitoring_port=self.monitoring_port
+                settings, monitoring_enabled=self.monitoring_enabled, monitoring_port=self.monitoring_port
             )
         except RuntimeError as err:
             logger.error(f"{settings.type} initialization issue, {err}")
