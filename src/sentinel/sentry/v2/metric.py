@@ -1,3 +1,4 @@
+import asyncio
 import time
 from typing import Dict
 
@@ -67,7 +68,6 @@ class MetricServer(AsyncCoreSentry):
             "status": "healthy",
             "host": request.host,
         }
-        self.logger.info(health_status)
         return web.json_response(data=health_status)
 
     async def get_metrics(self, request: web.Request) -> web.Response:
@@ -86,8 +86,22 @@ class MetricServer(AsyncCoreSentry):
             self._db.update(metric=MetricModel(**metric))
         return web.json_response({"status": "accepted"})
 
-    def run(self) -> None:
-        self.init()
-
+    async def run_server(self) -> None:
         app = self.create_web_app()
-        web.run_app(app=app, host=self._host, port=self._port, ssl_context=None)
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, host=self._host, port=self._port)
+        await site.start()
+
+        while True:
+            await asyncio.sleep(600)
+
+    async def processing(self) -> None:
+        await self.on_init()
+        try:
+            await asyncio.gather(asyncio.create_task(self.run_server(), name="MetricsWebServer"))
+        finally:
+            self.logger.info("Processing completed")
+
+    def terminate(self) -> None:
+        super().terminate()
