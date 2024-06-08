@@ -1,10 +1,10 @@
 import json
 from typing import Dict, List
 
-from sentinel.metrics.types import MetricsTypes
-from sentinel.metrics.metricdict import MetricDict
-from sentinel.metrics.histogram import POS_INF, NEG_INF
 from sentinel.metrics.core import MetricDatabase, MetricDBRecord
+from sentinel.metrics.histogram import NEG_INF, POS_INF
+from sentinel.metrics.metricdict import MetricDict
+from sentinel.metrics.types import MetricsTypes
 
 HELP_FMT = "# HELP {name} {doc}"
 TYPE_FMT = "# TYPE {name} {kind}"
