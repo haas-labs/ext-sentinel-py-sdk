@@ -22,7 +22,7 @@ class OutboundMetricChannel(OutboundChannel):
     ) -> None:
         super().__init__(id=id, name=name, record_type="sentinel.metrics.collector.MetricModel", **kwargs)
         self._monitoring_port = monitoring_port
-        self._metric_server_url = f"http://127.0.0.1:{self._monitoring_port}"
+        self._metric_server_url = f"http://127.0.0.1:{self._monitoring_port}/metrics"
         self._push_interval = push_interval
 
         assert registry is not None, "Undefined registry"
@@ -42,7 +42,8 @@ class OutboundMetricChannel(OutboundChannel):
         self.logger = get_logger(__name__)
         while True:
             async with httpx.AsyncClient() as client:
-                for metric in self._registry.dump_all():
-                    data = metric.model_dump()
-                    await client.put(url=self._metric_server_url, json=data)
+                metrics = [metric.model_dump() for metric in self._registry.dump_all()]
+                response = await client.put(url=self._metric_server_url, json=metrics)
+                if response.status_code != 200:
+                    self.logger.warning(f"Metrics update issue, response: {response}")
             await asyncio.sleep(self._push_interval)
