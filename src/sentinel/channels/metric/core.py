@@ -41,9 +41,12 @@ class OutboundMetricChannel(OutboundChannel):
     async def run(self):
         self.logger = get_logger(__name__)
         while True:
-            async with httpx.AsyncClient() as client:
-                metrics = [metric.model_dump() for metric in self._registry.dump_all()]
-                response = await client.put(url=self._metric_server_url, json=metrics)
-                if response.status_code != 200:
-                    self.logger.warning(f"Metrics update issue, response: {response}")
+            try:
+                async with httpx.AsyncClient() as client:
+                    metrics = [metric.model_dump() for metric in self._registry.dump_all()]
+                    response = await client.put(url=self._metric_server_url, json=metrics)
+                    if response.status_code != 200:
+                        self.logger.warning(f"Metrics update issue, response: {response}")
+            except httpx.ConnectError as err:
+                self.logger.warning(f"No connection to Metrics Server, error: {err}")
             await asyncio.sleep(self._push_interval)
