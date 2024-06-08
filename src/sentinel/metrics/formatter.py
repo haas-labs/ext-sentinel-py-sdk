@@ -110,7 +110,7 @@ class PrometheusFormattter:
 
     def prep_labels(self, labels: Dict) -> str:
         if labels and len(labels) > 0:
-            return json.dumps(labels, separators=(",", ":"))
+            return json.dumps(labels, separators=(",", "="))
         return ""
 
     def format_enum(self, metric: MetricDBRecord) -> List[str]:
