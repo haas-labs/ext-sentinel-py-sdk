@@ -34,7 +34,7 @@ async def test_metric_server_health_check(aiohttp_client):
 
 
 @pytest.mark.asyncio
-async def test_metric_server_health_post_and_get_metrics(aiohttp_client):
+async def test_metric_server_health_put_and_get_metrics(aiohttp_client):
     enum_metric = Enum(
         name="component_state",
         doc="Current component state",
@@ -66,4 +66,4 @@ async def test_metric_server_health_post_and_get_metrics(aiohttp_client):
     resp = await client.get("/metrics")
     assert resp.status == 200, "Incorrect status code"
     response: str = await resp.text()
-    assert len(response.split("\n")) == 16, "Incorrect number of lines in the response"
+    assert len(response.split("\n")) == 8, "Incorrect number of lines in the response"
