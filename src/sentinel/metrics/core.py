@@ -1,32 +1,23 @@
+import hashlib
 import time
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, Iterator
 
 from pydantic import BaseModel, Field
 from sentinel.metrics.collector import MetricModel
-
-# TODO remove after full deprecation
-# class MetricQueue:
-#     def __init__(self):
-#         self._metrics_queue = multiprocessing.Queue()
-
-#     def send(self, metrics: MetricModel) -> None:
-#         self._metrics_queue.put(metrics)
-
-#     def receive(self) -> MetricModel:
-#         return self._metrics_queue.get()
-
-#     @property
-#     def size(self) -> int:
-#         return self._metrics_queue.qsize()
 
 
 class MetricDBRecord(BaseModel):
     kind: int
     name: str
     doc: str
-    labels: Dict[str, str] = Field(default_factory=list)
+    labels: Dict[str, str] = Field(default_factory=dict)
     timestamp: int
     values: Any
+
+    @property
+    def hash(self) -> int:
+        _key = f"{self.kind}{self.name}{self.doc}{sorted(self.labels.items())}".encode("utf-8")
+        return hashlib.sha256(_key).hexdigest()
 
 
 class MetricDatabase:
@@ -34,24 +25,27 @@ class MetricDatabase:
     Metric Database, used in Metric Server for metrics publishing
     """
 
-    def __init__(self, retention_period: int = 30) -> None:
+    def __init__(self, retention_period: int = 60) -> None:
         """
         :param retention_period: time interval in seconds for removing outdated records,
-                                 default: 30 secs
+                                 default: 60 secs
         """
-        self._metrics: List[MetricDBRecord] = list()
+        self._metrics: Dict[str, MetricDBRecord] = dict()
         self.retention_period = retention_period * 1000
 
     @property
     def size(self):
         return len(self._metrics)
 
+    def current_time(self) -> int:
+        return int(time.time() * 1000)
+
     def all(self) -> Iterator[MetricDBRecord]:
         current_time = int(time.time() * 1000)
-        for metric in self._metrics:
+        for metric in self._metrics.values():
             if (current_time - metric.timestamp) >= self.retention_period:
                 continue
-            yield metric
+            yield metric.model_copy()
 
     def update(self, metric: MetricModel) -> None:
         for v in metric.values:
@@ -67,11 +61,12 @@ class MetricDatabase:
                 values=v.get("values"),
                 timestamp=metric.timestamp,
             )
-            self._metrics.append(metric_record)
+            self._metrics[metric_record.hash] = metric_record
 
     def clean(self) -> None:
         """
         Remove outdated metrics
         """
-        metrics = [m for m in self._metrics if (int(time.time() * 1000) - m.timestamp) <= self.retention_period]
+        current_time = self.current_time()
+        metrics = {k: m for k, m in self._metrics.items() if (current_time - m.timestamp) <= self.retention_period}
         self._metrics = metrics
