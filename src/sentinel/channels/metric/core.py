@@ -1,8 +1,8 @@
 import asyncio
 
-import httpx
 from sentinel.core.v2.channel import Channel, OutboundChannel
 from sentinel.metrics.registry import Registry
+from sentinel.metrics.utils import async_publish_metrics
 from sentinel.utils.logger import get_logger
 
 DEFAULT_PUSH_INTERVAL = 10
@@ -41,12 +41,6 @@ class OutboundMetricChannel(OutboundChannel):
     async def run(self):
         self.logger = get_logger(__name__)
         while True:
-            try:
-                async with httpx.AsyncClient() as client:
-                    metrics = [metric.model_dump() for metric in self._registry.dump_all()]
-                    response = await client.put(url=self._metric_server_url, json=metrics)
-                    if response.status_code != 200:
-                        self.logger.warning(f"Metrics update issue, response: {response}")
-            except httpx.ConnectError as err:
-                self.logger.warning(f"No connection to Metrics Server, error: {err}")
+            metrics = [metric.model_dump() for metric in self._registry.dump_all()]
+            await async_publish_metrics(metric_server_url=self._metric_server_url, metrics=metrics, logger=self.logger)
             await asyncio.sleep(self._push_interval)
