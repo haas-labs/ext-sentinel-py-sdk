@@ -1,9 +1,9 @@
 import json
+from collections import defaultdict
 from typing import Dict, List
 
 from sentinel.metrics.core import MetricDatabase, MetricDBRecord
 from sentinel.metrics.histogram import NEG_INF, POS_INF
-from sentinel.metrics.metricdict import MetricDict
 from sentinel.metrics.types import MetricsTypes
 
 HELP_FMT = "# HELP {name} {doc}"
@@ -37,32 +37,11 @@ class PrometheusFormattter:
         the quantile label, respectively).
     """
 
-    def group_metrics(self, db: MetricDatabase) -> Dict:
-        """
-        Group metrics by kind, metric name and use just latest values
-        """
-        groups = dict()
-        for metric in db.all():
-            if metric.kind not in groups:
-                groups[metric.kind] = dict()
-
-            if metric.name not in groups[metric.kind]:
-                groups[metric.kind][metric.name] = {"doc": metric.doc, "metrics": MetricDict()}
-
-            groups[metric.kind][metric.name]["doc"] = metric.doc
-
-            if metric.labels not in groups[metric.kind][metric.name]["metrics"]:
-                groups[metric.kind][metric.name]["metrics"][metric.labels] = {
-                    "values": metric.values,
-                    "timestamp": metric.timestamp,
-                }
-
-            elif metric.timestamp > groups[metric.kind][metric.name]["metrics"][metric.labels]["timestamp"]:
-                groups[metric.kind][metric.name]["metrics"][metric.labels] = {
-                    "values": metric.values,
-                    "timestamp": metric.timestamp,
-                }
-
+    def group_metrics(self, metrics: List[MetricDBRecord]) -> Dict[str, List[MetricDBRecord]]:
+        groups = defaultdict(list)
+        for metric in metrics:
+            metric_key = json.dumps({"name": metric.name, "kind": MetricsTypes(metric.kind).name, "doc": metric.doc})
+            groups[metric_key].append(metric)
         return groups
 
     def format(self, db: MetricDatabase) -> str:
@@ -70,40 +49,44 @@ class PrometheusFormattter:
         Format metrics into a bytes object
         """
         lines = []
-        for metric in db.all():
-            lines.extend(self.format_metric(metric))
+        for k, metrics in self.group_metrics(db.all()).items():
+            group = json.loads(k)
+            lines.extend(
+                self.format_metric_group(name=group["name"], kind=group["kind"], doc=group["doc"], metrics=metrics)
+            )
 
         return LINE_SEPARATOR_FMT.join(lines)
 
-    def format_metric(self, metric: MetricDBRecord) -> List[str]:
+    def format_metric_group(self, name: str, kind: str, doc: str, metrics: List[MetricDBRecord]) -> List[str]:
         """
         Format metric into a bytes object
         """
         # create headers
-        help_header = HELP_FMT.format(name=metric.name, doc=metric.doc)
-        type_header = TYPE_FMT.format(name=metric.name, kind=MetricsTypes(metric.kind).name)
+        help_header = HELP_FMT.format(name=name, doc=doc)
+        type_header = TYPE_FMT.format(name=name, kind=kind)
 
         lines = [help_header, type_header]
 
-        match metric.kind:
-            case MetricsTypes.stateset.value:
-                metric.labels = self.prep_labels(metric.labels)
-                lines.extend(self.format_enum(metric))
-            case MetricsTypes.info.value:
-                metric.labels = self.prep_labels(metric.labels)
-                lines.extend(self.format_info(metric))
-            case MetricsTypes.counter.value:
-                metric.labels = self.prep_labels(metric.labels)
-                lines.extend(self.format_counter(metric))
-            case MetricsTypes.gauge.value:
-                metric.labels = self.prep_labels(metric.labels)
-                lines.extend(self.format_gauge(metric))
-            case MetricsTypes.summary.value:
-                lines.extend(self.format_summary(metric))
-            case MetricsTypes.histogram.value:
-                lines.extend(self.format_histogram(metric))
-            case _:
-                raise ValueError(f"Unknown metric type, {metric.kind}")
+        for metric in metrics:
+            match metric.kind:
+                case MetricsTypes.stateset.value:
+                    metric.labels = self.prep_labels(metric.labels)
+                    lines.extend(self.format_enum(metric))
+                case MetricsTypes.info.value:
+                    metric.labels = self.prep_labels(metric.labels)
+                    lines.extend(self.format_info(metric))
+                case MetricsTypes.counter.value:
+                    metric.labels = self.prep_labels(metric.labels)
+                    lines.extend(self.format_counter(metric))
+                case MetricsTypes.gauge.value:
+                    metric.labels = self.prep_labels(metric.labels)
+                    lines.extend(self.format_gauge(metric))
+                case MetricsTypes.summary.value:
+                    lines.extend(self.format_summary(metric))
+                case MetricsTypes.histogram.value:
+                    lines.extend(self.format_histogram(metric))
+                case _:
+                    raise ValueError(f"Unknown metric type, {metric.kind}")
 
         lines.append("")
         return lines

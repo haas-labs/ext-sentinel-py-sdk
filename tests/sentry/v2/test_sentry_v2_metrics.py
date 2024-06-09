@@ -66,4 +66,4 @@ async def test_metric_server_health_put_and_get_metrics(aiohttp_client):
     resp = await client.get("/metrics")
     assert resp.status == 200, "Incorrect status code"
     response: str = await resp.text()
-    assert len(response.split("\n")) == 8, "Incorrect number of lines in the response"
+    assert len(response.split("\n")) == 5, "Incorrect number of lines in the response"

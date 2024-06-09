@@ -13,26 +13,23 @@ def test_metric_formatter_group_metrics():
     db = MetricDatabase()
 
     metric = get_sample(kind=MetricsTypes.counter, current_time=True)
+    metric.labels = {"component": "A"}
     db.update(metric)
 
     metric = get_sample(kind=MetricsTypes.counter, current_time=True)
-    metric.timestamp += 10
+    metric.labels = {"component": "B"}
     db.update(metric)
 
     metric = get_sample(kind=MetricsTypes.counter, current_time=True)
-    metric.timestamp += 10
+    metric.labels = {"component": "C"}
     db.update(metric)
-
-    last_ts = metric.timestamp
 
     formatter = PrometheusFormattter()
-    metrics = formatter.group_metrics(db)
-    assert (
-        len(metrics[MetricsTypes.counter.value]["test_counter_metric"]["metrics"]) == 1
-    ), "Incorrect number of metrics"
+    metrics = formatter.group_metrics(db.all())
+    assert len(metrics) == 1, "Incorrect number of metric groups"
 
-    for v in metrics[MetricsTypes.counter.value]["test_counter_metric"]["metrics"].values():
-        assert v["timestamp"] == last_ts, "Incorrect metric timestamp"
+    for k, v in metrics.items():
+        assert len(v) == 3, "Incorrect number of metrics in a group"
 
 
 def test_metric_formatter_format_enum():
