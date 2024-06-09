@@ -5,11 +5,23 @@ from datetime import datetime, timezone
 from typing import List
 
 from sentinel.core.v2.sentry import CoreSentry
+from sentinel.metrics.gauge import Gauge
+from sentinel.metrics.registry import Registry
+from sentinel.metrics.utils import publish_metrics
 from sentinel.models.sentry import Sentry
 from sentinel.models.settings import Settings
 from sentinel.utils.imports import import_by_classpath
 from sentinel.utils.logger import logger
 from sentinel.version import VERSION
+
+
+@dataclass
+class SentriesStatus:
+    total: int = 0
+    active: int = 0
+    restarting: int = 0
+    scheduled: int = 0
+    finished: int = 0
 
 
 @dataclass
@@ -44,8 +56,12 @@ class Dispatcher:
 
         logger.info(f"Sentinel SDK version: {VERSION}")
 
+        self.sentries_status = SentriesStatus()
+
         self.monitoring_enabled = self.project.config.monitoring_enabled
         self.monitoring_port = self.project.config.monitoring_port
+        self.metric_server_url = f"http://127.0.0.1:{self.monitoring_port}/metrics"
+        self.metric_registry = None
 
         self.activate_monitoring()
 
@@ -93,6 +109,13 @@ class Dispatcher:
             else False
         )
 
+    def _update_sentries_status(self):
+        self.sentries_status.total = len(self.instances)
+        self.sentries_status.active = len(self.active_sentries)
+        self.sentries_status.restarting = len(self.restarting_sentries)
+        self.sentries_status.scheduled = len(self.scheduled_sentries)
+        self.sentries_status.finished = self.sentries_status.total - self.sentries_status.active
+
     def activate_monitoring(self):
         """
         Activate monitoring if project.config.monitoring_enabled is True
@@ -110,6 +133,8 @@ class Dispatcher:
                 restart=True,
             )
         )
+        self.metric_registry = Registry()
+        self.metric_registry.register(Gauge(name="sentries", doc="The number of sentries"))
 
     def _log_intro(self):
         """
@@ -127,12 +152,29 @@ class Dispatcher:
     def _log_sentries_stats(self) -> None:
         logger.info(
             "Sentries: "
-            + f"{len(self.instances)} total, "
-            + f"{len(self.active_sentries)} active, "
-            + f"{len(self.restarting_sentries)} restarting, "
-            + f"{len(self.scheduled_sentries)} scheduled, "
-            + f"{len(self.instances) - len(self.active_sentries)} finished"
+            + f"{self.sentries_status.total} total, "
+            + f"{self.sentries_status.active} active, "
+            + f"{self.sentries_status.restarting} restarting, "
+            + f"{self.sentries_status.scheduled} scheduled, "
+            + f"{self.sentries_status.finished} finished"
         )
+        if self.monitoring_enabled is True:
+            self.metric_registry.sentries.set_value(labels={"status": "total"}, value=self.sentries_status.total)
+            self.metric_registry.sentries.set_value(labels={"status": "active"}, value=self.sentries_status.active)
+            self.metric_registry.sentries.set_value(
+                labels={"status": "restarting"}, value=self.sentries_status.restarting
+            )
+            self.metric_registry.sentries.set_value(
+                labels={"status": "scheduled"}, value=self.sentries_status.scheduled
+            )
+            self.metric_registry.sentries.set_value(labels={"status": "finished"}, value=self.sentries_status.finished)
+
+            metrics = [metric.model_dump() for metric in self.metric_registry.dump_all()]
+            publish_metrics(
+                metric_server_url=self.metric_server_url,
+                metrics=metrics,
+                logger=logger,
+            )
 
     def run_sentry(self, sentry: SentryInstance) -> SentryInstance:
         """
@@ -205,6 +247,7 @@ class Dispatcher:
             while True:
                 self._rerun_inactive_sentries()
                 self._update_instances_status()
+                self._update_sentries_status()
                 self._log_sentries_stats()
 
                 # Stop processing if no active sentries
