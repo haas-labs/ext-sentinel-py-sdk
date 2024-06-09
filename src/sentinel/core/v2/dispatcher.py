@@ -101,9 +101,11 @@ class Dispatcher:
         """
         return (
             True
-            if self.sentries_status.active == 0
-            and self.sentries_status.restarting == 0
-            and self.sentries_status.scheduled == 0
+            if (
+                len(self.active_sentries) == 0
+                and len(self.restarting_sentries) == 0
+                and len(self.scheduled_sentries) == 0
+            )
             else False
         )
 
