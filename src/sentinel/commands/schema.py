@@ -117,5 +117,6 @@ class Command(SentinelCommand):
                     status = f"[red]{schema.status}[/]"
 
             table.add_row(str(schema.id), schema.name, schema.version, status)
-        console = Console()
-        console.print(table)
+        if table.row_count > 0:
+            console = Console()
+            console.print(table)
