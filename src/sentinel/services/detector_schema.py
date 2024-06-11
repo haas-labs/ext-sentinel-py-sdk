@@ -106,7 +106,9 @@ class DetectorSchemaAPI:
                     yield SchemaModel(**schema)
             case _:
                 self.logger.error(
-                    f"Getting detector schema failed, status code: {response.status_code}, query: {query}"
+                    "Getting detector schema failed, {}".format(
+                        {"status code": response.status_code, "query": query, "response": response.text}
+                    )
                 )
 
     def show(self, path: str) -> None: ...
