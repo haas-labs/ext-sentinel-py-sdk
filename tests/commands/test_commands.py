@@ -8,6 +8,7 @@ def test_get_commands_from_module():
         "fetch",
         "inventory",
         "launch",
+        "schema",
         "version",
     ], "Incorrect list of sentinel commands"
 
