@@ -1,0 +1,35 @@
+project:
+  name: Dynamic Config Transaction Detector
+  description: >
+    Transaction Detector provided as example of 
+    - consuming transactions
+    - collecting metrics
+    - use dynamic configuration
+  config:
+    monitoring_enabled: true
+    monitoring_port: 9091
+
+imports:
+- ../profiles/inputs.yaml
+
+sentries:
+
+- name: TxMetricsDetector
+  type: dynamic_config.sentry.TxMetricsDetector
+  description: >
+    The example of simple transactions detector for consiming transaction and collecting metrics around it
+  parameters:
+    network: ethereum
+  inputs:
+  - hacken/cloud/kafka/configuration
+  - hacken/cloud/kafka/transaction/ethereum
+  outputs:
+  - transaction/local/fs/event
+
+outputs:
+
+- id: transaction/local/fs/event
+  type: sentinel.channels.fs.events.OutboundEventsChannel
+  parameters:
+    path: dynamic_config/data/events/events.json
+    mode: overwrite
