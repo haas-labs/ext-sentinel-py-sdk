@@ -1,5 +1,22 @@
-from sentinel.utils.logger import logger
+import json
+
 from sentinel.channels.common import Channel
+from sentinel.utils.logger import logger
+
+
+def json_deserializer(serialized):
+    """
+    JSON Deserializer
+    """
+    if serialized is None:
+        return None
+    return json.loads(serialized)
+
+
+def bytes2int_deserializer(serialized: bytes) -> int:
+    if serialized is None:
+        return None
+    return int.from_bytes(serialized, byteorder="big")
 
 
 class KafkaChannel(Channel):
