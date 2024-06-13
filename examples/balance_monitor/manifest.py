@@ -1,9 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from sentinel.manifest import BaseSchema, MetadataModel, Status
 
 
-class BalanceMonitorSchema(BaseModel):
-    "Balance Monitor Schema"
-
+class Schema(BaseSchema):
     erc20_addr: str = Field(title="ERC20 Address", description="ERC20 Address")
     erc20_balance_threshold: int = Field(
         title="ERC20 Balance Threshold", description="ERC20 Balance Threshold", default=300000000000
@@ -15,6 +14,16 @@ class BalanceMonitorSchema(BaseModel):
     severity: float = Field(title="Severity", description="Severity", ge=0.0, le=1.0)
     decimals: int = Field(title="Decimals", description="Decimals", default=18)
 
-    @staticmethod
-    def revision():
-        return ("Test-Balance-Monitor", "0.1.1")
+
+metadata = MetadataModel(
+    name="Test-Balance-Monitor",
+    version="0.1.1",
+    status=Status.active,
+    description="Test Balance Monitor Detector",
+    faq=[
+        {
+            "name": "What is for?",
+            "value": "Monitors Account/Contract balance (native token)",
+        }
+    ],
+)

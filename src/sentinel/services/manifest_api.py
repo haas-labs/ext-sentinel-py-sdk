@@ -1,9 +1,8 @@
 import os
-from enum import Enum
-from typing import Dict, Iterator
+from typing import Iterator
 
 import httpx
-from pydantic import BaseModel, Field
+from sentinel.manifest import ManifestAPIModel, MetadataModel, Status
 from sentinel.utils.logger import get_logger
 
 DEFAULT_HEADERS = {
@@ -12,35 +11,16 @@ DEFAULT_HEADERS = {
 }
 
 
-class SchemaStatus(str, Enum):
-    active = "ACTIVE"
-    disabled = "DISABLED"
-    deleted = "DELETED"
-
-
-class SchemaModel(BaseModel):
-    id: int
-    created_at: int = Field(alias="createdAt")
-    updated_at: int = Field(alias="updatedAt")
-    status: SchemaStatus
-    name: str
-    version: str
-    jsonschema: Dict = Field(default_factory=dict, alias="schema")
-
-
-class DetectorSchemaAPI:
+class ManifestAPI:
     def __init__(self) -> None:
-        """
-        Service Account Token Init
-        """
         self._endpoint_url = os.environ.get("EXTRACTOR_API_ENDPOINT")
         self._token = os.environ.get("EXT_API_TOKEN")
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self._token}"
-        self.logger = get_logger("DetectorSchemaAPI")
+        self.logger = get_logger("ManifestAPI")
 
-    def change(self, schema_id: int, name: str = None, status: SchemaStatus = None) -> None:
+    def change(self, schema_id: int, name: str = None, status: Status = None) -> None:
         endpoint = self._endpoint_url + f"/api/v1/schema/{schema_id}"
         data = {}
         if name is not None:
@@ -56,19 +36,21 @@ class DetectorSchemaAPI:
                     "The schema update failed, {}".format(
                         {
                             "name": name,
-                            "status": status,
+                            "status": status.value,
                             "status code": response.status_code,
                             "response": response.text,
                         }
                     )
                 )
 
-    def register(self, name: str, version: str, schema: str) -> None:
+    def register(self, metadata: MetadataModel, schema: str) -> None:
         endpoint = self._endpoint_url + "/api/v1/schema"
         data = {
-            "status": SchemaStatus.active.value,
-            "name": name,
-            "version": version,
+            "name": metadata.name,
+            "version": metadata.version,
+            "status": metadata.status.value,
+            "description": metadata.description,
+            "faq": [faq.model_dump() for faq in metadata.faq],
             "schema": schema,
         }
         response = httpx.post(url=endpoint, headers=self._headers, json=data, verify=False)
@@ -76,18 +58,9 @@ class DetectorSchemaAPI:
             case 200:
                 self.logger.info("The schema registered succesfully")
             case _:
-                self.logger.error(
-                    "Registering schema failed, {}".format(
-                        {
-                            "name": name,
-                            "version": version,
-                            "status code": response.status_code,
-                            "response": response.text,
-                        }
-                    )
-                )
+                self.logger.error(f"Registering schema failed, manifest: {data}, response: {response.text}")
 
-    def get(self, schema_id: int = None, name: str = None, version: str = None) -> Iterator[SchemaModel]:
+    def get(self, schema_id: int = None, name: str = None, version: str = None) -> Iterator[ManifestAPIModel]:
         endpoint = self._endpoint_url + "/api/v1/schema/search"
 
         query = {}
@@ -103,7 +76,7 @@ class DetectorSchemaAPI:
             case 200:
                 content = response.json()
                 for schema in content.get("data", []):
-                    yield SchemaModel(**schema)
+                    yield ManifestAPIModel(**schema)
             case _:
                 self.logger.error(
                     "Getting detector schema failed, {}".format(
