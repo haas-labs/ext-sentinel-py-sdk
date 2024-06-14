@@ -1,7 +1,13 @@
-from typing import Dict, List
+from typing import List
 
 from pydantic import Field
 from sentinel.manifest import BaseSchema, MetadataModel, NetworkTag, Severity, Status
+from typing_extensions import TypedDict
+
+
+class TokenThresholds(TypedDict, total=False):
+    token: str
+    threshold: int
 
 
 class Schema(BaseSchema):
@@ -16,20 +22,14 @@ class Schema(BaseSchema):
     severity: Severity = Field(title="Severity", description="Severity", default=Severity.INFO)
     decimals: int = Field(title="Decimals", description="Decimals", default=18)
     tokens: List[str] = Field(title="Tokens", description="Monitored Tokens", default=["0x0001", "0x0002", "0x0004"])
-    token_thresholds: Dict[str, int] = Field(
-        title="Token thresholds",
-        description="Options to specify thresholds per token",
-        default={
-            "0x001": 100,
-            "0x002": 200,
-            "0x003": 300,
-        },
+    token_thresholds: List[TokenThresholds] = Field(
+        title="Token thresholds", description="Options to specify thresholds per token", default_factory=list
     )
 
 
 metadata = MetadataModel(
     name="Test-Balance-Monitor",
-    version="0.1.6",
+    version="0.1.8",
     status=Status.ACTIVE,
     description="Test Balance Monitor Detector",
     tags=[
