@@ -1,8 +1,10 @@
+import hashlib
+
 from aiokafka.structs import ConsumerRecord
+from sentinel.channels.kafka.common import bytes2int_deserializer, json_deserializer
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 from sentinel.models.channel import Channel
 from sentinel.models.config import Configuration
-from sentinel.transform import json_deserializer
 
 
 class InboundConfigChannel(InboundKafkaChannel):
@@ -10,13 +12,15 @@ class InboundConfigChannel(InboundKafkaChannel):
 
     def __init__(self, name: str, **kwargs) -> None:
         sentry_name = kwargs.pop("sentry_name")
-        network = kwargs.pop("network")
-        default_group_id = f"sentinel.{network}.{sentry_name}.tx"
+        channel_hash = hashlib.sha256(str(id(self)).encode("utf-8")).hexdigest()[:6]
+        default_group_id = f"sentinel.{sentry_name}.{channel_hash}"
 
         super().__init__(name, record_type="sentinel.models.config.Configuration", **kwargs)
 
         self.config["group_id"] = self.config.get("group_id", default_group_id)
+        self.config["key_deserializer"] = bytes2int_deserializer
         self.config["value_deserializer"] = json_deserializer
+        self.config["auto_offset_reset"] = "earliest"
 
     @classmethod
     def from_settings(cls, settings: Channel, **kwargs):
@@ -30,8 +34,9 @@ class InboundConfigChannel(InboundKafkaChannel):
         """
         Handle consumer message for transaction channel
         """
-        key = int(message.key, 16)
+        key = message.key
         data = message.value
+        print(key, data)
         if data is not None:
             # remove unused fields to simplify configuration model
             data.pop("destinations", None)
