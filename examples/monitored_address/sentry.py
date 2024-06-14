@@ -3,7 +3,7 @@ from sentinel.models.transaction import Transaction
 from sentinel.sentry.v2.transaction import TransactionDetector
 
 
-class TxMetricsDetector(TransactionDetector):
+class MonitoredAddressTxDetector(TransactionDetector):
     name = "TxMetricsDetector"
 
     async def on_init(self):
