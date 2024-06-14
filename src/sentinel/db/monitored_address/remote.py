@@ -20,7 +20,7 @@ class SchemaVersion(BaseModel):
 
 
 class RemoteMonitoredAddressDB(CoreMonitoredAddressDB):
-    name = "config"
+    name = "monitored_address"
 
     def __init__(
         self,
@@ -63,7 +63,7 @@ class RemoteMonitoredAddressDB(CoreMonitoredAddressDB):
 
     def get_group_id(self) -> str:
         channel_hash = hashlib.sha256(str(id(self)).encode("utf-8")).hexdigest()[:6]
-        return f"sentinel.{self.name}-{channel_hash}.tx"
+        return f"sentinel.{self.name}.{channel_hash}"
 
     def get_address(self, config: Configuration) -> str:
         return config.contract.proxy_address if config.contract.proxy_address is not None else config.contract.address
