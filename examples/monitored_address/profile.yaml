@@ -36,3 +36,14 @@ outputs:
   parameters:
     path: dynamic_config/data/events/events.json
     mode: overwrite
+
+databases:
+
+- id: hacken/cloud/monitored_address
+  type: sentinel.db.monitored_address.remote.RemoteMonitoredAddressDB
+  parameters:
+    bootstrap_servers: haas-dev-kafka1.hacken.dev:9092
+    topics:
+    - extractor.sync.detector
+    network: bsc
+    schema: { name: Basic, version: "1" }
