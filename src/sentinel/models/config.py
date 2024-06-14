@@ -5,9 +5,9 @@ from pydantic import BaseModel, Field
 
 
 class Status(str, Enum):
-    active = "ACTIVE"
-    disabled = "DISABLED"
-    deleted = "DELETED"
+    ACTIVE = "ACTIVE"
+    DISABLED = "DISABLED"
+    DELETED = "DELETED"
 
 
 class Contract(BaseModel):
