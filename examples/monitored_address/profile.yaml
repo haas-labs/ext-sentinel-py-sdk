@@ -1,5 +1,5 @@
 project:
-  name: Dynamic Config Transaction Detector
+  name: Monitored Address Transaction Detector 
   description: >
     Transaction Detector provided as example of 
     - consuming transactions
@@ -14,17 +14,20 @@ imports:
 
 sentries:
 
-- name: TxMetricsDetector
-  type: dynamic_config.sentry.TxMetricsDetector
+- name: MonitoredAddressTxDetector
+  type: monitored_address.sentry.MonitoredAddressTxDetector
   description: >
-    The example of simple transactions detector for consiming transaction and collecting metrics around it
+    The example of simple transactions detector for consiming transaction 
+    and collecting metrics for monitored addresses
   parameters:
     network: ethereum
   inputs:
-  - hacken/cloud/kafka/configuration
+  - hacken/cloud/kafka/monitored_address
   - hacken/cloud/kafka/transaction/ethereum
   outputs:
   - transaction/local/fs/event
+  databases:
+  - hacken/cloud/monitored_address
 
 outputs:
 
