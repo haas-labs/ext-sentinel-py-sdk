@@ -13,10 +13,45 @@ from typing import Dict, List
 from pydantic import BaseModel, Field
 
 
+class Severity(str, Enum):
+    INFO = "INFO"  # 0
+    LOW = "LOW"  # 0.15
+    MEDIUM = "MEDIUM"  # 0.25
+    HIGH = "HIGH"  # 0.5
+    CRITICAL = "CRITICAL"  # 0.75
+
+
+class NetworkTag(str, Enum):
+    # Network groups
+    EVM = "evm"
+    ICP = "icp"
+    STELLAR = "stellar"
+    VECHAIN = "vechain"
+
+    # EVM Networks
+    ARBITRUM = "arbitrum"
+    BSC = "bsc"
+    BSC_TESTNET = "bsc_testnet"
+    ETHEREUM = "ethereum"
+    LINEA = "linea"
+    OPTIMISM = "optimism"
+    BASE = "base"
+    GNOSIS = "gnosis"
+    FANTOM = "fantom"
+    POLYGON = "polygon"
+    BLAST = "blast"
+    ZKSYNC = "zksync"
+    SCROLL = "scroll"
+    AVALANCHE = "avalanche"
+
+    # // test
+    ANVIL = "anvil"
+
+
 class Status(str, Enum):
-    active = "ACTIVE"
-    disabled = "DISABLED"
-    deleted = "DELETED"
+    ACTIVE = "ACTIVE"
+    DISABLED = "DISABLED"
+    DELETED = "DELETED"
 
 
 class FAQModel(BaseModel):
@@ -31,7 +66,7 @@ class MetadataModel(BaseModel):
     name: str
     version: str
     description: str
-    tags: List[str] = Field(default_factory=list)
+    tags: List[NetworkTag] = Field(default_factory=list)
     faq: List[FAQModel] = Field(default_factory=list)
     status: Status
 
