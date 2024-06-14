@@ -51,6 +51,7 @@ class ManifestAPI:
             "status": metadata.status.value,
             "description": metadata.description,
             "faq": [faq.model_dump() for faq in metadata.faq],
+            "tags": metadata.tags,
             "schema": schema,
         }
         response = httpx.post(url=endpoint, headers=self._headers, json=data, verify=False)
@@ -63,7 +64,9 @@ class ManifestAPI:
     def get(self, schema_id: int = None, name: str = None, version: str = None) -> Iterator[ManifestAPIModel]:
         endpoint = self._endpoint_url + "/api/v1/schema/search"
 
-        query = {}
+        query = {
+            "size": 100,
+        }
         if schema_id is not None:
             query = {"where": f"id = {schema_id}"}
         elif name is not None and version is not None:
