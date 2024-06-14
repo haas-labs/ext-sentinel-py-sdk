@@ -1,0 +1,49 @@
+project:
+  name: Monitored Address Transaction Detector 
+  description: >
+    Transaction Detector provided as example of 
+    - consuming transactions
+    - collecting metrics
+    - use dynamic configuration
+  config:
+    monitoring_enabled: true
+    monitoring_port: 9091
+
+imports:
+- ../profiles/inputs.yaml
+
+sentries:
+
+- name: MonitoredAddressTxDetector
+  type: monitored_address.sentry.MonitoredAddressTxDetector
+  description: >
+    The example of simple transactions detector for consiming transaction 
+    and collecting metrics for monitored addresses
+  parameters:
+    network: ethereum
+  inputs:
+  - hacken/cloud/kafka/monitored_address
+  - hacken/cloud/kafka/transaction/ethereum
+  outputs:
+  - transaction/local/fs/event
+  databases:
+  - hacken/cloud/monitored_address
+
+outputs:
+
+- id: transaction/local/fs/event
+  type: sentinel.channels.fs.events.OutboundEventsChannel
+  parameters:
+    path: dynamic_config/data/events/events.json
+    mode: overwrite
+
+databases:
+
+- id: hacken/cloud/monitored_address
+  type: sentinel.db.monitored_address.remote.RemoteMonitoredAddressDB
+  parameters:
+    bootstrap_servers: haas-dev-kafka1.hacken.dev:9092
+    topics:
+    - extractor.sync.detector
+    network: bsc
+    schema: { name: Basic, version: "1" }

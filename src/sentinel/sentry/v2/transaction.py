@@ -59,7 +59,10 @@ class TransactionDetector(AsyncCoreSentry):
 
     def init(self) -> None:
         super().init()
-        self.inputs.transactions.on_transaction = self.on_transaction
+        if getattr(self.inputs, "transactions", None):
+            self.inputs.transactions.on_transaction = self.on_transaction
+        else:
+            raise AttributeError("Missed required transactions input channel, please check configuration")
 
     # handle incoming transaction
     async def on_transaction(self, transaction: Transaction) -> None: ...

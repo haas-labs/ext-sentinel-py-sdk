@@ -1,8 +1,8 @@
 from aiokafka.structs import ConsumerRecord
+from sentinel.channels.kafka.common import json_deserializer
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 from sentinel.models.channel import Channel
 from sentinel.models.transaction import Transaction
-from sentinel.transform import json_deserializer
 
 
 class InboundTransactionsChannel(InboundKafkaChannel):

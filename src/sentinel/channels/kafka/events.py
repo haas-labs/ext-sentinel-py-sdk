@@ -1,13 +1,10 @@
 from typing import Dict
 
-
 from aiokafka.structs import ConsumerRecord
-
-from sentinel.models.event import Event
-
-from sentinel.transform import json_deserializer
+from sentinel.channels.kafka.common import json_deserializer
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 from sentinel.channels.kafka.outbound import OutboundKafkaChannel
+from sentinel.models.event import Event
 
 
 class InboundEventsChannel(InboundKafkaChannel):
