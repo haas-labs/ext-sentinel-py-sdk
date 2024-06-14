@@ -80,11 +80,11 @@ class Command(SentinelCommand):
                 if args.classpath is None:
                     logger.error("Missed must have agrument for show action, --classpath")
                     return
-                _, schema = import_by_classpath(classpath=args.classpath)
-                name, version = schema.revision()
-                print(f"Schema name: {name}, version: {version}")
+                _, manifest = import_by_classpath(classpath=args.classpath)
+                print(manifest.metadata)
+
                 print("JSON schema:")
-                print_json(data=schema.model_json_schema())
+                print_json(data=manifest.Schema.model_json_schema())
 
             case _:
                 logger.error(f"Unknown action: {args.action}, possible values: create, get or validate")
