@@ -7,7 +7,7 @@ from typing import Dict, List
 import aiokafka
 from pydantic import BaseModel
 from sentinel.channels.kafka.common import bytes2int_deserializer, json_deserializer
-from sentinel.db.monitored_address.core import CoreMonitoredAddressDB
+from sentinel.db.monitoring_conditions.core import CoreMonitoringConditionsDB
 from sentinel.models.config import Configuration, Status
 
 INGEST_TIMEOUT_SECS = 1
@@ -19,16 +19,16 @@ class SchemaVersion(BaseModel):
     version: str
 
 
-class RemoteMonitoredAddressDB(CoreMonitoredAddressDB):
-    name = "monitored_address"
+class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
+    name = "monitoring_conditions"
 
     def __init__(
         self,
         name: str,
         network: str,
-        schema: SchemaVersion,
         bootstrap_servers: str,
         topics: List[str],
+        schema: Dict[str, str],
         model: BaseModel = None,
     ) -> None:
         super().__init__(name=name, network=network, model=model)
