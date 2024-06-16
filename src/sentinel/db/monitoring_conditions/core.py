@@ -7,8 +7,10 @@ from sentinel.utils.logger import get_logger
 class CoreMonitoringConditionsDB:
     name = "monitoring_conditions"
 
-    def __init__(self, name: str, network: str, model: str = None) -> None:
+    def __init__(self, name: str, sentry_name: str, sentry_hash: str, network: str, model: str = None) -> None:
         self.name = name if name else self.name
+        self.sentry_name = sentry_name
+        self.sentry_hash = sentry_hash
         self.network = network
         if model is not None or model != "":
             _, model = import_by_classpath(model)
@@ -24,11 +26,16 @@ class CoreMonitoringConditionsDB:
 
     @classmethod
     def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
         network = settings.parameters.pop("network")
         model = settings.parameters.pop("model")
         kwargs.update(settings.parameters)
         return cls(
             name=settings.name,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
             network=network,
             model=model,
             **kwargs,
