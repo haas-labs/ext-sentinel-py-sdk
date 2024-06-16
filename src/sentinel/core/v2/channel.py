@@ -58,7 +58,7 @@ class Channels:
     def init(self, channels: List[Channel]) -> None:
         for channel in channels:
             try:
-                self.logger.info(f"Initializing channel: {channel.id}, type: {channel.type}")
+                self.logger.info(f"Initializing channel: {channel.id}, type: {channel.type}, kwargs: {self.kwargs}")
                 channel_instance: ChannelHandler = load_instance(settings=channel, **self.kwargs)
                 setattr(self, channel_instance.name, channel_instance)
                 self.names.append(channel_instance.name)
