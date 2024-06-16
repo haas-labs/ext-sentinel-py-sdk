@@ -1,7 +1,6 @@
 import json
 
 from sentinel.channels.common import Channel
-from sentinel.utils.logger import logger
 
 
 def json_deserializer(serialized):
@@ -27,8 +26,12 @@ class KafkaChannel(Channel):
         Kafka Channel Init
         """
         super().__init__(name=name, record_type=record_type, **kwargs)
+        self.logger.info(f"{self.name} -> Connecting to Kafka: {kwargs}")
 
-        logger.info(f"{self.name} -> Connecting to Kafka: {kwargs}")
+        # Sentry Details
+        kwargs = kwargs.copy()
+        self.sentry_name = self.config.pop("sentry_name")
+        self.sentry_hash = self.config.pop("sentry_hash")
 
         # Topics
         self.topics = self.config.pop("topics")
