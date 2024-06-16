@@ -1,5 +1,4 @@
 import asyncio
-import hashlib
 import time
 from collections import defaultdict
 from typing import Dict, List
@@ -26,12 +25,14 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         self,
         name: str,
         network: str,
+        sentry_name: str,
+        sentry_hash: str,
         bootstrap_servers: str,
         topics: List[str],
         schema: Dict[str, str],
         model: BaseModel = None,
     ) -> None:
-        super().__init__(name=name, network=network, model=model)
+        super().__init__(name=name, sentry_name=sentry_name, sentry_hash=sentry_hash, network=network, model=model)
 
         self.schema = SchemaVersion(**schema)
 
@@ -55,15 +56,12 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         self.kafka_config["value_deserializer"] = json_deserializer
         self.kafka_config["auto_offset_reset"] = "earliest"
 
-        self.logger.info(self.kafka_config)
-
     @property
     def addresses(self) -> Dict[str, Dict[int, Configuration]]:
         return dict(self._address_db)
 
     def get_group_id(self) -> str:
-        channel_hash = hashlib.sha256(str(id(self)).encode("utf-8")).hexdigest()[:6]
-        return f"sentinel.{self.name}.{channel_hash}"
+        return f"sentinel.{self.sentry_name}.{self.sentry_hash}"
 
     def get_address(self, config: Configuration) -> str:
         return config.contract.proxy_address if config.contract.proxy_address is not None else config.contract.address

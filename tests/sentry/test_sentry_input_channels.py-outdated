@@ -1,10 +1,9 @@
 import pytest
-
-from sentinel.models.channel import Channel
-from sentinel.sentry.channel import SentryInputs
 from sentinel.channels.fs.transactions import InboundTransactionsChannel as FSInboundTransactionsChannel
 from sentinel.channels.kafka.transactions import InboundTransactionsChannel as KafkaInboundTransactionsChannel
 from sentinel.channels.ws.transactions import InboundTransactionChannel as WSInboundTransactionChannel
+from sentinel.models.channel import Channel
+from sentinel.sentry.channel import SentryInputs
 
 INPUTS = [
     Channel(

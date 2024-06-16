@@ -3,6 +3,7 @@
 from typing import Any
 
 from sentinel.utils.imports import import_by_classpath
+from sentinel.utils.logger import logger
 
 
 class Channel:
@@ -15,6 +16,8 @@ class Channel:
         self.name = name if name is not None else self.name
         _, self.record_type = import_by_classpath(record_type)
         self.config = kwargs.copy()
+
+        self.logger = logger
 
     async def run(self) -> None:
         """

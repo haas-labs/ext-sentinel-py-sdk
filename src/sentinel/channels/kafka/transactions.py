@@ -10,12 +10,10 @@ class InboundTransactionsChannel(InboundKafkaChannel):
 
     def __init__(self, name: str, **kwargs) -> None:
         # Building sentry specific group id
-        sentry_name = kwargs.pop("sentry_name")
-        default_group_id = "sentinel.{}.tx".format(sentry_name)
 
         super().__init__(name, record_type="sentinel.models.transaction.Transaction", **kwargs)
 
-        self.config["group_id"] = self.config.get("group_id", default_group_id)
+        self.config["group_id"] = self.config.get("group_id", "sentinel.{}.tx".format(self.sentry_name))
         self.config["value_deserializer"] = json_deserializer
 
     @classmethod
