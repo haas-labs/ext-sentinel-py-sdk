@@ -77,6 +77,9 @@ class CoreSentry(multiprocessing.Process):
         """
         self.logger = get_logger(name=self.logger_name, log_level=self.settings.settings.get("LOG_LEVEL", logging.INFO))
 
+        self.databases = SentryDatabases(
+            ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
+        )
         self.inputs = SentryInputs(
             sentry_name=self.name,
             ids=self._inputs,
@@ -84,9 +87,6 @@ class CoreSentry(multiprocessing.Process):
         )
         self.outputs = SentryOutputs(
             ids=self._outputs, channels=self.settings.outputs if hasattr(self.settings, "outputs") else []
-        )
-        self.databases = SentryDatabases(
-            ids=self._databases, databases=self.settings.databases if hasattr(self.settings, "databases") else []
         )
 
     def time_to_run(self) -> datetime:
