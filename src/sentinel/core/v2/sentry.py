@@ -1,4 +1,5 @@
 import asyncio
+import hashlib
 import logging
 import multiprocessing
 from dataclasses import dataclass
@@ -80,6 +81,8 @@ class CoreSentry(multiprocessing.Process):
 
         self.kwargs = kwargs
 
+        self.hash = hashlib.sha256(str(id(self)).encode("utf-8")).hexdigest()[:6]
+
     @classmethod
     def from_settings(cls, settings: Sentry, **kwargs):
         return cls(
@@ -104,7 +107,7 @@ class CoreSentry(multiprocessing.Process):
 
     def init(self) -> None:
         self.logger = get_logger(name=self.logger_name, log_level=self.parameters.get("log_level", logging.INFO))
-        self.databases = Databases(self.settings.databases)
+        self.databases = Databases(self.settings.databases, sentry_name=self.name, sentry_hash=self.hash)
 
     def time_to_run(self) -> ScheduleDates:
         if self.schedule is None:
@@ -185,15 +188,16 @@ class AsyncCoreSentry(CoreSentry):
         # Inputs
         for input in self.settings.inputs:
             input.flow_type = FlowType.inbound
-        self.inputs = Channels(channels=self.settings.inputs, logger=self.logger, sentry_name=self.name)
-
-        if getattr(self.inputs, "configuration", None):
-            self.inputs.configuration.on_config_change = self.on_config_change
+        self.inputs = Channels(
+            channels=self.settings.inputs, logger=self.logger, sentry_name=self.name, sentry_hash=self.hash
+        )
 
         # Outputs
         for output in self.settings.outputs:
             output.flow_type = FlowType.outbound
-        self.outputs = Channels(channels=self.settings.outputs, logger=self.logger, sentry_name=self.name)
+        self.outputs = Channels(
+            channels=self.settings.outputs, logger=self.logger, sentry_name=self.name, sentry_hash=self.hash
+        )
 
     async def processing(self) -> None:
         """
