@@ -10,6 +10,7 @@ project:
     monitoring_port: 9091
 
 imports:
+
 - ../profiles/inputs.yaml
 
 sentries:
@@ -22,28 +23,38 @@ sentries:
   parameters:
     network: ethereum
   inputs:
-  - hacken/cloud/kafka/monitored_address
+  - monitored_address/kafka/monitoring_conditions
   - hacken/cloud/kafka/transaction/ethereum
   outputs:
   - transaction/local/fs/event
   databases:
   - hacken/cloud/monitored_address
 
+inputs:
+
+- id: monitored_address/kafka/monitoring_conditions
+  type: sentinel.channels.kafka.config.InboundConfigChannel
+  parameters:
+    bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
+    topics: 
+    - extractor.sync.detector
+
 outputs:
 
 - id: transaction/local/fs/event
   type: sentinel.channels.fs.events.OutboundEventsChannel
   parameters:
-    path: dynamic_config/data/events/events.json
+    path: monitored_address/data/events/events.json
     mode: overwrite
 
 databases:
 
 - id: hacken/cloud/monitored_address
-  type: sentinel.db.monitored_address.remote.RemoteMonitoredAddressDB
+  type: sentinel.db.monitoring_conditions.remote.RemoteMonitoringConditionsDB
   parameters:
     bootstrap_servers: haas-dev-kafka1.hacken.dev:9092
     topics:
     - extractor.sync.detector
     network: bsc
+    model: monitored_address.manifest.Schema
     schema: { name: Basic, version: "1" }
