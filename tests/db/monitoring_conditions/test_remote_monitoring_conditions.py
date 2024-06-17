@@ -1,14 +1,23 @@
-from pydantic import BaseModel
+from typing import Dict, Optional
+
+import pytest
+from pydantic import BaseModel, Field
 from sentinel.db.monitoring_conditions.remote import RemoteMonitoringConditionsDB
 from sentinel.models.database import Database
+
+
+class ConsumerRecord(BaseModel):
+    key: int
+    value: Optional[Dict] = Field(default_factory=dict)
 
 
 class ConditionsModel(BaseModel):
     threshold: int = 100
 
 
-def test_remote_monitoring_conditions_db_init():
-    conditions = RemoteMonitoringConditionsDB(
+@pytest.fixture
+def monitoring_conditions_db():
+    return RemoteMonitoringConditionsDB(
         name="TestMonitoringConditions",
         network="ethereum",
         sentry_name="Test-Sentry",
@@ -16,11 +25,53 @@ def test_remote_monitoring_conditions_db_init():
         bootstrap_servers="kafka-server",
         topics=["sentinel.monitoring-conditions.0123"],
         model="test_remote_monitoring_conditions.ConditionsModel",
-        schema={"name": "conditions-schema", "version": "0.1.0"},
+        schema={"name": "Basic", "version": "1"},
     )
-    assert isinstance(conditions, RemoteMonitoringConditionsDB), "Incorrect Remote Monitoring Conditions DB instance"
-    assert conditions.sentry_name == "Test-Sentry", "Incorrect sentry hash"
-    assert conditions.sentry_hash == "12345", "Incorrect sentry hash"
+
+
+@pytest.fixture
+def kafka_consumer_record() -> Dict:
+    return {
+        "id": 1705,
+        "createdAt": 1716215314873,
+        "updatedAt": 1716215314873,
+        "status": "ACTIVE",
+        "contract": {
+            "id": 1371,
+            "createdAt": 1716215314839,
+            "updatedAt": 1716215314839,
+            "projectId": 503,
+            "tenantId": 519,
+            "chainUid": "ethereum",
+            "proxyAddress": None,
+            "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "name": "eth",
+        },
+        "schema": {
+            "id": 1,
+            "createdAt": 1717751852969,
+            "updatedAt": 1717751852969,
+            "status": "ACTIVE",
+            "name": "Basic",
+            "version": "1",
+            "schema": {},
+        },
+        "name": "Attack Detector",
+        "source": "ATTACK_DETECTOR",
+        "tags": ["SECURITY"],
+        "config": {},
+        "destinations": [],
+        "actions": [],
+    }
+
+
+def test_remote_monitoring_conditions_db_init(monitoring_conditions_db):
+    assert isinstance(
+        monitoring_conditions_db, RemoteMonitoringConditionsDB
+    ), "Incorrect Remote Monitoring Conditions DB instance"
+    assert monitoring_conditions_db.sentry_name == "Test-Sentry", "Incorrect sentry hash"
+    assert monitoring_conditions_db.sentry_hash == "12345", "Incorrect sentry hash"
+    assert monitoring_conditions_db.get_group_id().startswith("sentinel.Test-Sentry."), "Incorrrect group id prefix"
 
 
 def test_remote_monitoring_conditions_db_from_settings():
@@ -41,3 +92,53 @@ def test_remote_monitoring_conditions_db_from_settings():
     assert isinstance(conditions, RemoteMonitoringConditionsDB), "Incorrect Remote Monitoring Conditions DB instance"
     assert conditions.sentry_name == "Test-Sentry", "Incorrect sentry hash"
     assert conditions.sentry_hash == "12345", "Incorrect sentry hash"
+
+
+def test_remote_monitoring_conditions_db_add_remove_operations(monitoring_conditions_db, kafka_consumer_record):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=kafka_consumer_record))
+    assert monitoring_conditions_db.size == 1, "Incorrect number of records in db"
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=None))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+
+def test_remote_monitoring_conditions_db_filter_by_source(monitoring_conditions_db, kafka_consumer_record):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    record["source"] = "FORTA"
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+
+def test_remote_monitoring_conditions_db_filter_by_schame_and_version(monitoring_conditions_db, kafka_consumer_record):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    record["schema"]["name"] = "Invalid-Schema"
+    record["schema"]["version"] = "0.1.0"
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+
+def test_remote_monitoring_conditions_db_filter_by_network(monitoring_conditions_db, kafka_consumer_record):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    record["contract"]["chainUid"] = "bsc"
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+
+def test_remote_monitoring_conditions_db_disabled_records(monitoring_conditions_db, kafka_consumer_record):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 1, "Incorrect number of records in db"
+
+    record = kafka_consumer_record.copy()
+    record["status"] = "DISABLED"
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
