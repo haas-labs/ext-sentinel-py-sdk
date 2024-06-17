@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.1
+
+Feature
+
+- Monitoring conditions helpers (#288)
+- Integrate monitoring conditions with channel (#287)
+- Detector configuration from kafka topic (#285)
+- Add manifest command for managing sentry schema and metadata
+
 ## v0.5.0
 
 Feature
