@@ -1,7 +1,6 @@
 import asyncio
 import time
-from collections import defaultdict
-from typing import Dict, List
+from typing import Dict, Iterator, List
 
 import aiokafka
 from pydantic import BaseModel
@@ -36,13 +35,6 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
 
         self.schema = SchemaVersion(**schema)
 
-        # Configuration Database
-        self._config_db: Dict[int, Configuration] = {}
-
-        # Monitored Address Database
-        # The structure: <address> -> <config_id> -> <config itself>
-        self._address_db: Dict[str, Dict] = defaultdict()
-
         self.topics = topics
 
         self.kafka_config = {}
@@ -56,9 +48,21 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         self.kafka_config["value_deserializer"] = json_deserializer
         self.kafka_config["auto_offset_reset"] = "earliest"
 
+        # Configuration Database
+        self._config_db: Dict[int, Configuration] = {}
+
+        # Monitored Address Database
+        # The structure: <address> -> List[<config_id>]
+        self._address_db: Dict[str, List[int]] = {}
+
     @property
     def addresses(self) -> Dict[str, Dict[int, Configuration]]:
         return dict(self._address_db)
+
+    def get_address_conditions(self, address: str) -> Iterator[Configuration]:
+        if address in self._address_db:
+            for config_id in self._address_db[address]:
+                yield self._config_db[config_id]
 
     def get_group_id(self) -> str:
         return f"sentinel.{self.sentry_name}.{self.sentry_hash}"
@@ -93,10 +97,10 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
             # skip inactive config with removing active ones if present
             if config.status != Status.ACTIVE:
                 if record.key in self._config_db:
-                    config: Configuration = self._config_db.pop(record.key, None)
+                    config: Configuration = self._config_db.pop(record.key)
                     address = self.get_address(config=config)
                     if address is not None:
-                        self._address_db[address].pop(config.id, None)
+                        self._address_db[address].remove(config.id)
                         if len(self._address_db[address]) == 0:
                             del self._address_db[address]
                 return
@@ -104,11 +108,17 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
             self._config_db[record.key] = config
             address = self.get_address(config=config)
             if address not in self._address_db:
-                self._address_db[address] = dict()
-            self._address_db[address][config.id] = config.config
+                self._address_db[address] = list()
+            self._address_db[address].append(config.id)
 
         else:
-            self._config_db.pop(record.key, None)
+            config = self._config_db.pop(record.key, None)
+            # Cleanup address db
+            if config is not None:
+                address = self.get_address(config=config)
+                self._address_db[address].remove(record.key)
+                if len(self._address_db[address]) == 0:
+                    del self._address_db[address]
 
     def ingest(self) -> None:
         async def ingest_records():
