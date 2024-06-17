@@ -1,7 +1,15 @@
-from pydantic import BaseModel, create_model
+from collections import defaultdict
+from typing import Dict
+
+from pydantic import BaseModel, Field, create_model
 from sentinel.models.database import Database
 from sentinel.utils.imports import import_by_classpath
 from sentinel.utils.logger import get_logger
+
+
+class Conditions(BaseModel):
+    address: str
+    conditions: Dict = Field(default_factory=dict)
 
 
 class CoreMonitoringConditionsDB:
@@ -24,6 +32,10 @@ class CoreMonitoringConditionsDB:
 
         self.logger = get_logger(__name__)
 
+        # Monitored Address Database
+        # The structure: <address> -> <conditions>
+        self._address_db: Dict[str, Dict] = defaultdict()
+
     @classmethod
     def from_settings(cls, settings: Database, **kwargs):
         kwargs = kwargs.copy()
@@ -41,4 +53,12 @@ class CoreMonitoringConditionsDB:
             **kwargs,
         )
 
-    def update(self) -> None: ...
+    @property
+    def size(self):
+        return len(self._address_db)
+
+    def update(self, conditions: Conditions) -> None:
+        self._address_db[conditions.address] = conditions.conditions
+
+    def has_address(self, address: str) -> bool:
+        return True if address in self._address_db else False
