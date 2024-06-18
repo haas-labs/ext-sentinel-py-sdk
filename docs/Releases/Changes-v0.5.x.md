@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.5
+
+Fix
+
+- Pass sentry name and hash parameters to db (#299)
+- Update interval for remote monitored contract db (#298)
+- Default value for metadata field in events channel (#297)
+
 ## v0.5.4
 
 Fix
