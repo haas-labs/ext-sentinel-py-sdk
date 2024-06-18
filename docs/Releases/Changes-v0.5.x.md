@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.3
+
+Fix
+
+- Add from_setting method for inbound/outbound tx channel
+- Parameters in remote monitored contract
+
 ## v0.5.2
 
 Feature
