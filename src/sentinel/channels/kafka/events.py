@@ -50,7 +50,7 @@ class OutboundEventsChannel(OutboundKafkaChannel):
 
     @classmethod
     def from_settings(cls, settings: Channel, **kwargs):
-        metadata = settings.parameters.pop("metadata")
+        metadata = settings.parameters.pop("metadata", dict())
         kwargs.update(settings.parameters)
         return cls(
             name=settings.name,
