@@ -1,8 +1,7 @@
 import httpx
-
-from sentinel.models.address import AddressType
 from sentinel.db.address.common import CommonAddressDB
-
+from sentinel.models.address import AddressType
+from sentinel.models.database import Database
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -34,6 +33,28 @@ class RemoteAddressDB(CommonAddressDB):
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {token}"
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        endpoint_url = settings.parameters.pop("endpoint_url")
+        token = settings.parameters.pop("token")
+        chain_id = settings.parameters.pop("chain_id")
+        network = settings.parameters.pop("network")
+        timeout = settings.parameters.pop("timeout", 60)
+        kwargs.update(settings.parameters)
+        return cls(
+            endpoint_url=endpoint_url,
+            token=token,
+            chain_id=chain_id,
+            network=network,
+            timeout=timeout,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+            **kwargs,
+        )
 
     async def _fetch(self, address: str) -> AddressType:
         """
