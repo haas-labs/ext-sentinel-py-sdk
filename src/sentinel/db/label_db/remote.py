@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 import httpx
+from sentinel.models.database import Database
 
 from .common import CommonLabelDB, LabelDBRecord
 
@@ -38,6 +39,30 @@ class LabelDB(CommonLabelDB):
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self._token}"
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        endpoint_url = settings.parameters.pop("endpoint_url")
+        token = settings.parameters.pop("token")
+        chain_id = settings.parameters.pop("chain_id")
+        network = settings.parameters.pop("network")
+        update_tags = settings.parameters.pop("update_tags", [])
+        update_interval = settings.parameters.pop("update_interval", 120)
+        kwargs.update(settings.parameters)
+        return cls(
+            endpoint_url=endpoint_url,
+            token=token,
+            chain_id=chain_id,
+            network=network,
+            update_tags=update_tags,
+            update_interval=update_interval,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+            **kwargs,
+        )
 
     async def query(self, endpoint: str, query: Dict, fetch_all: bool = False) -> List[LabelDBRecord]:
         """

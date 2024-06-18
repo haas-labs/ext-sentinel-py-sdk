@@ -2,7 +2,7 @@ import csv
 import pathlib
 
 from pydantic import BaseModel
-
+from sentinel.models.database import Database
 from sentinel.utils.logger import get_logger
 
 
@@ -38,6 +38,22 @@ class Mixers:
 
         if self.path.suffix == ".csv":
             self._import_csv(self.path)
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        path = settings.parameters.pop("path")
+        allowed_chain_id = settings.parameters.pop("allowed_chain_id")
+        kwargs.update(settings.parameters)
+        return cls(
+            path=path,
+            allowed_chain_id=allowed_chain_id,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+            **kwargs,
+        )
 
     def _import_csv(self, path: pathlib.Path) -> None:
         """
