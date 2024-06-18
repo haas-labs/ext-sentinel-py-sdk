@@ -4,6 +4,7 @@ from aiokafka.structs import ConsumerRecord
 from sentinel.channels.kafka.common import json_deserializer
 from sentinel.channels.kafka.inbound import InboundKafkaChannel
 from sentinel.channels.kafka.outbound import OutboundKafkaChannel
+from sentinel.models.channel import Channel
 from sentinel.models.event import Event
 
 
@@ -13,6 +14,14 @@ class InboundEventsChannel(InboundKafkaChannel):
     def __init__(self, name: str, **kwargs) -> None:
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
         self.config["value_deserializer"] = json_deserializer
+
+    @classmethod
+    def from_settings(cls, settings: Channel, **kwargs):
+        kwargs.update(settings.parameters)
+        return cls(
+            name=settings.name,
+            **kwargs,
+        )
 
     async def on_message(self, message: ConsumerRecord) -> None:
         """
@@ -38,6 +47,16 @@ class OutboundEventsChannel(OutboundKafkaChannel):
     def __init__(self, name: str, metadata: Dict = dict(), **kwargs) -> None:
         super().__init__(name, record_type="sentinel.models.event.Event", **kwargs)
         self._default_metadata = metadata.copy()
+
+    @classmethod
+    def from_settings(cls, settings: Channel, **kwargs):
+        metadata = settings.parameters.pop("metadata")
+        kwargs.update(settings.parameters)
+        return cls(
+            name=settings.name,
+            metadata=metadata,
+            **kwargs,
+        )
 
     async def send(self, msg: Event) -> None:
         """
