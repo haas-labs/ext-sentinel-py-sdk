@@ -194,7 +194,7 @@ class Dispatcher:
         if settings.schedule:
             current_datetime = datetime.now(tz=timezone.utc).replace(second=0).replace(microsecond=0)
             time_to_run = sentry.instance.time_to_run()
-            if time_to_run["curr_date"] == sentry.launch_time or time_to_run["curr_date"] != current_datetime:
+            if time_to_run.current == sentry.launch_time or time_to_run.current != current_datetime:
                 return sentry
             sentry.instance.run_on_schedule = True
 
