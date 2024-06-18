@@ -1,13 +1,12 @@
-import time
-import httpx
 import datetime
-
+import time
 from typing import List
 
-from .common import Contract
-
+import httpx
+from sentinel.models.database import Database
 from sentinel.utils.logger import get_logger
 
+from .common import Contract
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -24,6 +23,7 @@ class MonitoredContractsDB:
         token: str,
         network: str = "ethereum",
         update_interval: int = 300,
+        **kwargs,
     ) -> None:
         """
         Monitored Constacts Database Init
@@ -44,6 +44,26 @@ class MonitoredContractsDB:
 
         self._last_update = self.current_time()
         self._update_interval = update_interval
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        endpoint_url = settings.parameters.get("endpoint_url")
+        token = settings.parameters.get("token")
+        network = settings.parameters.get("network")
+        update_interval = settings.parameters.get("update_interval")
+        kwargs.update(settings.parameters)
+        return cls(
+            endpoint_url=endpoint_url,
+            token=token,
+            network=network,
+            update_interval=update_interval,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+            **kwargs,
+        )
 
     def current_time(self):
         """
