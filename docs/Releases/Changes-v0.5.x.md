@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.2
+
+Feature
+
+- Add from_settings method for monitored contract db (#290)
+
 ## v0.5.1
 
 Feature
