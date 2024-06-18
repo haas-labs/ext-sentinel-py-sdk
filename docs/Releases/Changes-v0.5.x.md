@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.4
+
+Fix
+
+- Add from_setting method for address dbs (#295)
+- Add from_setting method for label and mixer dbs (#294)
+
 ## v0.5.3
 
 Fix
