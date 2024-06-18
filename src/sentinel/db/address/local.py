@@ -1,13 +1,13 @@
 import pathlib
 
-
+from sentinel.models.database import Database
 from sentinel.utils.logger import get_logger
 
 
 class AddressDB:
     name = "address"
 
-    def __init__(self, path: pathlib.Path) -> None:
+    def __init__(self, path: pathlib.Path, **kwargs) -> None:
         self.logger = get_logger(__name__)
         if isinstance(path, str):
             self.path = pathlib.Path(path)
@@ -16,6 +16,12 @@ class AddressDB:
 
         self._db = []
         self._import(self.path)
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        path = settings.parameters.pop("path")
+        kwargs.update(settings.parameters)
+        return cls(path=path, **kwargs)
 
     def _import(self, path: pathlib.Path) -> None:
         path = pathlib.Path(path) if isinstance(path, str) else path
