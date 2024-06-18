@@ -19,6 +19,7 @@ class RemoteAddressDB(CommonAddressDB):
         chain_id: int,
         network: str,
         timeout: int = 60,
+        **kwargs,
     ) -> None:
         """
         Address DB Init

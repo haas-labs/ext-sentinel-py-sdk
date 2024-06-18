@@ -30,6 +30,7 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         topics: List[str],
         schema: Dict[str, str],
         model: BaseModel = None,
+        **kwargs,
     ) -> None:
         super().__init__(name=name, sentry_name=sentry_name, sentry_hash=sentry_hash, network=network, model=model)
 
