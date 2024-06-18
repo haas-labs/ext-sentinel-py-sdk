@@ -50,10 +50,10 @@ class MonitoredContractsDB:
         kwargs = kwargs.copy()
         sentry_name = kwargs.pop("sentry_name")
         sentry_hash = kwargs.pop("sentry_hash")
-        endpoint_url = settings.parameters.get("endpoint_url")
-        token = settings.parameters.get("token")
-        network = settings.parameters.get("network")
-        update_interval = settings.parameters.get("update_interval")
+        endpoint_url = settings.parameters.pop("endpoint_url")
+        token = settings.parameters.pop("token")
+        network = settings.parameters.pop("network")
+        update_interval = settings.parameters.pop("update_interval")
         kwargs.update(settings.parameters)
         return cls(
             endpoint_url=endpoint_url,
