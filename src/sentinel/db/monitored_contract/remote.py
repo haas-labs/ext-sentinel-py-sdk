@@ -53,7 +53,7 @@ class MonitoredContractsDB:
         endpoint_url = settings.parameters.pop("endpoint_url")
         token = settings.parameters.pop("token")
         network = settings.parameters.pop("network")
-        update_interval = settings.parameters.pop("update_interval")
+        update_interval = settings.parameters.pop("update_interval", 300)
         kwargs.update(settings.parameters)
         return cls(
             endpoint_url=endpoint_url,
