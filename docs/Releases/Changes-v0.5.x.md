@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.7
+
+Fix
+
+- time to run handler in dispatcher (#303)
+
 ## v0.5.6
 
 Fix
