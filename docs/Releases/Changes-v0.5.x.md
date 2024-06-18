@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.6
+
+Fix
+
+- from settings method for local address db (#301)
+
 ## v0.5.5
 
 Fix
