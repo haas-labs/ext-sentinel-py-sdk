@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.10
+
+Feature
+
+- Add cid field for event message (#310)
+
 ## v0.5.9
 
 Fix
