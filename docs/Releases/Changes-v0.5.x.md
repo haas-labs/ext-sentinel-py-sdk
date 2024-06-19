@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.9
+
+Fix
+
+- Missed kwargs in remote trace db constructor (#308)
+
 ## v0.5.8
 
 Fix
