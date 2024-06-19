@@ -35,9 +35,11 @@ class StandardABISignatures:
     @classmethod
     def from_settings(cls, settings: Database, **kwargs):
         kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
         standards = settings.parameters.pop("standards", [])
         kwargs.update(settings.parameters)
-        return cls(standards=standards, **kwargs)
+        return cls(standards=standards, sentry_name=sentry_name, sentry_hash=sentry_hash, **kwargs)
 
     @property
     def total_records(self):
