@@ -8,7 +8,7 @@ from .common import CommonTraceDB
 class RemoteTraceDB(CommonTraceDB):
     name = "trace"
 
-    def __init__(self, endpoint_url: str, network: str, timeout: int = 60) -> None:
+    def __init__(self, endpoint_url: str, network: str, timeout: int = 60, **kwargs) -> None:
         """
         Remote Trace DB Init
         """
