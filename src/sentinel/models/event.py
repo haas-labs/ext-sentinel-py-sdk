@@ -1,6 +1,6 @@
 import uuid
-
 from typing import Dict, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -23,6 +23,9 @@ class Event(BaseModel):
 
     # Event UUID
     eid: str = Field(default_factory=get_event_id)
+
+    # Extractor Detector Config id
+    cid: Optional[int] = None
 
     # Source ID
     # TODO Default value for Sentinel Detector
