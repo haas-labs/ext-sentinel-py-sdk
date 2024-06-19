@@ -1,15 +1,14 @@
 import json
+from typing import Dict, Iterator, List
 
-
-from typing import List, Dict, Iterator
+from sentinel.db.contract.utils import to_signature_record
+from sentinel.models.contract import ABIRecord, ABISignature
+from sentinel.models.database import Database
+from sentinel.utils.logger import get_logger
 
 from .erc20 import ERC20
 from .erc721 import ERC721
 from .erc1155 import ERC1155
-
-from sentinel.models.contract import ABIRecord, ABISignature
-from sentinel.db.contract.utils import to_signature_record
-from sentinel.utils.logger import get_logger
 
 
 class StandardABISignatures:
@@ -23,7 +22,7 @@ class StandardABISignatures:
 
     name = "StandardABISignatures"
 
-    def __init__(self, standards: List[str] = list()) -> None:
+    def __init__(self, standards: List[str] = list(), **kwargs) -> None:
         """
         Standard ABI Signatures Init
         """
@@ -32,6 +31,13 @@ class StandardABISignatures:
         self._db = []
         self._standards = standards
         self.update(standards=self._standards)
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        standards = settings.parameters.pop("standards", [])
+        kwargs.update(settings.parameters)
+        return cls(standards=standards, **kwargs)
 
     @property
     def total_records(self):

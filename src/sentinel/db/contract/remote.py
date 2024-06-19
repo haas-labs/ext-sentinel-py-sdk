@@ -1,19 +1,17 @@
 import json
+from typing import List, Union
+
 import httpx
-
-from typing import Union, List
 from async_lru import alru_cache
-
-
 from sentinel.models.contract import (
-    Contract,
     ABISignature,
+    Contract,
 )
+from sentinel.models.database import Database
 from sentinel.models.errors import EndpointError
 
 from .common import CommonContractDB
 from .utils import to_signature_record
-
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -31,6 +29,7 @@ class RemoteContractDB(CommonContractDB):
         network: str,
         chain_id: int,
         timeout: int = 60,
+        **kwargs,
     ) -> None:
         """
         Remote Contract DB Init
@@ -43,6 +42,27 @@ class RemoteContractDB(CommonContractDB):
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self.token}"
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        endpoint_url = settings.parameters.pop("endpoint_url")
+        token = settings.parameters.pop("token")
+        chain_id = settings.parameters.pop("chain_id")
+        network = settings.parameters.pop("network")
+        timeout = settings.parameters.pop("timeout", 60)
+        kwargs.update(settings.parameters)
+        return cls(
+            endpoint_url=endpoint_url,
+            token=token,
+            chain_id=chain_id,
+            network=network,
+            timeout=timeout,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+        )
 
     async def get(self, address: str, follow_impl: bool = False) -> Union[Contract, EndpointError]:
         """
