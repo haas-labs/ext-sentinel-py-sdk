@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.8
+
+Fix
+
+- from settings method for remote trace db (#306)
+- from settings method for contract and standard abi signatures db (#305)
+
 ## v0.5.7
 
 Fix
