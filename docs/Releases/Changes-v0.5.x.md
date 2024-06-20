@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.11
+
+Fix
+
+- Remove duplicates in monitoring conditions (#312)
+
 ## v0.5.10
 
 Feature
