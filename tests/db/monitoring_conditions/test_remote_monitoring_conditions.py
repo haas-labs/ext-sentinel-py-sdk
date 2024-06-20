@@ -142,3 +142,18 @@ def test_remote_monitoring_conditions_db_disabled_records(monitoring_conditions_
     record["status"] = "DISABLED"
     monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
     assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+
+def test_remote_monitoring_conditions_db_duplicated_records(monitoring_conditions_db, kafka_consumer_record):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 1, "Incorrect number of records in db"
+
+    record = kafka_consumer_record.copy()
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_conditions_db.size == 1, "Incorrect number of records in db"
+    assert monitoring_conditions_db.addresses == {
+        "0xdac17f958d2ee523a2206206994597c13d831ec7": [1705]
+    }, "Incorrect monitored addresses list"
