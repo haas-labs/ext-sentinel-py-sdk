@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.12
+
+Feature
+
+- Get address conditions return config only (#314)
+
 ## v0.5.11
 
 Fix
