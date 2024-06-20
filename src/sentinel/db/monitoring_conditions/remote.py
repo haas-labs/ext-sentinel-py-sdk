@@ -110,7 +110,8 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
             address = self.get_address(config=config)
             if address not in self._address_db:
                 self._address_db[address] = list()
-            self._address_db[address].append(config.id)
+            if config.id not in self._address_db[address]:
+                self._address_db[address].append(config.id)
 
         else:
             config = self._config_db.pop(record.key, None)
