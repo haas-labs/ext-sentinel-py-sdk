@@ -41,6 +41,7 @@ class SentryInstance:
 
 STATE_CHECK_TIME_INTERVAL = 30
 TERMINATION_TIMEOUT = 3
+SENTRY_METRIC_SERVER_TYPE = "sentinel.sentry.v2.metric.MetricServer"
 
 
 class Dispatcher:
@@ -128,7 +129,7 @@ class Dispatcher:
         self.settings.sentries.append(
             Sentry(
                 name="MetricServer",
-                type="sentinel.sentry.v2.metric.MetricServer",
+                type=SENTRY_METRIC_SERVER_TYPE,
                 parameters={"port": self.monitoring_port},
                 restart=True,
             )
