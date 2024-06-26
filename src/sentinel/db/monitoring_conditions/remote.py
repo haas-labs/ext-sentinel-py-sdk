@@ -8,8 +8,8 @@ from sentinel.channels.kafka.common import bytes2int_deserializer, json_deserial
 from sentinel.db.monitoring_conditions.core import CoreMonitoringConditionsDB
 from sentinel.models.config import Configuration, Status
 
-INGEST_TIMEOUT_SECS = 1
-INGEST_TIMEOUT_MSECS = 1000
+INGEST_TIMEOUT_SECS = 5
+INGEST_TIMEOUT_MSECS = INGEST_TIMEOUT_SECS * 1000
 
 
 class SchemaVersion(BaseModel):
@@ -63,7 +63,7 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
     def get_address_conditions(self, address: str) -> Iterator[Configuration]:
         if address in self._address_db:
             for config_id in self._address_db[address]:
-                yield self._config_db[config_id].config
+                yield self._config_db[config_id]
 
     def get_group_id(self) -> str:
         return f"sentinel.{self.sentry_name}.{self.sentry_hash}"
