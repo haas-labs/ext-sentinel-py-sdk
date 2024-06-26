@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.15
+
+Feature
+
+- increase deps and dev/deployment tools versions
+
 ## v0.5.14
 
 Merge conflict release
