@@ -61,7 +61,9 @@ class ManifestAPI:
             case _:
                 self.logger.error(f"Registering schema failed, manifest: {data}, response: {response.text}")
 
-    def get(self, schema_id: int = None, name: str = None, version: str = None) -> Iterator[ManifestAPIModel]:
+    def get(
+        self, schema_id: int = None, name: str = None, version: str = None, status: Status = None
+    ) -> Iterator[ManifestAPIModel]:
         endpoint = self._endpoint_url + "/api/v1/schema/search"
 
         query = {
@@ -73,13 +75,16 @@ class ManifestAPI:
             query = {"where": f"name = '{name}' and version = '{version}'"}
         elif name is not None and version is None:
             query = {"where": f"name = '{name}'"}
+        elif status is not None:
+            query = {"where": f"status = '{status.value}'"}
 
         response = httpx.post(url=endpoint, headers=self._headers, json=query, verify=False)
         match response.status_code:
             case 200:
                 content = response.json()
-                for schema in content.get("data", []):
-                    yield ManifestAPIModel(**schema)
+                for manifest_data in content.get("data", []):
+                    manifest = ManifestAPIModel(**manifest_data)
+                    yield manifest
             case _:
                 self.logger.error(
                     "Getting detector schema failed, {}".format(
