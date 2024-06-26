@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.table import Table
 from sentinel.commands.common import SentinelCommand
 from sentinel.manifest import Status
-from sentinel.services.manifest_api import ManifestAPI
+from sentinel.services.manifest_api import ManifestAPI, Status
 from sentinel.services.service_account import import_service_tokens
 from sentinel.utils.imports import import_by_classpath
 from sentinel.utils.logger import logger
@@ -69,12 +69,9 @@ class Command(SentinelCommand):
                 # Getting a schema by name and version
                 elif args.name is not None and args.version is not None:
                     self.get_manifest_by(api=manifest_api, name=args.name, version=args.version)
-                # Getting all schema versions
-                elif args.name is not None and args.version is None:
-                    self.get_all(manifest_api, name=args.name)
-                # Getting all schemas
+                # Getting rest of conditions
                 else:
-                    self.get_all(manifest_api)
+                    self.get_all(manifest_api, name=args.name, status=Status[args.status.upper()])
 
             case Action.show.value:
                 if args.classpath is None:
@@ -98,14 +95,14 @@ class Command(SentinelCommand):
             for schema in api.get(name=name, version=version):
                 print_json(schema.model_dump_json())
 
-    def get_all(self, api: ManifestAPI, name: str = None) -> None:
+    def get_all(self, api: ManifestAPI, name: str = None, status: Status = None) -> None:
         table = Table(box=box.MINIMAL)
         table.add_column(header="id")
         table.add_column(header="name")
         table.add_column(header="version")
         table.add_column(header="status")
         table.add_column(header="description")
-        for manifest in api.get(name=name):
+        for manifest in api.get(name=name, status=status):
             status = manifest.status
             match manifest.status:
                 case "ACTIVE":
