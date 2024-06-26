@@ -35,9 +35,9 @@ class Command(SentinelCommand):
             choices=[a.value.lower() for a in Action],
             help="Manifest actions",
         )
-        parser.add_argument("--id", type=str, help="The detector id")
-        parser.add_argument("--name", type=str, help="The detector name")
-        parser.add_argument("--version", type=str, help="The detector version")
+        parser.add_argument("--id", type=str, help="The detector schema id")
+        parser.add_argument("--name", type=str, help="The detector schema name")
+        parser.add_argument("--version", type=str, help="The detector schema version")
         parser.add_argument("--status", choices=[s.value.lower() for s in Status], help="The schema status")
         parser.add_argument("--classpath", type=str, help="The classpath to detector manifest")
 
