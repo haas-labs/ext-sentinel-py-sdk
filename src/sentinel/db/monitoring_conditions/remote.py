@@ -8,8 +8,8 @@ from sentinel.channels.kafka.common import bytes2int_deserializer, json_deserial
 from sentinel.db.monitoring_conditions.core import CoreMonitoringConditionsDB
 from sentinel.models.config import Configuration, Status
 
-INGEST_TIMEOUT_SECS = 1
-INGEST_TIMEOUT_MSECS = 1000
+INGEST_TIMEOUT_SECS = 5
+INGEST_TIMEOUT_MSECS = INGEST_TIMEOUT_SECS * 1000
 
 
 class SchemaVersion(BaseModel):
