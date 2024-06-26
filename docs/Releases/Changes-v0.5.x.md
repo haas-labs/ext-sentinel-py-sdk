@@ -4,6 +4,16 @@
 
 Feature
 
+- Add monitored target model (#316)
+
+Fix
+
+- Increase kafka connection timeout for monitoring  conditions db (#317)
+
+## v0.5.12
+
+Feature
+
 - Get address conditions return config only (#314)
 
 ## v0.5.11
