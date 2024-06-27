@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.17
+
+Feature
+
+- Handling manifest status (#326)
+- Connection error handling for manifest api (#325)
+
 ## v0.5.16
 
 Feature
