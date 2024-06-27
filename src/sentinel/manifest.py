@@ -13,12 +13,13 @@ from typing import Dict, List
 from pydantic import BaseModel, Field
 
 
-class Severity(str, Enum):
-    INFO = "INFO"  # 0
-    LOW = "LOW"  # 0.15
-    MEDIUM = "MEDIUM"  # 0.25
-    HIGH = "HIGH"  # 0.5
-    CRITICAL = "CRITICAL"  # 0.75
+class Severity(float, Enum):
+    AUTOMATIC = -1
+    INFO = 0
+    LOW = 0.15
+    MEDIUM = 0.25
+    HIGH = 0.5
+    CRITICAL = 0.75
 
 
 class NetworkTag(str, Enum):
