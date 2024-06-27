@@ -71,7 +71,8 @@ class Command(SentinelCommand):
                     self.get_manifest_by(api=manifest_api, name=args.name, version=args.version)
                 # Getting rest of conditions
                 else:
-                    self.get_all(manifest_api, name=args.name, status=Status[args.status.upper()])
+                    status = Status[args.status.upper()] if args.status is not None else None
+                    self.get_all(manifest_api, name=args.name, status=status)
 
             case Action.show.value:
                 if args.classpath is None:
