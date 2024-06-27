@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.16
+
+Feature
+
+- Add filtering manifests by status
+
+Fix
+
+- Fix manifest schema for tags field(#323)
+
 ## v0.5.15
 
 Feature
