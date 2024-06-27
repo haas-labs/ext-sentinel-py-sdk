@@ -78,19 +78,22 @@ class ManifestAPI:
         elif status is not None:
             query = {"where": f"status = '{status.value}'"}
 
-        response = httpx.post(url=endpoint, headers=self._headers, json=query, verify=False)
-        match response.status_code:
-            case 200:
-                content = response.json()
-                for manifest_data in content.get("data", []):
-                    manifest = ManifestAPIModel(**manifest_data)
-                    yield manifest
-            case _:
-                self.logger.error(
-                    "Getting detector schema failed, {}".format(
-                        {"status code": response.status_code, "query": query, "response": response.text}
+        try:
+            response = httpx.post(url=endpoint, headers=self._headers, json=query, verify=False)
+            match response.status_code:
+                case 200:
+                    content = response.json()
+                    for manifest_data in content.get("data", []):
+                        manifest = ManifestAPIModel(**manifest_data)
+                        yield manifest
+                case _:
+                    self.logger.error(
+                        "Getting detector schema failed, {}".format(
+                            {"status code": response.status_code, "query": query, "response": response.text}
+                        )
                     )
-                )
+        except httpx.ConnectError as err:
+            self.logger.error(f"Connection error: {err}")
 
     def show(self, path: str) -> None: ...
 
