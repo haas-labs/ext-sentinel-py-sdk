@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.table import Table
 from sentinel.commands.common import SentinelCommand
 from sentinel.manifest import Status
-from sentinel.services.manifest_api import ManifestAPI, Status
+from sentinel.services.manifest_api import ManifestAPI
 from sentinel.services.service_account import import_service_tokens
 from sentinel.utils.imports import import_by_classpath
 from sentinel.utils.logger import logger
