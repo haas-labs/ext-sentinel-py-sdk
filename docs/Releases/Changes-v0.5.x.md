@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.18
+
+Feature
+
+- Add new logic for handling manifest severity (#330)
+- Use numeric severity for manifest (#329)
+
+Fix
+
+- double status in manifest api (#328)
+
 ## v0.5.17
 
 Feature
