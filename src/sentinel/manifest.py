@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 
 
 class Severity(float, Enum):
-    AUTOMATIC = -1
+    AUTO = -1
     INFO = 0
     LOW = 0.15
     MEDIUM = 0.25
@@ -60,7 +60,8 @@ class FAQModel(BaseModel):
     value: str
 
 
-class BaseSchema(BaseModel): ...
+class BaseSchema(BaseModel):
+    severity: float = Field(title="Severity", description="Severity", default=-1.0)
 
 
 class MetadataModel(BaseModel):
