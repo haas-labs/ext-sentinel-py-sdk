@@ -30,6 +30,7 @@ Sentinel Python SDK includes command line interface for launching processes. Aft
 - [Launch Command](docs/Commands/Launch.md) to run detector/monitor/... from a profile or a bundle
 - [Fetch Command](docs/Commands//Fetch.md) to fetch different datasets via RPC and store them locally as files
 - [ABI Signatures Command](docs/Commands/ABI-Signatures.md) to git ABI signatures for contract
+- [Manifest Command]() for managing detector's manifests
 
 ## Sentinel Components
 

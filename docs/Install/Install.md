@@ -25,3 +25,14 @@ Virtual environments allow you do not conflict with already-installed Python sys
 - [Dev Container Setup](/docs/Install/Dev-Container.md) (Optional)
 
 To get more options how to install different SDK version, please follow the guide [How to install specific SDK version](/docs/Install/Howto-Install-Specific-SDK-Version.md)
+
+## Environemnt Settings
+
+Sentinel uses environment variables for getting access to environemnt specific parameters, like Kafka servers, security tokens, etc. There are several ways how to manage environment:
+
+- The settings in environment variables specified from environment itself. For example, from Kubernetes. This approach is typical for dev and prod environments
+- For local development and testing with dev enviroment there are ways:
+  - to specify all required environment variables as part of virtual environment configuration
+  - specify via `sentinel` command line argument `--env-vars`  the path to YAML file with parameters
+  - specify the path to configuration file via `SENTINEL_ENV_PROFILE` env variable
+
