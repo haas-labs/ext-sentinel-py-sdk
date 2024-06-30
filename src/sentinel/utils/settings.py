@@ -51,9 +51,9 @@ def load_extra_vars(extra_vars: List[str] = list()) -> Dict:
                     try:
                         data = yaml.load(source, Loader=yaml.FullLoader)
                     except yaml.YAMLError as err:
-                        logger.error("{}, {}".format(err, vars))
+                        logger.error("Cannot load variables from the file {}, {}".format(err, vars))
             except FileNotFoundError as err:
-                logger.error(err)
+                logger.error(f"Cannot load variables from the file. {err.strerror} {err.filename}")
                 sys.exit(1)
         else:
             try:

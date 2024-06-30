@@ -10,8 +10,11 @@ from pkgutil import iter_modules
 from typing import Dict, List
 
 from sentinel.models.project import ProjectSettings
+from sentinel.utils.logger import get_logger
 from sentinel.utils.settings import load_extra_vars
 from sentinel.version import VERSION
+
+logger = get_logger(__name__)
 
 
 class SentinelCommand:
@@ -51,9 +54,9 @@ class SentinelCommand:
             action="append",
             help="Set additional variables as JSON, " + "if filename prepend with @. Support YAML/JSON file",
         )
-        group.add_argument(
-            "--env", type=str, default="local", help="Environment, possible values: local, demo, cloud. Default: local"
-        )
+        # group.add_argument(
+        #     "--env", type=str, default="local", help="Environment, possible values: local, demo, cloud. Default: local"
+        # )
         group.add_argument("--env-vars", type=str, help="Set environment variables from JSON/YAML file")
         # group.add_argument("--rich-logging", action="store_true", help="Activate rich logging")
 
@@ -96,8 +99,19 @@ class SentinelCommand:
         SentinelCommand.overwrite_logging_settings(args.log_level)
         self.extra_vars = load_extra_vars(args.vars)
 
-        # Update env var from file
+        # Update env variables via SENTINEL_ENV_PROFILE
+        if "SENTINEL_ENV_PROFILE" in os.environ:
+            logger.info(f"Loading variables from SENTINEL_ENV_PROFILE, {os.environ['SENTINEL_ENV_PROFILE']}")
+            for k, v in load_extra_vars(
+                [
+                    f"@{os.environ['SENTINEL_ENV_PROFILE']}",
+                ]
+            ).items():
+                os.environ[k] = v
+
+        # Update env variables from file
         if args.env_vars is not None:
+            logger.info(f"Loading variables from env vars file, {args.env_vars}")
             for k, v in load_extra_vars(
                 [
                     f"@{args.env_vars}",
