@@ -1,12 +1,11 @@
-from web3 import Web3
-from hexbytes import HexBytes
-
 from typing import Dict, List
 
+from hexbytes import HexBytes
 from sentinel.models.contract import (
     ABIRecord,
     ABISignature,
 )
+from web3 import Web3
 
 
 def get_abi_input_types(abi: ABIRecord) -> List[str]:
@@ -43,6 +42,7 @@ def extract_data_from_topics(abi_record: ABIRecord, topics: List[str]) -> Dict:
     if len(topics) == 0:
         return kv
 
+    topics = topics.copy()
     kv["event_signature_hash"] = topics.pop(0)
 
     if len(topics) != 0:
