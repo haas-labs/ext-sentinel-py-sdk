@@ -117,6 +117,8 @@ class CoreSentry(multiprocessing.Process):
             previous=cron.get_prev(datetime), current=cron.get_current(datetime), next=cron.get_next(datetime)
         )
 
+    # event handers
+
     def on_init(self) -> None: ...
 
     def on_run(self) -> None: ...

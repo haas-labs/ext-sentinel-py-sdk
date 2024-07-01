@@ -11,12 +11,16 @@ class Sentry(BaseModel):
 
     # Sentry ID
     id: Optional[str] = None
+
     # Sentry Type
     type: str
+
     # Sentry Name
     name: Optional[str]
+
     # Sentry Descriptions
     description: Optional[str] = None
+
     # Sentry Parameters
     parameters: Optional[Dict] = Field(default_factory=dict)
 
