@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.19
+
+Feature
+
+- Core sentinel database (#336)
+- Add monitoring target command
+- Load env vars from SENTINEL_ENV_PROFILE
+
+Fix
+
+- Empty topics list issue
+
 ## v0.5.18
 
 Feature
