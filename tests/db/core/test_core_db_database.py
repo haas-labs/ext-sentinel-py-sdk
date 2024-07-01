@@ -1,4 +1,4 @@
-from sentinel.db.core import Database
+from sentinel.db.core.core import Database
 
 
 def test_core_database(tmpdir):

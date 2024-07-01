@@ -1,7 +1,7 @@
 from typing import Dict
 
 from pydantic import BaseModel, Field
-from sentinel.db.utils import (
+from sentinel.db.core.utils import (
     FIELD_TYPE_MAPPING,
     get_fields,
     get_sql_create_table,
