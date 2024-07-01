@@ -91,3 +91,24 @@ class Database:
         "Sets ``journal_mode`` back to ``'delete'`` to disable Write-Ahead Log mode."
         if self.journal_mode != "delete":
             self.execute("PRAGMA journal_mode=delete;")
+
+
+class SentinelDatabase(Database):
+    def __init__(self, name: str, sentry_name: str, sentry_hash: str, **kwargs) -> None:
+        self.name = name if name else self.name
+        self.sentry_name = sentry_name
+        self.sentry_hash = sentry_hash
+        # self.logger = get_logger(__name__)
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        kwargs.update(settings.parameters)
+        return cls(
+            name=settings.name,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+            **kwargs,
+        )
