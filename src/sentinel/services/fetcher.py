@@ -1,29 +1,25 @@
+from typing import AsyncIterator, Dict, List, Union
+
 import httpx
-
 from rich.progress import Progress
-
-from typing import List, Dict, Iterator, Union, AsyncIterator
-
+from sentinel.formats.mappings import (
+    JSONRPC_BLOCK_FIELD_IGNORE_LIST,
+    JSONRPC_BLOCK_FIELD_MAPPINGS,
+    JSONRPC_BLOCK_FIELD_TRANSFORM,
+    JSONRPC_TRANSACTION_FIELD_IGNORE_LIST,
+    JSONRPC_TRANSACTION_FIELD_MAPPINGS,
+    JSONRPC_TRANSACTION_FIELD_TRANSFORM,
+    JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST,
+    JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS,
+    JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_TRANSFORM,
+)
 from sentinel.utils.dicts import (
-    dicts_merge,
     dict_fields_filter,
     dict_fields_mapping,
     dict_fields_transform,
-)
-
-from sentinel.formats.mappings import (
-    JSONRPC_BLOCK_FIELD_MAPPINGS,
-    JSONRPC_BLOCK_FIELD_TRANSFORM,
-    JSONRPC_BLOCK_FIELD_IGNORE_LIST,
-    JSONRPC_TRANSACTION_FIELD_MAPPINGS,
-    JSONRPC_TRANSACTION_FIELD_TRANSFORM,
-    JSONRPC_TRANSACTION_FIELD_IGNORE_LIST,
-    JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_TRANSFORM,
-    JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_MAPPINGS,
-    JSONRPC_TRANSACTION_RECEIPT_LOG_FIELD_IGNORE_LIST,
+    dicts_merge,
 )
 from sentinel.utils.logger import get_logger
-
 
 JSONRPC_VERSION = "2.0"
 HEADERS = {

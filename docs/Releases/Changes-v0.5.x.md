@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.20
+
+Feature
+
+- Add telos chain to definition (#339)
+- Add concurrency protection for publish and release Github workflows (#338)
+
 ## v0.5.19
 
 Feature
