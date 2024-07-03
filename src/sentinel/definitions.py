@@ -30,4 +30,7 @@ BLOCKCHAIN = {
     "fantom": Blockchain(
         network="fantom", chain_id=250, short_name="fantom", description="Fantom Opera", currency="FTM"
     ),
+    "telos": Blockchain(
+        network="telos", chain_id=40, short_name="telos", description="Telos EVM Mainnet", currency="TLOS"
+    ),
 }
