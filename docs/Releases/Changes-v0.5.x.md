@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.21
+
+Feature
+
+- Make tx_type and receipt_effective_gas_price fields optional (#341)
+
 ## v0.5.20
 
 Feature
