@@ -1,5 +1,6 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field, AliasChoices
+
+from pydantic import AliasChoices, BaseModel, Field
 
 
 class Block(BaseModel):
@@ -54,7 +55,7 @@ class Transaction(BaseModel):
     gas: int
     gas_price: int
     gas_used: int = Field(validation_alias=AliasChoices("receipt_gas_used", "gas_used"))
-    effective_gas_price: int = Field(
+    effective_gas_price: Optional[int] = Field(
         validation_alias=AliasChoices("receipt_effective_gas_price", "effective_gas_price")
     )
     max_fee_per_gas: Optional[int] = None
@@ -68,7 +69,7 @@ class Transaction(BaseModel):
     )
     root: Optional[str] = Field(validation_alias=AliasChoices("receipt_root", "root"))
     status: int = Field(validation_alias=AliasChoices("receipt_status", "status"))
-    transaction_type: int
+    transaction_type: Optional[int] = None
     logs: List[LogEntry]
     attack_probablity: float = 0.0
 
