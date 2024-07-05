@@ -14,7 +14,12 @@ DEFAULT_HEADERS = {
 class ManifestAPI:
     def __init__(self) -> None:
         self._endpoint_url = os.environ.get("EXTRACTOR_API_ENDPOINT")
+        if not self._endpoint_url:
+            raise RuntimeError("Environment variable EXTRACTOR_API_ENDPOINT must be configured for Manifest API use")
+
         self._token = os.environ.get("EXT_API_TOKEN")
+        if not self._token:
+            raise RuntimeError("Environment variable EXT_API_TOKEN must be configured for Manifest API use")
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self._token}"
