@@ -1,9 +1,8 @@
 import os
-import httpx
 
+import httpx
 from sentinel.models.token import Token
 from sentinel.utils.logger import logger
-
 
 SERVICE_ACCOUNT_TOKENS = {
     "HAAS_API_TOKEN": {
@@ -73,6 +72,12 @@ def import_service_tokens():
     Import service tokens
     """
     for token_name, vars in SERVICE_ACCOUNT_TOKENS.items():
+        if token_name in os.environ and os.environ[token_name] not in ("", None):
+            logger.info(f"The token {token_name} specified in env variables")
+            continue
+
+        # Generate new token
+        logger.info(f"No token {token_name} detected in env variables, trying to generate new")
         endppoint_var_name = vars.get("endpoint")
         endpoint = os.environ.get(endppoint_var_name) if endppoint_var_name is not None else None
         if endpoint is None:
