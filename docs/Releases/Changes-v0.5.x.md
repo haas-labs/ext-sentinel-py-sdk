@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.22
+
+Feature
+
+- Use token from env vars instead of generating new ones every time (#344)
+- Add transaction log entries filter by ABI signatures (#343)
+
 ## v0.5.21
 
 Feature
