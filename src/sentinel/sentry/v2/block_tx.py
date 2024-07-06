@@ -61,25 +61,16 @@ class BlockTxDetector(TransactionDetector):
         """
         Remove outdated incomplete blocks
         """
-        blk_numbers = self._blocks.keys()
+        block_ids = list(self._blocks.keys())
 
         # if no blocks in a stack -> exit
-        if len(blk_numbers) == 0:
+        if len(block_ids) == 0:
             return
 
-        last_blk_num = max(blk_numbers)
-
-        queued_blocks = {}
-        for blk_id, blk_meta in self._blocks.items():
-            if last_blk_num - blk_id < self._blocks_stack_size:
-                queued_blocks[blk_id] = blk_meta
-            else:
-                self.logger.warning(
-                    f"Incomplete block detected, block id: {blk_id}, "
-                    + f"expected tx: {blk_meta.size}, "
-                    + f"detected tx: {len(blk_meta.txs)}"
-                )
-        self._blocks = queued_blocks
+        last_block_id = max(block_ids)
+        outdated_blocks = filter(lambda blk_id: last_block_id - blk_id >= self._blocks_stack_size, block_ids)
+        for block_id in outdated_blocks:
+            self._blocks.pop(block_id)
 
     async def on_transaction(self, transaction: Transaction) -> None:
         """
