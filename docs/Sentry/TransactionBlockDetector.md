@@ -10,3 +10,6 @@ required for processing.
 - `on_block(self, transactions: List[Transaction])`: raised when all transactions per a block collected. 
   Transactions passed as argument
 
+## References
+
+- [Transaction Model](/src/sentinel/models/transaction.py)

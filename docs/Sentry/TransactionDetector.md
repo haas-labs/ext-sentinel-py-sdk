@@ -10,4 +10,6 @@ The Transaction Detector is most common way to build detectors/monitors around t
     and transaction passed as an argument
 
 
+## References
 
+- [Transaction Model](/src/sentinel/models/transaction.py)
