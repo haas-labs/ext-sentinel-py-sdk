@@ -13,7 +13,6 @@ from sentinel.core.v2.db import Databases
 from sentinel.core.v2.handler import FlowType
 from sentinel.core.v2.settings import Settings
 from sentinel.metrics.registry import Registry
-from sentinel.models.config import Configuration
 from sentinel.models.sentry import Sentry
 from sentinel.utils.logger import get_logger
 
@@ -235,8 +234,3 @@ class AsyncCoreSentry(CoreSentry):
             self.logger.warning("Interrupted by user")
 
     async def on_init(self) -> None: ...
-
-    async def on_run(self) -> None: ...
-
-    # handle incoming changes in config
-    async def on_config_change(self, config: Configuration) -> None: ...
