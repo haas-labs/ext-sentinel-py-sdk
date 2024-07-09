@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.23
+
+Feature
+
+- Improve performance of removing outdated blocks (#347)
+- Handle missed env vars required for manifest api (#346)
+
+Docs
+
+- Update sentry documentation (#348)
+
 ## v0.5.22
 
 Feature
