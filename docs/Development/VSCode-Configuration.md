@@ -32,7 +32,7 @@ Extentions required:
 }
 ```
 
-Since all Sentinel documentation is Markdown based, it could be helpful to add
+Since all Sentinel documentation is Markdown based, it would be helpful to add
 
 ```json
     "[markdown]": {
