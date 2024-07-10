@@ -9,5 +9,4 @@ Depend on interface there are:
     - [Kafka Channel Examples](/docs/Channels//KafkaChannelExamples.md)
 - [File Channels](/docs/Channels/FileChannel.md)
 - [Websocket Channels](/docs/Channels/WebscoketChannel.md)
-- [HTTP Channels]()
-- [Metrics Channels]()
+- [HTTP Channels](/docs/Channels/HTTPChannels.md)
