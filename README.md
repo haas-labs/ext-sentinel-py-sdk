@@ -28,10 +28,12 @@ Sentinel SDK is not limmited to build just on-chain data processor, there are op
 
 Sentinel Python SDK includes command line interface for launching processes. After the installation steps described above, you should be able to run `sentinel` command in your terminal or VS Code shell. 
 
-- [Sentinel Commands](docs/Commands/Main.md)
+- [Sentinel Commands](docs/Commands/Command-List.md)
+
+Most common Sentinel commands:
+
 - [Launch Command](docs/Commands/Launch.md) to run detector/monitor/... from a profile or a bundle
 - [Fetch Command](docs/Commands//Fetch.md) to fetch different datasets via RPC and store them locally as files
-- [ABI Signatures Command](docs/Commands/ABI-Signatures.md) to git ABI signatures for contract
 - [Manifest Command]() for managing detector's manifests
 
 ## Sentinel Components
