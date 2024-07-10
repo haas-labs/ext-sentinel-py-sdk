@@ -14,6 +14,8 @@ Detector Examples:
 
 Sentinel supports all blockchain networks supported by [Extractor](https://extractor.live) (e.g. Ethereum,Arbitrum,BSC,...). Please, visit [Extractor](https://extractor.live) for full list of supported networks
 
+Sentinel SDK is not limmited to build just on-chain data processor, there are options to develop sentries for processing data on schedule. 
+
 ## Installation
 
 - [Installation Guides](/docs/Install/Install.md)
@@ -38,15 +40,6 @@ Sentinel Python SDK includes command line interface for launching processes. Aft
 - [Channel](/docs/Channels/Overview.md)
 - [Database](/docs/Databases/Overview.md)
 
-## Detectors
-
-The role of the detector is to identify various events that have occurred in blockchain's transactions
-
-- [BlockTx Example](examples/block_tx/README.md)
-- [Transaction Example](examples/transaction/README.md)
-- [Balance Monitor](examples/balance_monitor/README.md)
-- [Extrctor Attack Detectors](https://github.com/haas-labs/ext-sentinel-detectors-py)
-
 ## Metrics
 
 - [Metrics](/docs/Metrics/Index.md)
@@ -58,14 +51,17 @@ The role of the detector is to identify various events that have occurred in blo
 - [Bundle](/docs/Tutorials/Bundle.md)
 - [How to work with transaction data locally](/docs/Tutorials/How-to-work-with-transaction-data-locally.md)
 
-## Examples
+## Detector and Monitor Examples
+
+The role of the detector is to identify various events that have occurred in blockchain's transactions
 
 - [BlockTx Detector](examples/block_tx/README.md) provides step-by-step guide and information
+- [Balance Monitor](examples/balance_monitor/README.md)
+- [Kafka Events Monitor](examples/kafka_events_monitor/)
+- [Monitored Addresses](examples/monitored_address/README.md)
+- [Revenue](examples/revenue/)
+- [Transactions](examples/transaction/README.md)
 
 ## Deployment
 
 - [Packaging Sentinel processes in Docker image](docs/Deployment/Packaging-in-Docker-Image.md)
-
-## The Bundle
-
-The processes bundle allows to run several processes in one docker container.

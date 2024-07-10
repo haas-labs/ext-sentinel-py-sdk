@@ -1,8 +1,8 @@
 # Bundles
 
-Helps groups different detectors and monitors and run them together. There is the example of a bundle. 
-There are 2 detectors, for Ethereum and BSC networks, which consume transaction data from Kafka channel 
-and store results locally, in the file: `transaction/data/events/events.json`
+A bundle allows to run several processes in one docker container. It helps groups different detectors and monitors and run them together. There 
+
+is the example of a bundle. There are 2 detectors, for Ethereum and BSC networks, which consume transaction data from Kafka channel and store results locally, in the file: `transaction/data/events/events.json`
 
 ```yaml
 project:
