@@ -31,3 +31,12 @@ Extentions required:
     "editor.rulers": [120]
 }
 ```
+
+Since all Sentinel documentation is Markdown based, it could be helpful to add
+
+```json
+    "[markdown]": {
+        "editor.wordWrap": "bounded",
+        "editor.wordWrapColumn": 120
+    },
+```
