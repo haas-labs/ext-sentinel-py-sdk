@@ -1,6 +1,6 @@
 # Profile Settings
 
-The Profile settings allows to customize the behaviour of Sentinel processes, related to process logic and launching of processes in different infrastructure: local, development, production. 
+The Profile settings allows to customize the behavior of Sentinel processes, related to process logic and launching of processes in different infrastructure: local, development, production. 
 
 Profile settings can be populated using different mechanisms:
 - Command line options
