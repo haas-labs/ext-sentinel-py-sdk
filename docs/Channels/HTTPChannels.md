@@ -1,6 +1,6 @@
 # HTTP Channels
 
-The HTTP Channel supports only outbound interface for publishing events for the Extractor. The logic of publishing events similar to [Outbound Kafka Events Channel (OutboundEventsChannel)](/src/sentinel/channels/kafka/events.py)
+The HTTP Channel supports only outbound interface for publishing events for the Extractor. The logic of publishing events similar to `OutboundEventsChannel` (sentinel.channels.kafka.events)
 
 The access to Hacken Cloud is required
 

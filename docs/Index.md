@@ -13,8 +13,8 @@ Sentinel Python SDK is a library for building and running on-chain data processo
 - Labels collection
 - ...
 
-Sentinel supports all blockchain networks supported by [Extractor](https://extractor.live) (e.g. Ethereum,Arbitrum,BSC,...). Please, visit [Extractor](https://extractor.live) for full list of supported networks
-Sentinel SDK is not limmited to build just on-chain data processor, there are options to develop sentries for processing data on schedule.
+Sentinel supports all blockchain networks supported by [Extractor](https://extractor.live) (e.g. Ethereum, Arbitrum, BSC,...). Please, visit [Extractor](https://extractor.live) for full list of supported networks
+Sentinel SDK is not limited to build just on-chain data processor, there are options to develop sentries for processing data on schedule.
 ## Installation
 
 - [Installation Guides](Install/Install.md)
@@ -34,18 +34,18 @@ Most common Sentinel commands:
 - [Manifest Command](Commands/Manifest.md) for managing detector's manifests
 ## Sentinel Components
 
-- [Sentry](/docs/Sentry/Overview.md)
-- [Channel](/docs/Channels/Overview.md)
-- [Database](/docs/Databases/Overview.md)
+- [Sentry](Sentry/Overview.md)
+- [Channel](Channels/Overview.md)
+- [Database](Databases/Overview.md)
 ## Metrics
 
-- [Metrics](/docs/Metrics/Index.md)
+- [Metrics](Metrics/Index.md)
 ## Tutorials
 
-- [Profile](/docs/Tutorials/Profile.md)
-- [Template](/docs/Tutorials/Template.md)
-- [Bundle](/docs/Tutorials/Bundle.md)
-- [How to work with transaction data locally](/docs/Tutorials/How-to-work-with-transaction-data-locally.md)
+- [Profile](Tutorials/Profile.md)
+- [Template](Tutorials/Template.md)
+- [Bundle](Tutorials/Bundle.md)
+- [How to work with transaction data locally](Tutorials/How-to-work-with-transaction-data-locally.md)
 
 ## Detector and Monitor Examples
 
@@ -60,4 +60,4 @@ Most common Sentinel commands:
 
 ## Deployment
 
-- [Packaging Sentinel processes in Docker image](docs/Deployment/Packaging-in-Docker-Image.md)
+- [Packaging Sentinel processes in Docker image](Deployment/Packaging-in-Docker-Image.md)
