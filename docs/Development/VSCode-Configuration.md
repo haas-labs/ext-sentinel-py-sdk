@@ -6,7 +6,7 @@ This guide outlines common VSCode settings for Python development, along with th
 
 Note: Before applying these settings, ensure that Python and Ruff are installed on your system.
 
-Extentions required:
+Extensions required:
 - Python: provides support for Python language features and tools
 - Ruff: A code formatter for Python that enforces PEP 8 style guide recommendations. 
 

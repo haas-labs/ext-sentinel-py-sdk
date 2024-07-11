@@ -4,7 +4,7 @@ Building Sentinel processes into Docker images allows to deploy these processes 
 
 ## Prerequisites
 
-To build docker image, you need to run commands below from virtual environment. How to install/configure it, please follow [this guide](/docs/Install/Virtualenv.md)
+To build docker image, you need to run commands below from virtual environment. How to install/configure it, please follow [this guide](Virtualenv.md)
 
 ## Sentinel Base Docker image
 

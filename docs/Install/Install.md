@@ -20,11 +20,11 @@ The next steps, the installation of Sentinel SDK.
 
 Virtual environments allow you do not conflict with already-installed Python system packages, which could break some of your system tools and scripts, and still install packages normally with `pip` (without `sudo`).
 
-- [Python Virtual Environment](/docs/Install/Virtualenv.md) (Recommended)
-- [Python Virtual Environment whem system python version is 3.9-](/docs/Install/Virtenv-for-prev-python-versions.md)
-- [Dev Container Setup](/docs/Install/Dev-Container.md) (Optional)
+- [Python Virtual Environment](Virtualenv.md) (Recommended)
+- [Python Virtual Environment whem system python version is 3.9-](Virtenv-for-prev-python-versions.md)
+- [Dev Container Setup](Dev-Container.md) (Optional)
 
-To get more options how to install different SDK version, please follow the guide [How to install specific SDK version](/docs/Install/Howto-Install-Specific-SDK-Version.md)
+To get more options how to install different SDK version, please follow the guide [How to install specific SDK version](Howto-Install-Specific-SDK-Version.md)
 
 ## Environemnt Settings
 

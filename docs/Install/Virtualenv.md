@@ -19,7 +19,7 @@ Please be sure that you have created virtual environment in `.venv` directory. I
 ```sh
 python3 -m venv .venv
 ```
-Please be aware that if your system python version is lower than 3.0, you can use [the instruction](/docs/Install/Virtenv-for-prev-python-versions.md)
+Please be aware that if your system python version is lower than 3.0, you can use [the instruction](Virtenv-for-prev-python-versions.md)
 
 
 ## Activation
