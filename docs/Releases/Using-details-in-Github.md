@@ -15,6 +15,7 @@ Rather than wrecking readability, wrap it in a `<details>` tag!
 > https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details
 
 ## A collapsible section with markdown
+
 <details>
   <summary>Click to expand!</summary>
   
