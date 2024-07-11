@@ -52,6 +52,7 @@ Most common Sentinel commands:
 - [Template](/docs/Tutorials/Template.md)
 - [Bundle](/docs/Tutorials/Bundle.md)
 - [How to work with transaction data locally](/docs/Tutorials/How-to-work-with-transaction-data-locally.md)
+- [Processing transaction logs](/docs/Tutorials/Processing-transaction-logs.md)
 
 ## Detector and Monitor Examples
 
