@@ -74,6 +74,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Obsidian documentaion
+docs/.obsidian
+
 # PyBuilder
 .pybuilder/
 target/
