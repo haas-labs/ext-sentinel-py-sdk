@@ -46,4 +46,4 @@ or for python 3.11
 ```sh
 python3.11 -m venv .venv
 ```
-and then proceed with Sentinel SDK Installation instructions started from [Virtual Env Activation](/docs/Install/Virtualenv.md#activation)
+and then proceed with Sentinel SDK Installation instructions started from [Virtual Env Activation](Virtualenv.md#activation)

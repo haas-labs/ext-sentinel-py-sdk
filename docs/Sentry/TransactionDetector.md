@@ -19,7 +19,3 @@ class TxDetector(TransactionDetector):
     async def on_transaction(self, transaction: Transaction) -> None:
         ...
 ```
-
-## References
-
-- [Transaction Model](/src/sentinel/models/transaction.py)

@@ -1,20 +1,15 @@
-## <version>
+# Release Notes
 
-<date>
+## Changes
 
-Fixed:
+- [v0.3.x](Changes-v0.3.x.md)
+- [v0.4.x](Changes-v0.4.x.md)
+- [v0.5.x](Changes-v0.5.x.md)
 
-- to be added
+## Templates
 
-Added:
+- [Release Notes Template](Release-Notes-Template.md)
 
-- to be added
+## Hints
 
-Changed:
-
-- to be added
-
-Deprecated:
-
-- to be added
-
+- [Using-details-in-Github](Using-details-in-Github.md)

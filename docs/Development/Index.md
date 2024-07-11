@@ -1,3 +1,3 @@
 # Development
 
-- [VS Code Configuration][VSCode-Configuration.md]
+- [VS Code Configuration](VSCode-Configuration.md)

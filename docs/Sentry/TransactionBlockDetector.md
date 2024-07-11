@@ -10,7 +10,7 @@ required for processing.
 - `on_block(self, transactions: List[Transaction])`: raised when all transactions per a block collected. 
   Transactions passed as argument
 
-The detector listens input transaction stream, collects transactios per block, and when all transactions per block collected, invokes `on_block()` method. All transactions in a block ordered by transaction id
+The detector listens input transaction stream, collects transactions per block, and when all transactions per block collected, invokes `on_block()` method. All transactions in a block ordered by transaction id
 
 ```python
 from sentinel.models.transaction import Transaction
@@ -20,7 +20,3 @@ class BlockTxDetector(BlockDetector):
     async def on_block(self, transactions: List[Transaction]) -> None:
         ...
 ```
-
-## References
-
-- [Transaction Model](/src/sentinel/models/transaction.py)
