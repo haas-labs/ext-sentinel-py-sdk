@@ -18,12 +18,11 @@ Available commands:
 More commands available when run from project directory
 
 Use "sentinel <command> -h" to see more info about a command```
-```
 
 ## References
 
-- [ABI Signatures Command](/docs/Commands/ABI-Signatures.md)
-- [Inventory](/docs/Commands/Inventory.md)
-- [Fetch Command](/docs/Commands/Fetch.md)
-- [Launch Command](/docs/Commands/Launch.md)
-- [Version](/docs/Commands/Version.md)
+- [ABI Signatures Command](Commands/ABI-Signatures.md)
+- [Inventory](Commands/Inventory.md)
+- [Fetch Command](Commands/Fetch.md)
+- [Launch Command](Commands/Launch.md)
+- [Version](Commands/Version.md)

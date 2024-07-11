@@ -5,8 +5,9 @@ A Channel is a way how a sentry (processing unit) can communicate with external 
 Depend on interface there are:
 
 - Kafka Channels
-    - [Kafka Channels](/docs/Channels/KafkaChannels.md)
-    - [Kafka Channel Examples](/docs/Channels//KafkaChannelExamples.md)
-- [File Channels](/docs/Channels/FileChannel.md)
-- [Websocket Channels](/docs/Channels/WebscoketChannel.md)
-- [HTTP Channels](/docs/Channels/HTTPChannels.md)
+	- [[KafkaChannels]]
+    - [Kafka Channels](Channels/KafkaChannels.md)
+    - [Kafka Channel Examples](Channels//KafkaChannelExamples.md)
+- [File Channels](Channels/FileChannel.md)
+- [Websocket Channels](Channels/WebscoketChannel.md)
+- [HTTP Channels](Channels/HTTPChannels.md)

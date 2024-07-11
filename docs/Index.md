@@ -17,21 +17,21 @@ Sentinel supports all blockchain networks supported by [Extractor](https://extra
 Sentinel SDK is not limmited to build just on-chain data processor, there are options to develop sentries for processing data on schedule.
 ## Installation
 
-- [Installation Guides](/docs/Install/Install.md)
+- [Installation Guides](Install/Install.md)
 ## Development
 
-- [VSCode Configuration](/docs/Development/VSCode-Configuration.md)
+- [VSCode Configuration](Development/VSCode-Configuration.md)
 ## How to use Sentinel commands
 
   Sentinel Python SDK includes command line interface for launching processes. After the installation steps described above, you should be able to run `sentinel` command in your terminal or VS Code shell.
   
-- [Sentinel Commands](docs/Commands/Command-List.md)
+- [Sentinel Commands](Commands/Command-List.md)
 
 Most common Sentinel commands:
 
-- [Launch Command](docs/Commands/Launch.md) to run detector/monitor/... from a profile or a bundle
-- [Fetch Command](docs/Commands//Fetch.md) to fetch different datasets via RPC and store them locally as files
-- [Manifest Command]() for managing detector's manifests
+- [Launch Command](Commands/Launch.md) to run detector/monitor/... from a profile or a bundle
+- [Fetch Command](Commands/Fetch.md) to fetch different datasets via RPC and store them locally as files
+- [Manifest Command](Commands/Manifest.md) for managing detector's manifests
 ## Sentinel Components
 
 - [Sentry](/docs/Sentry/Overview.md)
