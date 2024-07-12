@@ -40,7 +40,6 @@ To be described later
 - https://ipfs.tech/
 - https://docs.ipfs.tech/concepts/content-addressing/#cid-versions
 
-
 ## Swarm
 
 to be descsribed later

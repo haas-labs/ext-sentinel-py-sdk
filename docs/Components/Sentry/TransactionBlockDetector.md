@@ -20,3 +20,7 @@ class BlockTxDetector(BlockDetector):
     async def on_block(self, transactions: List[Transaction]) -> None:
         ...
 ```
+
+## References
+
+- [Transaction Block Detector Template](TransactionBlockDetectorTemplate.md)
