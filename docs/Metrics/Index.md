@@ -19,16 +19,11 @@
 - [Info](Info.md)
 - [Enum](Enum.md)
 
-## Project Config
+## Metrics Configuration
 
-### Monitoring Enabled
+| Parameter            | Type    | Default | Description                                                                                    |
+| -------------------- | ------- | ------- | ---------------------------------------------------------------------------------------------- |
+| `monitoring_enabled` | BOOLEAN | False   | A boolean which specifies if the telemetry will be enabled                                     |
+| `monitoring_port`    | INTEGER | 9090    | A telemetry port for consuming metrics via MetricServer sentry, if `monitoring_enabled` = True |
 
-Default: False
 
-A boolean which specifies if the telemetry will be enabled
-
-### Monitoring Port
-
-Default: 9090
-
-A telemetry port for consuming metrics via MetricServer sentry, if TELEMETRY_ENABLED = True
