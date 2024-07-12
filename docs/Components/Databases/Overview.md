@@ -1,2 +1,2 @@
-# Databases Overview
+# Databases
 
