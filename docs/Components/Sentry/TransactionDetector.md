@@ -19,3 +19,7 @@ class TxDetector(TransactionDetector):
     async def on_transaction(self, transaction: Transaction) -> None:
         ...
 ```
+
+## References
+
+- [Transaction Detector Template](TransactionDetectorTemplate.md)

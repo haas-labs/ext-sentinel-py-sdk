@@ -1,5 +1,5 @@
 # Sentinel Components
 
-- [Sentry](Sentry/Index.md)
-- [Channel](Channels/Overview.md)
-- [Database](Databases/Overview.md)
+- [Sentry](Components/Sentry/Index.md)
+- [Channel](Components/Channels/Overview.md)
+- [Database](Components/Databases/Overview.md)

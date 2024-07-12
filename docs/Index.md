@@ -27,6 +27,7 @@ Sentinel SDK is not limited to build just on-chain data processor, there are opt
 - [Sentinel Components](Components/Index.md)
 - [Metrics](Metrics/Index.md)
 - [Tutorials](Tutorials/Index.md)
+- [Tools](Tools/Index.md)
 
 ## Detector and Monitor Examples
 
