@@ -1,5 +1,7 @@
 # Sentinel Python SDK
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 Sentinel Python SDK is a library for building and running on-chain data processors and sending events to [Extractor](https://extractor.live).
 
 Detector Examples:
