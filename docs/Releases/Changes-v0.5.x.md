@@ -4,6 +4,24 @@
 
 Feature
 
+- Add license
+- Use requirements files for deployment and dev profiles
+
+Documentation
+
+- Add data models (#362)
+- Re-org documentation structure
+- Add templates for detectors (#361)
+- Add Obsidian support
+- Update documentation for processes, transaction and block detectors (#354)
+- Update channel details (#353)
+- Update commands details (#352)
+- Update bundle description
+
+## v0.5.23
+
+Feature
+
 - Improve performance of removing outdated blocks (#347)
 - Handle missed env vars required for manifest api (#346)
 
