@@ -1,0 +1,29 @@
+import pytest
+from sentinel.utils.address import shorten_ethereum_address
+
+
+def test_shorten_ethereum_address_failed_transform():
+    with pytest.raises(ValueError):
+        shorten_ethereum_address(address="a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+
+
+def test_shorten_ethereum_address_success_transform():
+    assert (
+        shorten_ethereum_address(address="0x000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+        == "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    ), "Incorrect shorten address"
+
+    assert (
+        shorten_ethereum_address(address="0x000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+        == "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    ), "Incorrect shorten address"
+
+    assert (
+        shorten_ethereum_address(address="0x00a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+        == "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    ), "Incorrect shorten address"
+
+    assert (
+        shorten_ethereum_address(address="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
+        == "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    ), "Incorrect shorten address"
