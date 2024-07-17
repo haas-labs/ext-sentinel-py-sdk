@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.26
+
+Feature
+
+- add shorten ethereum address (#368)
+
 ## v0.5.25 (Cumulative release)
 
 Feature
