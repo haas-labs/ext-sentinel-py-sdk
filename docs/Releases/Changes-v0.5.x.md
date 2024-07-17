@@ -1,6 +1,52 @@
 # Changelog
 
-## v0.5.23
+## v0.5.25 (Cumulative release)
+
+Feature
+
+- Add license
+- Use requirements files for deployment and dev profiles
+- Improve performance of removing outdated blocks (#347)
+- Handle missed env vars required for manifest api (#346)
+- Use token from env vars instead of generating new ones every time (#344)
+- Add transaction log entries filter by ABI signatures (#343)
+- Make tx_type and receipt_effective_gas_price fields optional (#341)
+- Add telos chain to definition (#339)
+- Add concurrency protection for publish and release Github workflows (#338)
+- Core sentinel database (#336)
+- Add monitoring target command
+- Load env vars from SENTINEL_ENV_PROFILE
+- Add new logic for handling manifest severity (#330)
+- Use numeric severity for manifest (#329)
+- Handling manifest status (#326)
+- Connection error handling for manifest api (#325)
+- Add filtering manifests by status
+- increase deps and dev/deployment tools versions
+- Add monitored target model (#316)
+- Get address conditions return config only (#314)
+- Add cid field for event message (#310)
+
+Documentation
+
+- Add data models (#362)
+- Re-org documentation structure
+- Add templates for detectors (#361)
+- Add Obsidian support
+- Update documentation for processes, transaction and block detectors (#354)
+- Update channel details (#353)
+- Update commands details (#352)
+- Update bundle description
+- Update sentry documentation (#348)
+
+Fix
+
+- Empty topics list issue
+- double status in manifest api (#328)
+- Fix manifest schema for tags field(#323)
+- Increase kafka connection timeout for monitoring  conditions db (#317)
+- Remove duplicates in monitoring conditions (#312)
+
+## v0.5.24
 
 Feature
 
