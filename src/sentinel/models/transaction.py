@@ -56,7 +56,7 @@ class Transaction(BaseModel):
     gas_price: int
     gas_used: int = Field(validation_alias=AliasChoices("receipt_gas_used", "gas_used"))
     effective_gas_price: Optional[int] = Field(
-        validation_alias=AliasChoices("receipt_effective_gas_price", "effective_gas_price")
+        validation_alias=AliasChoices("receipt_effective_gas_price", "effective_gas_price"), default=None
     )
     max_fee_per_gas: Optional[int] = None
     max_priority_fee_per_gas: Optional[int] = None
