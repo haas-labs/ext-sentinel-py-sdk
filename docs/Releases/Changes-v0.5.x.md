@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.27
+
+Feature
+
+- Add default value for receipt effective gas price (#370)
+
 ## v0.5.26
 
 Feature
