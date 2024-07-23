@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.28
+
+Feature
+
+- Add normalize address util and tests (#372)
+
 ## v0.5.27
 
 Feature
