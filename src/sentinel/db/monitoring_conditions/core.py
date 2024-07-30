@@ -54,11 +54,17 @@ class CoreMonitoringConditionsDB:
         )
 
     @property
-    def size(self):
+    def size(self) -> int:
         return len(self._address_db)
 
     def update(self, conditions: Conditions) -> None:
+        """
+        update condition(-s) in database
+        """
         self._address_db[conditions.address] = conditions.conditions
 
     def has_address(self, address: str) -> bool:
+        """
+        returns True if address is in database
+        """
         return True if address in self._address_db else False
