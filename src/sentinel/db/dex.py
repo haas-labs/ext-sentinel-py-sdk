@@ -1,5 +1,5 @@
 import pathlib
-
+from typing import List
 
 from sentinel.utils.logger import get_logger
 
@@ -45,8 +45,8 @@ class LocalDEXAddresses:
         else:
             return False
 
-    def all(self):
-        '''
+    def all(self) -> List[str]:
+        """
         returns all DEX addresses in local storage
-        '''
+        """
         return self._db
