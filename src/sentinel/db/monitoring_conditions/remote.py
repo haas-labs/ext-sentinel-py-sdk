@@ -72,9 +72,15 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
                 yield self._config_db[config_id]
 
     def get_group_id(self) -> str:
+        """
+        returns Kafka group id
+        """
         return f"sentinel.{self.sentry_name}.{self.sentry_hash}"
 
     def get_address(self, config: Configuration) -> str:
+        """
+        returns address or proxy
+        """
         return config.contract.proxy_address if config.contract.proxy_address is not None else config.contract.address
 
     def update(self, record: aiokafka.ConsumerRecord) -> None:
