@@ -58,9 +58,15 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
 
     @property
     def addresses(self) -> Dict[str, Dict[int, Configuration]]:
+        """
+        returns the list addresses with monitoring conditions
+        """
         return dict(self._address_db)
 
     def get_address_conditions(self, address: str) -> Iterator[Configuration]:
+        """
+        returns monitoring conditions for specific address
+        """
         if address in self._address_db:
             for config_id in self._address_db[address]:
                 yield self._config_db[config_id]
