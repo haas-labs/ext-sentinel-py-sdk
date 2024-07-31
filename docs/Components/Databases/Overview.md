@@ -11,3 +11,22 @@
 - [Trace](Trace.md)
 - [Account](Account.md)
 - [DEX](DEX.md)
+
+## Data Models per database
+
+| Database             | Fields                    | Notes                                 |
+| -------------------- | ------------------------- | ------------------------------------- |
+| Address \| Common    | address                   |                                       |
+| Address \| Local     | address                   |                                       |
+| Address \| Remote    | address                   |                                       |
+| Blacklist \| Local   | address                   |                                       |
+| Blacklist \| Remote  | address                   |                                       |
+| Contract \| Remote   | contract or abi signature |                                       |
+| Label                | label db record           |                                       |
+| Mixer                | address                   |                                       |
+| Monitoring Contract  | address, network          |                                       |
+| Monitoring Condition | address, conditions       |                                       |
+| Trace                | address, dictionary       | The dictionary contains trace details |
+| Account              | address                   |                                       |
+| DEX                  | address                   |                                       |
+|                      |                           |                                       |
