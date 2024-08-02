@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.29
+
+Feature
+
+- Add status for failed manifest registration (#387)
+- Upgrade versions in pyproject and dev requirements (#374)
+
+Documentation
+
+- Update database details
+
 ## v0.5.28
 
 Feature
