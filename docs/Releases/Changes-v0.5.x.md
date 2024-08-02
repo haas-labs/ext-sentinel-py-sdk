@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.30
+
+Fix
+
+- Error handling for manifest registration
+
 ## v0.5.29
 
 Feature
