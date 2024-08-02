@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.31
+
+Feature
+
+- Manifest get parameters handling
+
 ## v0.5.30
 
 Fix
