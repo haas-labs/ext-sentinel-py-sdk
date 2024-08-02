@@ -83,13 +83,19 @@ class ManifestAPI:
             "size": 100,
         }
         if schema_id is not None:
-            query = {"where": f"id = {schema_id}"}
-        elif name is not None and version is not None:
-            query = {"where": f"name = '{name}' and version = '{version}'"}
-        elif name is not None and version is None:
-            query = {"where": f"name = '{name}'"}
-        elif status is not None:
-            query = {"where": f"status = '{status.value}'"}
+            query.update({"where": f"id = {schema_id}"})
+
+        params = []
+        if name is not None:
+            params.append(("name", name))
+        if version is not None:
+            params.append(("version", version))
+        if status is not None:
+            params.append(("status", status.value))
+
+        if len(params) > 0:
+            query_str = " and ".join([f"{kv[0]}='{kv[1]}'" for kv in params])
+            query["where"] = query_str
 
         try:
             response = httpx.post(url=endpoint, headers=self._headers, json=query, verify=False)
