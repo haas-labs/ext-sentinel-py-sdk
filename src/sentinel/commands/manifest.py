@@ -55,6 +55,7 @@ class Command(SentinelCommand):
                     logger.error("Missed or misconfigured required arguments, --id and/or --status")
                     return
                 manifest_api.change(schema_id=args.id, name=args.name, status=Status(args.status.upper()))
+
             case Action.registrer.value:
                 if args.classpath is None:
                     logger.error("Missed must have agrument for show action, --classpath")
