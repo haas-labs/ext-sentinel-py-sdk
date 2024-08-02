@@ -66,9 +66,11 @@ class ManifestAPI:
             case _:
                 self.logger.error(
                     " ".join(
-                        f"Registering schema failed, manifest: {data},",
-                        f"status code: {response.status_code},",
-                        f"response: {response.text}",
+                        [
+                            f"Registering schema failed, manifest: {data},",
+                            f"status code: {response.status_code},",
+                            f"response: {response.text}",
+                        ]
                     )
                 )
 
