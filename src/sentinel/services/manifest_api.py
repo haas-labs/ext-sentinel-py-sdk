@@ -64,7 +64,13 @@ class ManifestAPI:
             case 200:
                 self.logger.info("The schema registered succesfully")
             case _:
-                self.logger.error(f"Registering schema failed, manifest: {data}, response: {response.text}")
+                self.logger.error(
+                    " ".join(
+                        f"Registering schema failed, manifest: {data},",
+                        f"status code: {response.status_code},",
+                        f"response: {response.text}",
+                    )
+                )
 
     def get(
         self, schema_id: int = None, name: str = None, version: str = None, status: Status = None
