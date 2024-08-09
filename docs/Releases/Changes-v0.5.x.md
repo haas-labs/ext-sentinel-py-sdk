@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.32
+
+Feature
+
+- Add tags and network tags for detector manifest
+
+Documentation
+
+- update sentry diagrams
+
 ## v0.5.31
 
 Feature
