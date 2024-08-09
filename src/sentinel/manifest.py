@@ -22,6 +22,11 @@ class Severity(float, Enum):
     CRITICAL = 0.75
 
 
+class Tag(str, Enum):
+    SECURITY = "SECURITY"
+    COMPLIANCE = "COMPLIANCE"
+
+
 class NetworkTag(str, Enum):
     # Network groups
     EVM = "evm"
@@ -68,7 +73,8 @@ class MetadataModel(BaseModel):
     name: str
     version: str
     description: str
-    tags: List[str] = Field(default_factory=list)
+    tags: List[Tag] = Field(default_factory=list)
+    network_tags: List[NetworkTag] = Field(default_factory=list)
     faq: List[FAQModel] = Field(default_factory=list)
     status: Status
 
