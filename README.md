@@ -20,4 +20,4 @@ Sentinel SDK is not limmited to build just on-chain data processor, there are op
 
 ## Documentation
 
-- [Documentation](/docs/Index.md)
+- [Documentation](/docs/README.md)
