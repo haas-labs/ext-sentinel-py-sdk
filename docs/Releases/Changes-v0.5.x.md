@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.33
+
+Feature
+
+- Add financial tag for manifest (#402)
+- Generate summary file in docs (#401)
+
+Documentation
+
+- update links to release notes (#400)
+- SDK overview update (#396)
+- apply gitbook structure and configuration (#395)
+
 ## v0.5.32
 
 Feature
