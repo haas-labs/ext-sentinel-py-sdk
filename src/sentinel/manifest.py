@@ -25,6 +25,7 @@ class Severity(float, Enum):
 class Tag(str, Enum):
     SECURITY = "SECURITY"
     COMPLIANCE = "COMPLIANCE"
+    FINANCIAL = "FINANCIAL"
 
 
 class NetworkTag(str, Enum):
