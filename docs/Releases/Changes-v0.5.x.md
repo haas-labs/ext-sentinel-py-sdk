@@ -1,5 +1,11 @@
 # Changelog
 
+## V0.5.34
+
+Feature
+
+- Add manifest tag as string type (#404)
+
 ## v0.5.33
 
 Feature
