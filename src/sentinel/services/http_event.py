@@ -1,7 +1,6 @@
-from typing import List
-
 import httpx
 from sentinel.models.event import Event
+from sentinel.utils.logger import get_logger
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -12,17 +11,23 @@ DEFAULT_HEADERS = {
 class HTTPEventService:
     def __init__(self, endpoint_url: str, token: str) -> None:
         self._token = token
-        self._endpoint_url = endpoint_url
+        self._endpoint_url = endpoint_url + "/api/v1/event"
 
         self._headers = DEFAULT_HEADERS.copy()
         self._headers["Authorization"] = f"Bearer {self._token}"
 
-    def send(self, events: List[Event]) -> None:
-        endpoint_url = self._endpoint + "/api/v1/event"
-        query = {"events": events}
+        self.logger = get_logger(__name__)
 
+    def send(self, event: Event) -> None:
+        assert isinstance(event, Event), "Incorrect events type, expected list or tuple"
+
+        query = {"events": [event.model_dump(exclude_none=True)]}
         with httpx.Client(verify=False) as httpx_client:
-            response = httpx_client.post(url=endpoint_url, headers=self._headers, json=query)
+            response = httpx_client.post(
+                url=self._endpoint_url,
+                headers=self._headers,
+                json=query,
+            )
             match response.status_code:
                 case 200:
                     # self.logger.debug(f"{response}")
