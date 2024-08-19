@@ -4,6 +4,15 @@
 
 Feature
 
+- add pytest-httx to dev requirements
+- add http event service and tests
+- add tests for http events service
+- update dependencies
+
+## V0.5.34
+
+Feature
+
 - Add manifest tag as string type (#404)
 
 ## v0.5.33
