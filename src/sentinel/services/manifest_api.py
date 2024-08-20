@@ -2,6 +2,7 @@ import os
 from typing import Iterator
 
 import httpx
+
 from sentinel.manifest import ManifestAPIModel, MetadataModel, Status
 from sentinel.utils.logger import get_logger
 
@@ -55,9 +56,10 @@ class ManifestAPI:
             "version": metadata.version,
             "status": metadata.status.value,
             "description": metadata.description,
-            "faq": [faq.model_dump() for faq in metadata.faq],
             "tags": metadata.tags,
+            "network_tags": metadata.network_tags,
             "schema": schema,
+            "faq": [faq.model_dump() for faq in metadata.faq],
         }
         response = httpx.post(url=endpoint, headers=self._headers, json=data, verify=False)
         match response.status_code:
