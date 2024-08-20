@@ -1,6 +1,12 @@
 # Changelog
 
-## V0.5.34
+## V0.5.36
+
+Fix
+
+- Add missed network tags during manifest registration (#408)
+
+## V0.5.35
 
 Feature
 
