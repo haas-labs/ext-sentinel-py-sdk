@@ -1,4 +1,5 @@
 import httpx
+
 from sentinel.models.event import Event
 from sentinel.utils.logger import get_logger
 
@@ -23,11 +24,15 @@ class HTTPEventService:
 
         query = {"events": [event.model_dump(exclude_none=True)]}
         with httpx.Client(verify=False) as httpx_client:
-            response = httpx_client.post(
-                url=self._endpoint_url,
-                headers=self._headers,
-                json=query,
-            )
+            try:
+                response = httpx_client.post(
+                    url=self._endpoint_url,
+                    headers=self._headers,
+                    json=query,
+                )
+            except httpx.ConnectError as err:
+                self.logger.error(f"Cannot send HTTP event: {err}")
+                return
             match response.status_code:
                 case 200:
                     # self.logger.debug(f"{response}")
