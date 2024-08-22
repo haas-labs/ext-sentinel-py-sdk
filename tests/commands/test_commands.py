@@ -5,11 +5,11 @@ def test_get_commands_from_module():
     commands = get_commands_from_module("sentinel.commands")
     assert list(commands.keys()) == [
         "abi_signature",
+        "config",
         "fetch",
         "inventory",
         "launch",
         "manifest",
-        "target",
         "version",
     ], "Incorrect list of sentinel commands"
 
