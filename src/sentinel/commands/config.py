@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List
 
 from sentinel.commands.common import SentinelCommand
+from sentinel.db.config.remote import RemoteMonitoringConfigDB
 from sentinel.services.service_account import import_service_tokens
 from sentinel.utils.logger import logger
 
@@ -28,6 +29,8 @@ class Command(SentinelCommand):
 
     def run(self, opts: List[str], args: Namespace) -> None:
         super().run(opts, args)
+
+        config_db = RemoteMonitoringConfigDB()
 
         logger.info("Importing service account tokens")
         import_service_tokens()
