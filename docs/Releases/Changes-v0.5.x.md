@@ -2,6 +2,13 @@
 
 ## V0.5.36
 
+Feature
+
+- Add transparent proxy abi signatures (#412)
+- Add connection error handling for http event
+
+## V0.5.36
+
 Fix
 
 - Add missed network tags during manifest registration (#408)
