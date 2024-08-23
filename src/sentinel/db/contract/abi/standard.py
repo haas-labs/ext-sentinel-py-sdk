@@ -58,16 +58,17 @@ class StandardABISignatures:
             return
 
         for standard in standards:
-            if standard == "ERC20":
-                self._load("ERC20", json.loads(ERC20))
-            elif standard == "ERC721":
-                self._load("ERC721", json.loads(ERC721))
-            elif standard == "ERC1155":
-                self._load("ERC1155", json.loads(ERC1155))
-            elif standard == "TransparentProxy":
-                self._load("TransparentProxy", json.loads(TRANSPARENT_PROXY))
-            else:
-                self.logger.warning(f"Unknown standard name, {standard}")
+            match standard:
+                case "ERC20":
+                    self._load("ERC20", json.loads(ERC20))
+                case "ERC721":
+                    self._load("ERC721", json.loads(ERC721))
+                case "ERC1155":
+                    self._load("ERC1155", json.loads(ERC1155))
+                case "TransparentProxy":
+                    self._load("TransparentProxy", json.loads(TRANSPARENT_PROXY))
+                case _:
+                    self.logger.warning(f"Unknown standard name, {standard}")
 
     def _load(self, standard: str, abi_records: List[Dict]) -> None:
         """
@@ -81,6 +82,7 @@ class StandardABISignatures:
         standard: str = None,
         signature_type: str = None,
         signature_hash: str = None,
+        signature_name: str = None,
     ) -> Iterator[ABISignature]:
         """
         Search signatures
@@ -91,5 +93,11 @@ class StandardABISignatures:
                     continue
             if signature_type is not None:
                 if signature.type != signature_type:
+                    continue
+            if signature_hash is not None:
+                if signature.signature_hash != signature_hash:
+                    continue
+            if signature_name is not None:
+                if signature.abi.name.lower() != signature_name.lower():
                     continue
             yield signature

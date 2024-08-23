@@ -122,3 +122,29 @@ def test_abi_signatures_standard_search():
     assert (
         len(list(abi_signatures.search(standard="ERC1155", signature_type="function"))) == 8
     ), "Incorrect number of signatures for ERC 1155 and type = function"
+
+    assert (
+        len(
+            list(
+                abi_signatures.search(
+                    standard="ERC20",
+                    signature_type="event",
+                    signature_hash="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+                )
+            )
+        )
+        == 1
+    ), "Incorrect number of signatures for ERC 20 and type = event and hash = `Transfer`"
+
+    assert (
+        len(
+            list(
+                abi_signatures.search(
+                    standard="ERC20",
+                    signature_type="event",
+                    signature_name="Transfer",
+                )
+            )
+        )
+        == 1
+    ), "Incorrect number of signatures for ERC 20 and type = event and name = Transfer"
