@@ -49,14 +49,24 @@ def test_abi_signatures_standard_erc1155():
     assert abi_signatures.total_records == 12, "Incorrect number of total records for ERC 1155"
 
 
+def test_abi_signatures_standard_transparent_proxy():
+    """
+    Test | Standard ABI Signatures | Load Transparent Proxy Signatures
+    """
+    abi_signatures = StandardABISignatures(standards=["TransparentProxy"])
+    assert isinstance(abi_signatures, StandardABISignatures), "Incorrect ABI Signature type"
+
+    assert abi_signatures.total_records == 11, "Incorrect number of total records for Transparent Proxy"
+
+
 def test_abi_signatures_standard_all():
     """
     Test | Standard ABI Signatures | Load all standard signatures
     """
-    abi_signatures = StandardABISignatures(standards=["ERC20", "ERC721", "ERC1155"])
+    abi_signatures = StandardABISignatures(standards=["ERC20", "ERC721", "ERC1155", "TransparentProxy"])
     assert isinstance(abi_signatures, StandardABISignatures), "Incorrect ABI Signature type"
 
-    assert abi_signatures.total_records == 41, "Incorrect number of total records for all standard signatures"
+    assert abi_signatures.total_records == 52, "Incorrect number of total records for all standard signatures"
 
 
 def test_abi_signatures_standard_unknown_standard():
