@@ -1,19 +1,19 @@
 # Changelog
 
-## V0.5.36
+## v0.5.37
 
 Feature
 
 - Add transparent proxy abi signatures (#412)
 - Add connection error handling for http event
 
-## V0.5.36
+## v0.5.36
 
 Fix
 
 - Add missed network tags during manifest registration (#408)
 
-## V0.5.35
+## v0.5.35
 
 Feature
 
@@ -22,7 +22,7 @@ Feature
 - add tests for http events service
 - update dependencies
 
-## V0.5.34
+## v0.5.34
 
 Feature
 
