@@ -9,6 +9,7 @@ from sentinel.utils.logger import get_logger
 from .erc20 import ERC20
 from .erc721 import ERC721
 from .erc1155 import ERC1155
+from .tranparent_proxy import TRANSPARENT_PROXY
 
 
 class StandardABISignatures:
@@ -18,6 +19,7 @@ class StandardABISignatures:
     - ERC-20
     - ERC-721
     - ERC-1155
+    - TransparentProxy
     """
 
     name = "StandardABISignatures"
@@ -62,6 +64,8 @@ class StandardABISignatures:
                 self._load("ERC721", json.loads(ERC721))
             elif standard == "ERC1155":
                 self._load("ERC1155", json.loads(ERC1155))
+            elif standard == "TransparentProxy":
+                self._load("TransparentProxy", json.loads(TRANSPARENT_PROXY))
             else:
                 self.logger.warning(f"Unknown standard name, {standard}")
 
