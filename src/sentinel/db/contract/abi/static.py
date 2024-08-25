@@ -81,20 +81,3 @@ ABI_EVENT_TRANSFER = ABISignature(
         constant=None,
     ),
 )
-
-ABI_EVENT_UPGRADED = ABISignature(
-    contract_address="0x",
-    type="event",
-    signature="Upgraded(address)",
-    signature_hash="0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
-    abi=ABIRecord(
-        name="Upgraded",
-        type="event",
-        inputs=[ABIInput(internal_type="address", name="implementation", type="address", indexed=True)],
-        outputs=[],
-        state_mutability=None,
-        payable=None,
-        anonymous=False,
-        constant=None,
-    ),
-)
