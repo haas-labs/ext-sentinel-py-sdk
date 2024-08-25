@@ -13,7 +13,7 @@ class Event:
     fields: Dict[str, str]
 
 
-def filter_events(log_entries: List[LogEntry], signatures: List[ABISignature]) -> Iterator[Dict]:
+def filter_events(log_entries: List[LogEntry], signatures: List[ABISignature]) -> Iterator[Event]:
     for log_entry in log_entries:
         if len(log_entry.topics) == 0:
             continue
@@ -21,8 +21,6 @@ def filter_events(log_entries: List[LogEntry], signatures: List[ABISignature]) -
         signature_hash = log_entry.topics[0]
         for signature in signatures:
             if signature_hash == signature.signature_hash:
-                if log_entry.data == "0x":
-                    continue
                 yield Event(
                     address=log_entry.address.lower(),
                     type=signature.abi.name,
