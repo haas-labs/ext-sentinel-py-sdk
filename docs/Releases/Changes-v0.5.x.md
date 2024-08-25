@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.38
+
+Feature
+
+- Reorg static abi structure (#416)
+- Search abi signature by hash (#415)
+
 ## v0.5.37
 
 Feature
