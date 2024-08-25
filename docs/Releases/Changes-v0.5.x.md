@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.39
+
+Testing 
+
+- Add abi event withdrawal filtering (#418)
+
 ## v0.5.38
 
 Feature
