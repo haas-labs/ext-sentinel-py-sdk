@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.40
+
+Feature
+
+- Add vechain to definition
+
 ## v0.5.39
 
 Testing 
