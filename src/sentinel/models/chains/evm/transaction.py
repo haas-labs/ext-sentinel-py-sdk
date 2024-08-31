@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import AliasChoices, BaseModel, Field
 
 
-class Block(BaseModel):
+class EVMBlock(BaseModel):
     """
     EVM Based Transaction Block
     """
@@ -29,7 +29,7 @@ class Block(BaseModel):
     transaction_count: int
 
 
-class LogEntry(BaseModel):
+class EVMLogEntry(BaseModel):
     """
     Log Entry
     """
@@ -40,14 +40,14 @@ class LogEntry(BaseModel):
     topics: List[str] = Field(default_factory=list)
 
 
-class Transaction(BaseModel):
+class EVMTransaction(BaseModel):
     """
     EVM based Transaction
     """
 
     hash: str
     nonce: int
-    block: Block
+    block: EVMBlock
     transaction_index: int
     from_address: Optional[str] = None
     to_address: Optional[str] = None
@@ -70,7 +70,7 @@ class Transaction(BaseModel):
     root: Optional[str] = Field(validation_alias=AliasChoices("receipt_root", "root"))
     status: int = Field(validation_alias=AliasChoices("receipt_status", "status"))
     transaction_type: Optional[int] = None
-    logs: List[LogEntry]
+    logs: List[EVMLogEntry]
     attack_probablity: float = 0.0
 
     # TODO remove outdated fields after tests fix

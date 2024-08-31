@@ -33,4 +33,7 @@ BLOCKCHAIN = {
     "telos": Blockchain(
         network="telos", chain_id=40, short_name="telos", description="Telos EVM Mainnet", currency="TLOS"
     ),
+    "vechain": Blockchain(
+        network="vechain", chain_id=100009, short_name="vechain", description="VeChain Mainnet", currency="VET"
+    ),
 }
