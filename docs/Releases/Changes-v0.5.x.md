@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.40
+
+Feature
+
+- Add VeChain transaction input (#421)
+- Add VeChain definitions
+- Add VeVhain transaction model and tests
+
 ## v0.5.39
 
 Testing 
