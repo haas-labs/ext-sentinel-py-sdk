@@ -26,6 +26,13 @@ inputs:
     topics: 
     - {{ env['KAFKA_INBOUND_BSC_TX_TOPIC'] }}
 
+- id: hacken/cloud/kafka/transaction/vechain
+  type: sentinel.channels.kafka.transactions.InboundVeChainTransactionsChannel
+  parameters:
+    bootstrap_servers: {{ env['KAFKA_BOOTSTRAP_SERVERS'] }}
+    topics: 
+    - {{ env['KAFKA_INBOUND_VECHAIN_TX_TOPIC'] }}
+
 # Kafka Events
 
 - id: hacken/cloud/kafka/events
