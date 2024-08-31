@@ -5,7 +5,7 @@ from pydantic import AliasChoices, BaseModel, Field
 
 class Block(BaseModel):
     """
-    Transaction Block
+    EVM Based Transaction Block
     """
 
     hash: str
@@ -42,7 +42,7 @@ class LogEntry(BaseModel):
 
 class Transaction(BaseModel):
     """
-    Transaction
+    EVM based Transaction
     """
 
     hash: str
