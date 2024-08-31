@@ -33,7 +33,7 @@ class TxMetricsDetector(TransactionDetector):
         """
         Handle transactions with value > 0
         """
-        self.logger.info(transaction)
+        # self.logger.info(transaction)
 
         self.metrics.transactions_total.inc()
 
