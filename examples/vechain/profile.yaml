@@ -1,0 +1,33 @@
+project:
+  name: VeChain Transaction Detector
+  description: > 
+    VeChain Transaction Detector provided as example of 
+    consuming transactions and collecting metrics
+  config:
+    monitoring_enabled: true
+    monitoring_port: 9091
+
+imports:
+- ../profiles/inputs.yaml
+
+sentries:
+
+- name: TxMetricsDetector
+  type: vechain.sentry.TxMetricsDetector
+  description: >
+    The example of simple VeChain transactions detector for 
+    consiming transaction and collecting metrics around it
+  parameters:
+    network: vechain
+  inputs:
+  - hacken/cloud/kafka/transaction/vechain
+  outputs:
+  - transaction/local/fs/event
+
+outputs:
+
+- id: transaction/local/fs/event
+  type: sentinel.channels.fs.events.OutboundEventsChannel
+  parameters:
+    path: vechain/data/events/events.json
+    mode: overwrite
