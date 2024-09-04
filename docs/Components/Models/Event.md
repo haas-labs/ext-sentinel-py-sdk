@@ -1,5 +1,6 @@
 # Event
 
+The Event class is a critical component of the Sentinel SDK, serving as a data model for capturing and managing event data. This class is tightly integrated with the Extractor system, enabling efficient data collection, processing, and analysis for blockchain-related activities.
 ## Event Structure
 
 | Field name | Field type          | Default Value | Optional | Notes                                                                           |

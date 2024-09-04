@@ -2,8 +2,13 @@
 
 `sentinel.sentry.v2.block_tx.BlockTxDetector`
 
-The Transaction Block Detector is the way to build detectors/monitors when all transactions per block 
-required for processing.
+The Transaction Block Detector is the way to build detectors/monitors when all transactions per block required for processing. This component leverages the `on_block()` method, which processes entire blocks of transactions instead of transactions, in comparison to [Transaction detector](TransactionDetector.md). 
+
+It can handle operations like 
+- block data summation
+- analyzing transaction patterns within blocks
+- processing where the sequence of transactions are important    
+- or triggering batch processes based on block contents
 
 ## Event Handlers
 
