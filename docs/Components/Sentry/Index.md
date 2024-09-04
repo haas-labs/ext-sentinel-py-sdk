@@ -16,3 +16,8 @@ and databases.
 
 - [Transaction Detector Template](TransactionDetectorTemplate.md)
 - [Transaction Block Detector Template](TransactionBlockDetectorTemplate.md)
+
+## Configurations
+
+- [Detector Configuration](DetectorConfiguration.md)
+

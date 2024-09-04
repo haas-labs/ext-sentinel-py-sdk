@@ -1,5 +1,7 @@
 # Transaction Structure
 
+This data model captures the essential details of an Ethereum transaction by consolidating information from the transaction, block, and receipt RPC messages. The model is designed to be comprehensive yet flexible, allowing for efficient validation and interpretation of transaction data
+
 | Field Name               | Field Type                      | Notes                                  |
 | ------------------------ | ------------------------------- | -------------------------------------- |
 | hash                     | STRING                          | Transaction Hash                       |
