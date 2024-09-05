@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.41
+
+Fix
+
+- Add from_settings method for local monitored contract db (#424)
+
 ## v0.5.40
 
 Feature
