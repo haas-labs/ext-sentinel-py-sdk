@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.42
+
+Fix
+
+- Add missed args for local monitored contract db (#426)
+
 ## v0.5.41
 
 Fix
