@@ -1,7 +1,6 @@
-import time
 import datetime
-
-from typing import List, Dict
+import time
+from typing import Dict, List
 
 from pydantic import BaseModel
 
@@ -78,7 +77,6 @@ class CommonLabelDB:
 
         self._last_update = self.current_time()
         last_update_dt = datetime.datetime.fromtimestamp(self._last_update).isoformat()
-        self.logger.info(f"Updating label database, last update: {last_update_dt}, records: {self.stats}")
 
         for tag in self._addresses.keys():
             try:
@@ -88,6 +86,7 @@ class CommonLabelDB:
             except RuntimeError as err:
                 self.logger.error(err)
         self._addresses_updated = True
+        self.logger.info(f"Updating label database, last update: {last_update_dt}, records: {self.stats}")
 
     def has_tag(self, address: str, tag: str) -> bool:
         """
