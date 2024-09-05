@@ -1,13 +1,13 @@
 import csv
-import time
-import pathlib
 import datetime
-
+import pathlib
+import time
 from typing import List
 
-from .common import Contract
-
+from sentinel.models.database import Database
 from sentinel.utils.logger import get_logger
+
+from .common import Contract
 
 
 class MonitoredContractsDB:
@@ -34,6 +34,20 @@ class MonitoredContractsDB:
 
         if self.path.suffix == ".csv":
             self._import_csv(self.path)
+
+    @classmethod
+    def from_settings(cls, settings: Database, **kwargs):
+        kwargs = kwargs.copy()
+        sentry_name = kwargs.pop("sentry_name")
+        sentry_hash = kwargs.pop("sentry_hash")
+        network = settings.parameters.pop("network")
+        kwargs.update(settings.parameters)
+        return cls(
+            network=network,
+            sentry_name=sentry_name,
+            sentry_hash=sentry_hash,
+            **kwargs,
+        )
 
     def current_time(self):
         """
