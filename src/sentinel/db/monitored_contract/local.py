@@ -13,7 +13,13 @@ from .common import Contract
 class MonitoredContractsDB:
     name = "monitored_contract"
 
-    def __init__(self, path: pathlib.Path, network: str, update_interval: int = 300) -> None:
+    def __init__(
+        self,
+        path: pathlib.Path,
+        network: str,
+        update_interval: int = 300,
+        **kwargs,
+    ) -> None:
         """
         Static Monitored Constacts Database Init
         """
