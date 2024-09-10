@@ -74,7 +74,7 @@ class MetadataModel(BaseModel):
     name: str
     version: str
     description: str
-    author: str = Field(default="Hacken")
+    author: str | None = Field(default="Hacken")
     tags: List[str] = Field(default_factory=list)
     network_tags: List[str] = Field(default_factory=list)
     faq: List[FAQModel] = Field(default_factory=list)
