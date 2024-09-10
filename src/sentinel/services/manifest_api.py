@@ -54,6 +54,7 @@ class ManifestAPI:
         data = {
             "name": metadata.name,
             "version": metadata.version,
+            "author": metadata.author,
             "status": metadata.status.value,
             "description": metadata.description,
             "tags": metadata.tags,
