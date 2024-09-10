@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.43
+
+Feature
+
+- Change logging order for label db (#428)
+
+Fix
+
+- Log exception insufficient data bytes in filter events (#429)
+
+
 ## v0.5.42
 
 Fix
