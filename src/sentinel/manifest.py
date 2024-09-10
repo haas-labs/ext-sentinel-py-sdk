@@ -89,4 +89,7 @@ class ManifestAPIModel(MetadataModel):
     created_at: int = Field(alias="createdAt")
     updated_at: int = Field(alias="updatedAt")
     json_schema: Dict = Field(default_factory=dict, alias="schema")
+    # {
+    #   "ui:order": the list of fields in UI order
+    # }
     ui_schema: Dict = Field(default_factory=dict, alias="uiSchema")
