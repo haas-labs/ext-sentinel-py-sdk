@@ -74,6 +74,7 @@ class MetadataModel(BaseModel):
     name: str
     version: str
     description: str
+    author: str = Field(default="Hacken")
     tags: List[str] = Field(default_factory=list)
     network_tags: List[str] = Field(default_factory=list)
     faq: List[FAQModel] = Field(default_factory=list)
@@ -82,11 +83,10 @@ class MetadataModel(BaseModel):
 
 class ManifestAPIModel(MetadataModel):
     id: int
-    author: str | None
     icon: str | None
     status: Status
     version: str
     created_at: int = Field(alias="createdAt")
     updated_at: int = Field(alias="updatedAt")
     json_schema: Dict = Field(default_factory=dict, alias="schema")
-    ui_schema: Dict = Field(default_factory=dict, alias="uiSchena")
+    ui_schema: Dict = Field(default_factory=dict, alias="uiSchema")
