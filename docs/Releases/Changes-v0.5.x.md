@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.46
+
+Feature
+
+- Pass author value during manifest creation (#436)
+
 ## v0.5.45
 
 Feature
