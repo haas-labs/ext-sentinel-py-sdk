@@ -40,6 +40,18 @@ LOGS = [
             "0x000000000000000000000000df60ba7f7469ff884673dd11361fb66cb06b8560",
         ],
     ),
+    # Transfer with empty data (0x)
+    LogEntry(
+        index=353,
+        address="0xc36442b4a4522e871399cd717abdd847ab11fe88",
+        data="0x",
+        topics=[
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x000000000000000000000000887af8503047544df07b16dc3fca34156bfb65d2",
+            "0x000000000000000000000000e34139463ba50bd61336e0c446bd8c0867c6fe65",
+            "0x00000000000000000000000000000000000000000000000000000000000c429d",
+        ],
+    ),
     # Withdrawal
     LogEntry(
         index=296,
@@ -84,7 +96,7 @@ def test_filter_events_upgraded():
 
 def test_filter_events_transfer():
     events = list(filter_events(log_entries=LOGS, signatures=[ABI_EVENT_TRANSFER]))
-    assert len(events) == 1, "Incorrect number of transfer events"
+    assert len(events) == 2, "Incorrect number of transfer events"
 
     transfer_event: Event = events[0]
     assert transfer_event.address == "0xdac17f958d2ee523a2206206994597c13d831ec7", "Incorrect event address value"
@@ -94,6 +106,15 @@ def test_filter_events_transfer():
         "from": "0x8fca4ade3a517133ff23ca55cdaea29c78c990b8",
         "to": "0xdf60ba7f7469ff884673dd11361fb66cb06b8560",
         "value": 174400833,
+    }, "Incorrect event fields"
+
+    transfer_event: Event = events[1]
+    assert transfer_event.address == "0xc36442b4a4522e871399cd717abdd847ab11fe88", "Incorrect event address value"
+    assert transfer_event.type == "Transfer", "Incorrect event type"
+    assert transfer_event.fields == {
+        "event_signature_hash": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "from": "0x887af8503047544df07b16dc3fca34156bfb65d2",
+        "to": "0xe34139463ba50bd61336e0c446bd8c0867c6fe65",
     }, "Incorrect event fields"
 
 
@@ -115,4 +136,5 @@ def test_filter_events_withdrawal():
 
 def test_filter_several_events():
     events = list(filter_events(log_entries=LOGS, signatures=[ABI_EVENT_UPGRADED, ABI_EVENT_TRANSFER]))
-    assert len(events) == 2, "Incorrect number of events"
+    # Transfer: 2 events, Upgraded: 1 event
+    assert len(events) == 3, "Incorrect number of events"
