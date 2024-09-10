@@ -1,11 +1,12 @@
 from typing import Dict, List
 
 from hexbytes import HexBytes
+from web3 import Web3
+
 from sentinel.models.contract import (
     ABIRecord,
     ABISignature,
 )
-from web3 import Web3
 
 
 def get_abi_input_types(abi: ABIRecord) -> List[str]:
@@ -63,8 +64,9 @@ def extract_data_from_event_log(abi_record: ABIRecord, topics: List[str], data: 
     w3 = Web3()
     data_fields = get_abi_input_fields(abi_record)
     types = list(data_fields.values())
-    fields = dict(zip(data_fields, w3.codec.decode(types, HexBytes(data))))
-    fields.update(extract_data_from_topics(abi_record, topics))
+    fields = extract_data_from_topics(abi_record, topics)
+    if data != "0x":
+        fields.update(dict(zip(data_fields, w3.codec.decode(types, HexBytes(data)))))
 
     return fields
 
