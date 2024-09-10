@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.44
+
+Feature
+
+- Add ui schema annotations (#432)
+- Move author field to metadata model and fix ui schema field name (#431)
+
 ## v0.5.43
 
 Feature
