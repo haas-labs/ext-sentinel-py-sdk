@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.45
+
+Feature
+
+- Handling non author values in manifest (#434)
+
 ## v0.5.44
 
 Feature
