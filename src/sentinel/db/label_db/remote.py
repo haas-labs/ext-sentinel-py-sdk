@@ -1,6 +1,7 @@
 from typing import Dict, List
 
 import httpx
+
 from sentinel.models.database import Database
 
 from .common import CommonLabelDB, LabelDBRecord
