@@ -79,17 +79,19 @@ class MetadataModel(BaseModel):
     network_tags: List[str] = Field(default_factory=list)
     faq: List[FAQModel] = Field(default_factory=list)
     status: Status
-
-
-class ManifestAPIModel(MetadataModel):
-    id: int
-    icon: str | None
-    status: Status
-    version: str
-    created_at: int = Field(alias="createdAt")
-    updated_at: int = Field(alias="updatedAt")
-    json_schema: Dict = Field(default_factory=dict, alias="schema")
     # {
     #   "ui:order": the list of fields in UI order
     # }
+    ui_schema: Dict = Field(
+        default_factory=dict,
+    )
+
+
+class ManifestAPIModel(MetadataModel):
+    id: int = Field(default=None)
+    icon: str | None = Field(default=None)
+    created_at: int = Field(default=None, alias="createdAt")
+    updated_at: int = Field(default=None, alias="updatedAt")
+    network_tags: List[str] = Field(default_factory=list, alias="networkTags")
+    json_schema: Dict = Field(default_factory=dict, alias="schema")
     ui_schema: Dict = Field(default_factory=dict, alias="uiSchema")

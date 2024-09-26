@@ -58,9 +58,10 @@ class ManifestAPI:
             "status": metadata.status.value,
             "description": metadata.description,
             "tags": metadata.tags,
-            "network_tags": metadata.network_tags,
+            "networkTags": metadata.network_tags,
             "schema": schema,
             "faq": [faq.model_dump() for faq in metadata.faq],
+            "uiSchema": metadata.ui_schema,
         }
         response = httpx.post(url=endpoint, headers=self._headers, json=data, verify=False)
         match response.status_code:
