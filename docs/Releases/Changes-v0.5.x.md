@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.50
+
+Fix
+
+- Handling null proxy address in monitoring contract db (#445)
+
 ## v0.5.49
 
 Fix
