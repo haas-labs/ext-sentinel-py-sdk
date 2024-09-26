@@ -3,6 +3,7 @@ import time
 from typing import List
 
 import httpx
+
 from sentinel.models.database import Database
 from sentinel.utils.logger import get_logger
 
@@ -87,12 +88,28 @@ class MonitoredContractsDB:
 
         async with httpx.AsyncClient(verify=False) as httpx_async_client:
             response = await httpx_async_client.post(url=endpoint, headers=self._headers, json=query)
+
         if response.status_code == 200:
             data = response.json().get("data", [])
+
             # extract only required contract fields
-            self._contracts = [
-                contract.get("address").lower() for contract in data if contract.get("chainUid") == self._network
-            ]
+            self._contracts = list()
+            for contract in data:
+                if contract.get("chainUid") != self._network:
+                    continue
+                implementation_address = contract.get("address", "0x").lower()
+                proxy_address = contract.get("proxyAddress", "0x").lower()
+
+                # Use proxy address if specified
+                if proxy_address is not None or proxy_address != "0x":
+                    self._contracts.append(proxy_address)
+                    continue
+
+                # Use implementation if no proxu address and implementation address is not empty
+                if implementation_address is not None or implementation_address != "0x":
+                    self._contracts.append(implementation_address)
+                    continue
+
             # remove duplicates
             self._contracts = list(set(self._contracts))
 
