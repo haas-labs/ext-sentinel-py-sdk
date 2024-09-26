@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.49
+
+Fix
+
+- Handling empty addresses in monitoting address db (#443)
+
 ## v0.5.48
 
 Feature
