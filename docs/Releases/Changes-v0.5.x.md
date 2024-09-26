@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.47
+
+Feature
+
+- Add UI schema for manifest (#439)
+- Update balance monitor manifest for supporting us schema (examples/)
+
 ## v0.5.46
 
 Feature
