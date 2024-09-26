@@ -1,8 +1,9 @@
 from typing import List
 
 from pydantic import Field
-from sentinel.manifest import BaseSchema, MetadataModel, NetworkTag, Severity, Status
 from typing_extensions import TypedDict
+
+from sentinel.manifest import BaseSchema, MetadataModel, NetworkTag, Status, Tag
 
 
 class TokenThreshold(TypedDict, total=False):
@@ -19,7 +20,6 @@ class Schema(BaseSchema):
     balance_threshold: float = Field(
         title="Balance Threshold", description="Balance Threshold", default=100000000000000000000.0000
     )
-    severity: Severity = Field(title="Severity", description="Severity", default=Severity.INFO)
     decimals: int = Field(title="Decimals", description="Decimals", default=18)
     tokens: List[str] = Field(title="Tokens", description="Monitored Tokens", default=["0x0001", "0x0002", "0x0004"])
     token_thresholds: List[TokenThreshold] = Field(
@@ -31,10 +31,13 @@ class Schema(BaseSchema):
 
 metadata = MetadataModel(
     name="Test-Balance-Monitor",
-    version="0.1.9",
+    version="0.1.11",
     status=Status.ACTIVE,
     description="Test Balance Monitor Detector",
     tags=[
+        Tag.FINANCIAL,
+    ],
+    network_tags=[
         NetworkTag.EVM,
     ],
     faq=[
@@ -43,4 +46,16 @@ metadata = MetadataModel(
             "value": "Monitors Account/Contract balance (native token)",
         }
     ],
+    ui_schema={
+        "ui:order": [
+            "erc20_addr",
+            "erc20_balance_threshold",
+            "erc20_decimals",
+            "balance_threshold",
+            "decimals",
+            "tokens",
+            "token_thresholds",
+            "severity",
+        ]
+    },
 )
