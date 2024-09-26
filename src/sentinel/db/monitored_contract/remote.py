@@ -101,12 +101,12 @@ class MonitoredContractsDB:
                 proxy_address = contract.get("proxyAddress", "0x")
 
                 # Use proxy address if specified
-                if proxy_address != "0x":
+                if proxy_address is not None and proxy_address != "0x":
                     self._contracts.append(proxy_address.lower())
                     continue
 
                 # Use implementation if no proxu address and implementation address is not empty
-                if implementation_address != "0x":
+                if implementation_address is not None and implementation_address != "0x":
                     self._contracts.append(implementation_address.lower())
                     continue
 
