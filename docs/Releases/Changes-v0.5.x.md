@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.48
+
+Feature
+
+- Add handling proxy address for monitore contract (#441)
+
 ## v0.5.47
 
 Feature
