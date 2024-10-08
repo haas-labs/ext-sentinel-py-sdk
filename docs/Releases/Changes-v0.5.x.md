@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.51
+
+Feature
+
+- Handling inactive monitoring configs (#448)
+- Add flat transaction models and documentaion (#447)
+
 ## v0.5.50
 
 Fix
