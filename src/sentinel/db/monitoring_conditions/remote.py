@@ -4,6 +4,7 @@ from typing import Dict, Iterator, List
 
 import aiokafka
 from pydantic import BaseModel
+
 from sentinel.channels.kafka.common import bytes2int_deserializer, json_deserializer
 from sentinel.db.monitoring_conditions.core import CoreMonitoringConditionsDB
 from sentinel.models.config import Configuration, Status
@@ -50,6 +51,7 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         self.kafka_config["auto_offset_reset"] = "earliest"
 
         # Configuration Database
+        # The structure: <config_id> -> <Configuration>
         self._config_db: Dict[int, Configuration] = {}
 
         # Monitored Address Database
@@ -84,55 +86,50 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         return config.contract.proxy_address if config.contract.proxy_address is not None else config.contract.address
 
     def update(self, record: aiokafka.ConsumerRecord) -> None:
-        if record.value is not None:
-            config = Configuration(**record.value)
+        # Skip empty/deleted record. Specific use case for Kafka implementation
+        if record.value is None:
+            return
 
-            """
-            filtering schema by
-            - ignore if source != ATTACK_DETECTOR
-            - ignore if schema name and version is not matched with specified
-            - ignore if network is not matched with specified
-            - ignore if status != ACTIVE
-            """
+        config = Configuration(**record.value)
 
-            # ATTACK_DETECTOR configs only
-            if config.source != "ATTACK_DETECTOR":
-                return
+        """
+        filtering schema by
+        - ignore if source != ATTACK_DETECTOR
+        - ignore if schema name and version is not matched with specified
+        - ignore if network is not matched with specified
+        - ignore if status != ACTIVE
+        """
+        # Select ATTACK_DETECTOR configs only
+        if config.source != "ATTACK_DETECTOR":
+            return
 
-            # select configurations with specific schema and version only
-            if config.config_schema.name != self.schema.name or config.config_schema.version != self.schema.version:
-                return
+        # select configurations with specific schema and version only
+        if config.config_schema.name != self.schema.name or config.config_schema.version != self.schema.version:
+            return
 
-            # handle configuration for predefined network only
-            if config.contract.chain_uid != self.network:
-                return
+        # handle configuration for predefined network only
+        if config.contract.chain_uid != self.network:
+            return
 
-            # skip inactive config with removing active ones if present
-            if config.status != Status.ACTIVE:
-                if record.key in self._config_db:
-                    config: Configuration = self._config_db.pop(record.key)
-                    address = self.get_address(config=config)
-                    if address is not None:
-                        self._address_db[address].remove(config.id)
-                        if len(self._address_db[address]) == 0:
-                            del self._address_db[address]
-                return
+        # Remove inactive (DISABLED, DELETED) configs from local databases: configs and addresses
+        monitored_address = self.get_address(config=config)
+        if config.status != Status.ACTIVE:
+            if config.id in self._config_db:
+                # Cleanup config database
+                del self._config_db[config.id]
+                # Cleanup address database
+                if monitored_address is not None:
+                    self._address_db[monitored_address].remove(config.id)
+                    if len(self._address_db[monitored_address]) == 0:
+                        del self._address_db[monitored_address]
+            return
 
-            self._config_db[record.key] = config
-            address = self.get_address(config=config)
-            if address not in self._address_db:
-                self._address_db[address] = list()
-            if config.id not in self._address_db[address]:
-                self._address_db[address].append(config.id)
-
-        else:
-            config = self._config_db.pop(record.key, None)
-            # Cleanup address db
-            if config is not None:
-                address = self.get_address(config=config)
-                self._address_db[address].remove(record.key)
-                if len(self._address_db[address]) == 0:
-                    del self._address_db[address]
+        # Proceed with active configs only
+        self._config_db[config.id] = config
+        if monitored_address not in self._address_db:
+            self._address_db[monitored_address] = list()
+        if config.id not in self._address_db[monitored_address]:
+            self._address_db[monitored_address].append(config.id)
 
     def ingest(self) -> None:
         async def ingest_records():
