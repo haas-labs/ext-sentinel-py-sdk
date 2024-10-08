@@ -12,6 +12,8 @@ from sentinel.models.config import Configuration, Status
 INGEST_TIMEOUT_SECS = 5
 INGEST_TIMEOUT_MSECS = INGEST_TIMEOUT_SECS * 1000
 
+ATTACK_DETECTOR_SOURCE = "ATTACK_DETECTOR"
+
 
 class SchemaVersion(BaseModel):
     name: str
@@ -100,7 +102,7 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         - ignore if status != ACTIVE
         """
         # Select ATTACK_DETECTOR configs only
-        if config.source != "ATTACK_DETECTOR":
+        if config.source != ATTACK_DETECTOR_SOURCE:
             return
 
         # select configurations with specific schema and version only
@@ -128,6 +130,7 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         self._config_db[config.id] = config
         if monitored_address not in self._address_db:
             self._address_db[monitored_address] = list()
+
         if config.id not in self._address_db[monitored_address]:
             self._address_db[monitored_address].append(config.id)
 
