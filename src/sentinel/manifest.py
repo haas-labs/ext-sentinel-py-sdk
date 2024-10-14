@@ -72,9 +72,11 @@ class BaseSchema(BaseModel):
 
 class MetadataModel(BaseModel):
     name: str
+    title: str
     version: str
     description: str
     author: str | None = Field(default="Hacken")
+    icon: str | None = Field(default=None)
     tags: List[str] = Field(default_factory=list)
     network_tags: List[str] = Field(default_factory=list)
     faq: List[FAQModel] = Field(default_factory=list)
@@ -89,7 +91,6 @@ class MetadataModel(BaseModel):
 
 class ManifestAPIModel(MetadataModel):
     id: int = Field(default=None)
-    icon: str | None = Field(default=None)
     created_at: int = Field(default=None, alias="createdAt")
     updated_at: int = Field(default=None, alias="updatedAt")
     network_tags: List[str] = Field(default_factory=list, alias="networkTags")
