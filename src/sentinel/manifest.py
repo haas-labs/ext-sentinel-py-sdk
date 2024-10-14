@@ -72,7 +72,7 @@ class BaseSchema(BaseModel):
 
 class MetadataModel(BaseModel):
     name: str
-    title: str
+    title: str | None = Field(default=None)
     version: str
     description: str
     author: str | None = Field(default="Hacken")
