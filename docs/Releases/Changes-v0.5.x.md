@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.53
+
+Fix
+
+- Handle null title field in manifest
+
 ## v0.5.52
 
 Feature
