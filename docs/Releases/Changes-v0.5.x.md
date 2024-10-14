@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.52
+
+Feature
+
+- Add manifest fields: title and icon (#450)
+- Changes in GitHub CI/CD workflows
+
 ## v0.5.51
 
 Feature
