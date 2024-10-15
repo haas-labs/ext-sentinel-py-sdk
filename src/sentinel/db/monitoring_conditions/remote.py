@@ -105,12 +105,12 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         if config.source != ATTACK_DETECTOR_SOURCE:
             return
 
-        # select configurations with specific schema and version only
-        if config.config_schema.name != self.schema.name or config.config_schema.version != self.schema.version:
-            return
-
         # handle configuration for predefined network only
         if config.contract.chain_uid != self.network:
+            return
+
+        # select configurations with specific schema and version only
+        if not (config.config_schema.name == self.schema.name and config.config_schema.version == self.schema.version):
             return
 
         # Remove inactive (DISABLED, DELETED) configs from local databases: configs and addresses
