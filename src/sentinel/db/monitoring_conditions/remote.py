@@ -141,8 +141,8 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
             self.logger.info(f"{self.name} -> Starting consuming messages from Kafka channel: {self.name}")
             await consumer.start()
             try:
-                last_msg_time = time.time()
                 while True:
+                    last_msg_time = time.time()
                     data = await consumer.getmany(timeout_ms=INGEST_TIMEOUT_MSECS)
                     if data:
                         for _, records in data.items():
