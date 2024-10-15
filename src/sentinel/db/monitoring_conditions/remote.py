@@ -105,12 +105,12 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         if config.source != ATTACK_DETECTOR_SOURCE:
             return
 
-        # select configurations with specific schema and version only
-        if config.config_schema.name != self.schema.name or config.config_schema.version != self.schema.version:
-            return
-
         # handle configuration for predefined network only
         if config.contract.chain_uid != self.network:
+            return
+
+        # select configurations with specific schema and version only
+        if not (config.config_schema.name == self.schema.name and config.config_schema.version == self.schema.version):
             return
 
         # Remove inactive (DISABLED, DELETED) configs from local databases: configs and addresses
@@ -141,8 +141,8 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
             self.logger.info(f"{self.name} -> Starting consuming messages from Kafka channel: {self.name}")
             await consumer.start()
             try:
-                last_msg_time = time.time()
                 while True:
+                    last_msg_time = time.time()
                     data = await consumer.getmany(timeout_ms=INGEST_TIMEOUT_MSECS)
                     if data:
                         for _, records in data.items():
