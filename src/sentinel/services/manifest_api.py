@@ -53,8 +53,10 @@ class ManifestAPI:
         endpoint = self._endpoint_url + "/api/v1/schema"
         data = {
             "name": metadata.name,
+            "title": metadata.title,
             "version": metadata.version,
             "author": metadata.author,
+            "icon": metadata.icon,
             "status": metadata.status.value,
             "description": metadata.description,
             "tags": metadata.tags,
