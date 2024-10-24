@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.5.54
+
+Feature
+
+- Add title and icon fields for manifest (#459)
+- Update gitbook summary script and summary.md (#457)
+
+Fix
+
+- Last time handling in monitoring conditions (#454)
+
+Test
+
+- add py 3.12 and 3.13 for tests (#456)
+- support several sqlite versions (#455)
+
 ## v0.5.53
 
 Fix
