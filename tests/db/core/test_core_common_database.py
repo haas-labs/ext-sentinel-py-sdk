@@ -26,7 +26,7 @@ def test_core_database_operations():
 
 def test_database_version():
     db = Database(":memory:")
-    assert db.version.get("sqlite") in ["3.37.2", "3.46.1"], "Unexpected sqlite version"
+    assert db.version.get("sqlite") in ["3.37.2", "3.46.1", "3.47.0"], "Unexpected sqlite version"
 
 
 def test_database_vacuum(tmpdir):
