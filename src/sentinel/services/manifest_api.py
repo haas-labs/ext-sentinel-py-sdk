@@ -1,15 +1,29 @@
 import os
-from typing import Iterator
+from typing import Dict, Iterator
 
 import httpx
 
-from sentinel.manifest import ManifestAPIModel, MetadataModel, Status
+from sentinel.manifest import BaseSchema, ManifestAPIModel, MetadataModel, Status
 from sentinel.utils.logger import get_logger
 
 DEFAULT_HEADERS = {
     "Accept": "application/json",
     "Content-Type": "application/json",
 }
+
+
+def update_ui_schema(ui_schema: Dict, schema: BaseSchema) -> Dict:
+    """
+    Update UI schema
+    - if ui_schema exists, move `severity` field to the end of ui:order field
+    - if not, to order existing field in the sequence where `sequence` field is the last one
+    """
+    if ui_schema == {}:
+        ui_schema["ui:order"] = list(schema.model_fields.keys())
+    ui_schema["ui:order"] = [f for f in ui_schema["ui:order"] if f != "severity"] + (
+        ["severity"] if "severity" in ui_schema["ui:order"] else []
+    )
+    return ui_schema
 
 
 class ManifestAPI:
@@ -49,7 +63,7 @@ class ManifestAPI:
                     )
                 )
 
-    def register(self, metadata: MetadataModel, schema: str) -> None:
+    def register(self, metadata: MetadataModel, schema: BaseSchema) -> None:
         endpoint = self._endpoint_url + "/api/v1/schema"
         data = {
             "name": metadata.name,
@@ -61,24 +75,27 @@ class ManifestAPI:
             "description": metadata.description,
             "tags": metadata.tags,
             "networkTags": metadata.network_tags,
-            "schema": schema,
+            "schema": schema.model_json_schema(),
             "faq": [faq.model_dump() for faq in metadata.faq],
-            "uiSchema": metadata.ui_schema,
+            "uiSchema": update_ui_schema(ui_schema=metadata.ui_schema, schema=schema),
         }
-        response = httpx.post(url=endpoint, headers=self._headers, json=data, verify=False)
-        match response.status_code:
-            case 200:
-                self.logger.info("The schema registered succesfully")
-            case _:
-                self.logger.error(
-                    " ".join(
-                        [
-                            f"Registering schema failed, manifest: {data},",
-                            f"status code: {response.status_code},",
-                            f"response: {response.text}",
-                        ]
+        try:
+            response = httpx.post(url=endpoint, headers=self._headers, json=data, verify=False)
+            match response.status_code:
+                case 200:
+                    self.logger.info("The schema registered succesfully")
+                case _:
+                    self.logger.error(
+                        " ".join(
+                            [
+                                f"Registering schema failed, manifest: {data},",
+                                f"status code: {response.status_code},",
+                                f"response: {response.text}",
+                            ]
+                        )
                     )
-                )
+        except httpx.ConnectError as err:
+            self.logger.error(f"Connection error, url: {endpoint}, error: {err}")
 
     def get(
         self, schema_id: int = None, name: str = None, version: str = None, status: Status = None

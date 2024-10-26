@@ -5,6 +5,7 @@ from typing import List
 from rich import box, print, print_json
 from rich.console import Console
 from rich.table import Table
+
 from sentinel.commands.common import SentinelCommand
 from sentinel.manifest import Status
 from sentinel.services.manifest_api import ManifestAPI
@@ -61,7 +62,7 @@ class Command(SentinelCommand):
                     logger.error("Missed must have agrument for show action, --classpath")
                     return
                 _, manifest = import_by_classpath(classpath=args.classpath)
-                manifest_api.register(metadata=manifest.metadata, schema=manifest.Schema.model_json_schema())
+                manifest_api.register(metadata=manifest.metadata, schema=manifest.Schema)
 
             case Action.get.value:
                 # Getting a schema by id
