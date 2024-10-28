@@ -1,5 +1,6 @@
 from aiokafka import AIOKafkaConsumer as KafkaConsumer
 from aiokafka.structs import ConsumerRecord
+
 from sentinel.channels.kafka.common import KafkaChannel
 
 
@@ -24,6 +25,8 @@ class InboundKafkaChannel(KafkaChannel):
         await self.consumer.start()
         try:
             async for msg in self.consumer:
+                if msg is None:
+                    continue
                 await self.on_message(msg)
         finally:
             await self.consumer.stop()
