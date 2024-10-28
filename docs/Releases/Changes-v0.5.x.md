@@ -1,5 +1,129 @@
 # Changelog
 
+## v0.5.55
+
+Feature
+
+- Support manifests with bug versions in one detector (#463)
+- Add bugfix version check util
+- Monitoring config support bugfix version(-s) for processing)
+- Update UI schema automatically with last severity field (#461)
+- Update manifest for monitored address tx monitor
+- Use severity field in ui order as default behavior
+- Add title and icon fields for manifest (#459)
+- Update gitbook summary script and summary.md (#457)
+- Add manifest fields: title and icon (#450)
+- Handling delete events in monitoring configs (#448)
+- Handling active/inactive config changes in monitoring config
+- Use contact for detector source name
+- Update balance monitor manifest for supporting us schema
+- Update manifest to support ui schema field
+- Add flat transaction models and documentaion (#447)
+- Add handling proxy address for monitore contract (#441)
+- Add UI schema for manifest (#439)
+- Handling non author values in manifest (#434)
+- Add ui schema annotations (#432)
+- Move author field to metadata model and fix ui schema field name (#431)
+- Log exception insufficient data bytes in filter events (#429)
+- Change logging order for label db (#428)
+- Add vechain transaction input (#421)
+- Add vechain definitions
+- Add transaction models for different chains
+- Add basic test for vechain transaction
+- Extend vechain transaction model and tests
+- Add vechain transaction detector
+- Add inbound vechain transaction channel
+- Reorg static abi structure (#416)
+- Add transparent proxy abi signatures (#412)
+- Monitoring configs command (#411)
+- Add abi signature search by hash and name
+- Add config dn instead of target db
+- Add config command instead of target command
+- Add tests for monitoring configs
+- Add remote monitoring config db
+- Add connection error handling for http event
+- Reorg static abi structure
+- Remove duplicates
+- Search abi signature by hash (#414)
+- Sending adhoc events (#406)
+- Add abi signature search by hash and name
+- Add pytest-httx to dev requirements
+- Add http event service
+- Add tests for http events service
+- Update dependencies
+- Add manifest tag as string type (#404)
+- Add financial tag for manifest (#402)
+- Generate summary file in docs (#401)
+- Apply gitbook structure and configuration (#395)
+- Add tags and network tags (#393)
+- Manifest get parameters handling (#391)
+- Upgrade versions in pyproject and dev requirements (#374)
+- Add status for failed manifest registration (#387)
+- Add normalize address util and tests (#372)
+- Add default value for receipt effective gas price (#370)
+- Add shorten ethereum address (#368)
+- Update sentry diagrams
+- Update comments for remote monitoring conditions
+- Add tags and network tags for detector manifest
+- Add comments for monitoring condition database methods
+- Add return type for method all() in local dex db
+
+Test
+
+- Add tests for manifest api to update ui schema (#462)
+- Add py 3.12 and 3.13 for tests (#456)
+- Support several sqlite versions (#455)
+- Add abi event withdrawal filtering (#418)
+- Update tests for handling transfer event with empty data
+- Comment test filter events withdrawal
+- Add tests for monitoring configs
+
+Fix
+
+- Add new sqlite version support (#458)
+- Last time handling in monitoring conditions (#454)
+- Handle null title field in manifest (#452)
+- Handling null proxy address in monitoring contract db (#445)
+- Handling empty addresses in monitoting address db (#443)
+- Pass author value during manifest creation (#436)
+- Handling empty data value in extract_data_from_event_log
+- Add missed args for local monitored contract db (#426)
+- Add from_settings method for local monitored contract db (#424)
+- Versions in change log
+- Remove skip 0x data block for event filter
+- Versions in change log
+- Add missed network tags during manifest registration (#408)
+- Error handling during manifest registration (#389)
+
+Refacroting
+
+- Cosmetic changes in remote label db (#438)
+- Add comments for evm transaction models
+- Remove unused files
+- Commit transaction logging
+- Handling last time for monitoring conditions
+- Change order of filtering monitoring configs
+
+Documentation
+
+- Update links to release notes (#398)
+- SDK overview update (#396)
+- Update data model details per databases (#386)
+- Update trace details (#385)
+- Update monitoring contract db (#384)
+- Update monitoring contract details
+- Update monitoring conditions db (#383)
+- Update monitoring conditions database
+- Update mixer database (#382)
+- Update label database (#381)
+- Update dex db (#380)
+- Update dex address details
+- Update contract db (#379)
+- Update blacklist db details (#378)
+- Update suspicious account db methods (#377)
+- Fix refs to databases (#376)
+- Add details about address db (#375)
+
 ## v0.5.54
 
 Feature
