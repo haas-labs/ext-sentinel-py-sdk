@@ -26,7 +26,7 @@ def monitoring_conditions_db():
         bootstrap_servers="kafka-server",
         topics=["sentinel.monitoring-conditions.0123"],
         model="test_remote_monitoring_conditions.ConditionsModel",
-        schema={"name": "Basic", "version": "1"},
+        schema={"name": "Basic", "version": "1.1.1"},
     )
 
 
@@ -54,7 +54,7 @@ def kafka_consumer_active_record() -> Dict:
             "updatedAt": 1717751852969,
             "status": "ACTIVE",
             "name": "Basic",
-            "version": "1",
+            "version": "1.1.1",
             "schema": {},
         },
         "name": "Attack Detector",
@@ -90,7 +90,7 @@ def kafka_consumer_disabled_record() -> Dict:
             "updatedAt": 1717751852969,
             "status": "ACTIVE",
             "name": "Basic",
-            "version": "1",
+            "version": "1.1.1",
             "schema": {},
         },
         "name": "Attack Detector",
@@ -126,7 +126,7 @@ def kafka_consumer_deleted_record() -> Dict:
             "updatedAt": 1717751852969,
             "status": "ACTIVE",
             "name": "Basic",
-            "version": "1",
+            "version": "1.1.1",
             "schema": {},
         },
         "name": "Attack Detector",
@@ -156,7 +156,7 @@ def test_remote_monitoring_conditions_db_from_settings():
                 "bootstrap_servers": "kafka-server",
                 "topics": ["sentinel.monitoring-conditions.0123"],
                 "model": "test_remote_monitoring_conditions.ConditionsModel",
-                "schema": {"name": "conditions-schema", "version": "0.1.0"},
+                "schema": {"name": "conditions-schema", "version": "0.1.1"},
             },
         ),
         sentry_name="Test-Sentry",
@@ -211,7 +211,7 @@ def test_remote_monitoring_conditions_db_filter_by_schame_and_version(
 
     record = kafka_consumer_active_record.copy()
     record["schema"]["name"] = "Invalid-Schema"
-    record["schema"]["version"] = "0.1.0"
+    record["schema"]["version"] = "0.1.1"
     monitoring_conditions_db.update(ConsumerRecord(key=1705, value=record))
     assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
 

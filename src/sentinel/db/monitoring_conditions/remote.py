@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from sentinel.channels.kafka.common import bytes2int_deserializer, json_deserializer
 from sentinel.db.monitoring_conditions.core import CoreMonitoringConditionsDB
 from sentinel.models.config import Configuration, Status
-from sentinel.utils.version import is_bugfix
+from sentinel.utils.version import IncorrectVersionFormat, is_bugfix
 
 INGEST_TIMEOUT_SECS = 5
 INGEST_TIMEOUT_MSECS = INGEST_TIMEOUT_SECS * 1000
@@ -111,10 +111,14 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
             return
 
         # select configurations with specific schema and version only
-        if not (
-            config.config_schema.name == self.schema.name
-            and is_bugfix(main_version=self.schema.version, version=config.config_schema.version)
-        ):
+        try:
+            if not (
+                config.config_schema.name == self.schema.name
+                and is_bugfix(main_version=self.schema.version, version=config.config_schema.version)
+            ):
+                return
+        except IncorrectVersionFormat as err:
+            self.logger.error(f"Incorrect version format: {config}, error: {err}")
             return
 
         # Remove inactive (DISABLED, DELETED) configs from local databases: configs and addresses
