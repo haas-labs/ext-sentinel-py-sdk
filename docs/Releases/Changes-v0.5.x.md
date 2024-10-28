@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.57
+
+Fix
+
+- fix: ignore empty messages when consuming kafka records (#468)
+
 ## v0.5.56
 
 Feature
