@@ -1,15 +1,19 @@
 import json
+from typing import Any, Optional
 
 from sentinel.channels.common import Channel
 
 
-def json_deserializer(serialized):
+def json_deserializer(serialized: Optional[str]) -> Optional[Any]:
     """
     JSON Deserializer
     """
     if serialized is None:
         return None
-    return json.loads(serialized)
+    try:
+        return json.loads(serialized)
+    except json.decoder.JSONDecodeError:
+        return None
 
 
 def bytes2int_deserializer(serialized: bytes) -> int:
