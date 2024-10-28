@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.5.56
+
+Feature
+
+- Support multi format detector schema versions (#465)
+- Handling exact and main versions + error handling
+- Error handling for incorrect main schema version and detector config version
+
+Fix
+
+- Error handling for corrupted data (#466)
+
+Test
+
+- Fix versioning in monitoring conditions db
+
 ## v0.5.55
 
 Feature
