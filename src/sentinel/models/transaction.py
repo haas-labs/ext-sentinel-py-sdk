@@ -20,7 +20,7 @@ class Block(BaseModel):
     receipts_root: str
     miner: str
     difficulty: int
-    total_difficulty: int
+    total_difficulty: Optional[int] = None
     size: int
     extra_data: str
     gas_limit: int
