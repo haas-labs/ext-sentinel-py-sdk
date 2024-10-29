@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.58
+
+Feature
+
+- Make block.total_difficulty field optional in transaction model (#470)
+
 ## v0.5.57
 
 Fix
