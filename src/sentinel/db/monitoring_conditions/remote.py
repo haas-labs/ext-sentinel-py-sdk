@@ -114,7 +114,10 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         try:
             if not (
                 config.config_schema.name == self.schema.name
-                and is_bugfix(main_version=self.schema.version, version=config.config_schema.version)
+                and is_bugfix(
+                    main_version=self.schema.version,
+                    version=config.config_schema.version,
+                )
             ):
                 return
         except IncorrectVersionFormat as err:
@@ -166,4 +169,4 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
                 await consumer.stop()
 
         asyncio.run(ingest_records())
-        self.logger.info(f"Monitored addresses detected: {len(self._address_db)}")
+        self.logger.info(f"Monitored addresses detected: {self.size}")
