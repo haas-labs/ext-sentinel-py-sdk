@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.59
+
+Fix
+
+- Fix none proxy address in monitoring config (#473)
+
+Refactoring
+
+- Code refactoring for remote monitoring conditions (#472)
+
 ## v0.5.58
 
 Feature
