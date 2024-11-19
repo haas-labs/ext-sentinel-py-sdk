@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.5.60
+
+Feature
+
+- Upgrade aiohttp version to 3.10.11 (#477)
+- Add ignore macos specific files
+- Add descriptions for utils/address + add tests
+
+Test
+
+- Add tests for leading zero address handling (#476)
+
+Fix
+
+- Normalize_address function to preserve significant leading zeros in Ethereum addresses (#475)
+
+
 ## v0.5.59
 
 Fix
