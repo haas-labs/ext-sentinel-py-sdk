@@ -16,8 +16,11 @@ def shorten_ethereum_address(address: str) -> str:
     if not isinstance(address, str) or not address.startswith("0x"):
         raise ValueError("Invalid Ethereum address format")
 
-    # Strip the leading '0x' and leading zeros
-    shortened_address = address[2:].lstrip("0")
+    address_body = address[2:]
+    
+    if len(address_body) > 40:
+        address_body = address_body.lstrip('0')
 
-    # Return the address in the desired format with the '0x' prefix
-    return "0x" + shortened_address
+    address_body = address_body.zfill(40)
+
+    return "0x" + address_body
