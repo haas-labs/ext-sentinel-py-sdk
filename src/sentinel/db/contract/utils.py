@@ -78,6 +78,8 @@ def to_signature_record(contract_address: str, abi_record: ABIRecord) -> ABISign
     types = [input.type for input in abi_record.inputs]
     signature = "{}({})".format(abi_record.name, ",".join(types))
     signature_hash = Web3.keccak(text=signature).hex()
+    if not signature_hash.startswith("0x"):
+        signature_hash = "0x{}".format(signature_hash)
 
     abi_signature = ABISignature(
         contract_address=contract_address,
