@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.61
+
+Feature
+
+- Upgrade deps versions (#479)
+
+Refactoring
+
+- Code refactoring for standard abi signatures
+
 ## v0.5.60
 
 Feature
