@@ -75,7 +75,8 @@ class StandardABISignatures:
         Load ABI signatures to local database
         """
         for abi_record in abi_records:
-            self._db.append(to_signature_record(standard, ABIRecord(**abi_record)))
+            abi_signature = to_signature_record(standard, ABIRecord(**abi_record))
+            self._db.append(abi_signature)
 
     def search(
         self,
