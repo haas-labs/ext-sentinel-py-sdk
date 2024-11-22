@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.5.62
+
+Feature
+
+- Add field validator for block field: total difficulty
+- Add verification utils for models
+
+Fix
+
+- Transaction format handling (#481)
+
+Test
+
+- Add test model resources
+- Add tests for transaction model
+- Add tests for model utils
+
 ## v0.5.61
 
 Feature
