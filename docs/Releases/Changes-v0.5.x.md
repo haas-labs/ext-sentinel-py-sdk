@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.63
+
+Fix
+
+- Handling async web3 connection due to changes in web3 lib
+
 ## v0.5.62
 
 Feature
