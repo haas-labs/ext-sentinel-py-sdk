@@ -1,6 +1,8 @@
 from typing import List, Optional
 
-from pydantic import AliasChoices, BaseModel, Field
+from pydantic import AliasChoices, BaseModel, Field, field_validator
+
+from sentinel.utils.models import scientific_notation_to_int
 
 
 class Block(BaseModel):
@@ -27,6 +29,10 @@ class Block(BaseModel):
     gas_used: int
     base_fee_per_gas: Optional[int] = None
     transaction_count: int
+
+    @field_validator("total_difficulty", mode="before")
+    def validate_total_difficulty(cls, value):
+        return scientific_notation_to_int(value)
 
 
 class LogEntry(BaseModel):
