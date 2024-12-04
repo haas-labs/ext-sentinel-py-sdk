@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.64
+
+Feature
+
+- Add options to select hash type for bytecode hash calculation (#485)
+
 ## v0.5.63
 
 Fix
