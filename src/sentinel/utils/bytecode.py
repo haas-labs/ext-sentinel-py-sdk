@@ -1,11 +1,17 @@
+from enum import Enum
+from hashlib import sha256
 from typing import List
 
 import cbor2
-
-from web3 import Web3
 from pydantic import BaseModel
+from web3 import Web3
 
 from sentinel.utils.base58 import b58encode
+
+
+class HashType(Enum):
+    KACCAK = 1
+    SHA256 = 2
 
 
 class Metadata(BaseModel):
@@ -45,9 +51,13 @@ class Bytecode:
         length = int(self._bytecode[-4:], 16)
         return self._bytecode[: -(2 * length + 4)]
 
-    @property
-    def contract_hash(self) -> bytes:
-        return Web3.keccak(hexstr=self.contract)
+    def contract_hash(self, hash_type: HashType = HashType.KACCAK) -> bytes:
+        if hash_type == HashType.SHA256:
+            return sha256(self.contract.encode("utf-8")).digest()
+        elif hash_type == HashType.KACCAK:
+            return Web3.keccak(hexstr=self.contract)
+        else:
+            raise ValueError(f"Unsupported hash type: {hash_type}")
 
     @property
     def metadata(self) -> Metadata:
