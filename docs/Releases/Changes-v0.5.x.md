@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.65
+
+Fix
+
+- Typos in bytecode hash types (#487)
+
 ## v0.5.64
 
 Feature
