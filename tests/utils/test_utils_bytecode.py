@@ -49,9 +49,9 @@ def test_bytecode_extract_metadata():
 def test_bytecode_calculate_hash():
     bytecode = Bytecode(bytecode=BYTECODE_SAMPLE)
     assert (
-        bytecode.contract_hash(hash_type=HashType["KACCAK"]).hex()
+        bytecode.contract_hash(hash_type=HashType["KECCAK"]).hex()
         == "d1e264d0fda3e9267ad33a9bdae70258117c03e94537e44692f321a1022f490f"
-    ), "Incorrect contract KACCAK hash"
+    ), "Incorrect contract KECCAK hash"
     assert (
         bytecode.contract_hash(hash_type=HashType["SHA256"]).hex()
         == "d5e92aa61e7b8753adfc2fe46ff542337025d99378197c885d2b74543e4a6cab"

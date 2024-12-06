@@ -10,7 +10,7 @@ from sentinel.utils.base58 import b58encode
 
 
 class HashType(Enum):
-    KACCAK = 1
+    KECCAK = 1
     SHA256 = 2
 
 
@@ -51,10 +51,10 @@ class Bytecode:
         length = int(self._bytecode[-4:], 16)
         return self._bytecode[: -(2 * length + 4)]
 
-    def contract_hash(self, hash_type: HashType = HashType.KACCAK) -> bytes:
+    def contract_hash(self, hash_type: HashType = HashType.KECCAK) -> bytes:
         if hash_type == HashType.SHA256:
             return sha256(self.contract.encode("utf-8")).digest()
-        elif hash_type == HashType.KACCAK:
+        elif hash_type == HashType.KECCAK:
             return Web3.keccak(hexstr=self.contract)
         else:
             raise ValueError(f"Unsupported hash type: {hash_type}")
