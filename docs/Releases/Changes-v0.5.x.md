@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.66
+
+Feature
+
+- Add sepolia network in definitions (#489)
+
 ## v0.5.65
 
 Fix
