@@ -49,7 +49,7 @@ def extract_data_from_topics(abi_record: ABIRecord, topics: List[str]) -> Dict:
     if len(topics) != 0:
         w3 = Web3()
         for input in abi_record.inputs:
-            if input.indexed:
+            if input.indexed and len(topics) != 0:
                 topic_data = HexBytes(topics.pop(0))
                 kv[input.name] = w3.codec.decode(types=[input.type], data=topic_data)[0]
     return kv
