@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.67
+
+Feature
+
+- Update deps (#492)
+- Add new sqlite version support (#491)
+
+Fix
+
+- Prevent out of list error in extracting data from topics (#493)
+
 ## v0.5.66
 
 Feature
