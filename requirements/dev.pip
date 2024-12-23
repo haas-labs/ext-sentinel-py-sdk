@@ -1,0 +1,7 @@
+pytest
+pytest-asyncio
+pytest-aiohttp
+pytest-benchmark
+pytest-cov
+pytest-httpx
+ruff

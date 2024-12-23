@@ -31,13 +31,13 @@ function deployment-tools() {
         && ${PREFIX}python -m pip install --upgrade pip
 
     echo "[INFO] Install development tools and libs" \
-        && ${PREFIX}pip install --upgrade -r requirements/deployment.txt
+        && ${PREFIX}pip install --upgrade -r requirements/deployment.pip
 }
 
 function dev-tools() {
 
     echo "[INFO] Install development tools and libs" \
-        && ${PREFIX}pip install --upgrade -r requirements/dev.txt
+        && ${PREFIX}pip install --upgrade -r requirements/dev.pip
 }
 
 function sentinel() {
