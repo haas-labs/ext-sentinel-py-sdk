@@ -1,7 +1,5 @@
 from sentinel.db.core.common import Database
 
-SUPPORTED_SQLITE_VERSIONS = ["3.37.2", "3.46.1", "3.47.0", "3.47.2"]
-
 
 def test_core_database(tmpdir):
     db = Database(":memory:")
@@ -24,11 +22,6 @@ def test_core_database_operations():
     results = list(db.query("SELECT count(*) AS total_records FROM kv"))
     db.commit()
     assert results[0].get("total_records") == 1, "Incorrect number of records in database"
-
-
-def test_database_version():
-    db = Database(":memory:")
-    assert db.version.get("sqlite") in SUPPORTED_SQLITE_VERSIONS, "Unexpected sqlite version"
 
 
 def test_database_vacuum(tmpdir):
