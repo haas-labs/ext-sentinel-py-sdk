@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.68
+
+Feature
+
+- add hash calculated event id
+
+Test
+
+- remove sqlite version tests
+
 ## v0.5.67
 
 Feature
