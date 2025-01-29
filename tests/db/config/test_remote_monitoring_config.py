@@ -44,7 +44,7 @@ def kafka_consumer_record() -> Dict:
             "projectId": 503,
             "tenantId": 519,
             "chainUid": "ethereum",
-            "proxyAddress": None,
+            "implementation": None,
             "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
             "name": "eth",
         },
@@ -104,7 +104,7 @@ def test_remote_monitoring_config_db_add_remove_operations(monitoring_config_db,
 
 def test_remote_monitoring_config_db_filter_by_source(monitoring_config_db, kafka_consumer_record):
     assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
-
+    
     record = kafka_consumer_record.copy()
     record["source"] = "FORTA"
     monitoring_config_db.update(ConsumerRecord(key=1705, value=record))

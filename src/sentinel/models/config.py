@@ -17,7 +17,7 @@ class Contract(BaseModel):
     project_id: int = Field(alias="projectId")
     tenant_id: int = Field(alias="tenantId")
     chain_uid: str = Field(alias="chainUid")
-    proxy_address: str | None = Field(alias="proxyAddress", default=None)
+    implementation: str | None
     address: str
     name: str
 
