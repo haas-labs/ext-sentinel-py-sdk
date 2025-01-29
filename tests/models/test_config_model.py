@@ -16,7 +16,7 @@ def test_config_model_read_v1():
             "projectId": 503,
             "tenantId": 519,
             "chainUid": "ethereum",
-            "proxyAddress": null,
+            "implementation": null,
             "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
             "name": "eth"
         },

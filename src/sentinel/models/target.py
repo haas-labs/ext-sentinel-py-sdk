@@ -17,7 +17,7 @@ class Contract(BaseModel):
     project_id: int = Field(alias="projectId")
     tenant_id: int = Field(alias="tenantId")
     chain_uid: str = Field(alias="chainUid")
-    implementation: str
+    implementation: str | None
     address: str
     name: str
 
