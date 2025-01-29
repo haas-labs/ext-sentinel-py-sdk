@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.69
+
+Refactoring
+
+- Remove `proxy_address` and add a new `implementation` field (#497)
+- Update the current `address` logic to ensure it is always populated (#497)
+
 ## v0.5.68
 
 Feature
