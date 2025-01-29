@@ -82,7 +82,7 @@ class RemoteMonitoringConfigDB(CoreMonitoringConfigDB):
         """
         returns address or proxy
         """
-        return config.contract.proxy_address if config.contract.proxy_address is not None else config.contract.address
+        return config.contract.address
 
     def update(self, record: aiokafka.ConsumerRecord) -> None:
         if record.value is not None:

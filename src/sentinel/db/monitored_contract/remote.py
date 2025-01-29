@@ -97,18 +97,9 @@ class MonitoredContractsDB:
             for contract in data:
                 if contract.get("chainUid") != self._network:
                     continue
-                implementation_address = contract.get("address", "0x")
-                proxy_address = contract.get("proxyAddress", "0x")
 
-                # Use proxy address if specified
-                if proxy_address is not None and proxy_address != "0x":
-                    self._contracts.append(proxy_address.lower())
-                    continue
-
-                # Use implementation if no proxu address and implementation address is not empty
-                if implementation_address is not None and implementation_address != "0x":
-                    self._contracts.append(implementation_address.lower())
-                    continue
+                address = contract.get("address", "0x")
+                self._contracts.append(address.lower())
 
             # remove duplicates
             self._contracts = list(set(self._contracts))
