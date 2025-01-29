@@ -94,6 +94,8 @@ def test_remote_monitoring_config_db_from_settings():
 
 
 def test_remote_monitoring_config_db_add_remove_operations(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
     monitoring_config_db.update(ConsumerRecord(key=1705, value=kafka_consumer_record))
     assert monitoring_config_db.size == 1, "Incorrect number of records in db"
     monitoring_config_db.update(ConsumerRecord(key=1705, value=None))
@@ -101,6 +103,8 @@ def test_remote_monitoring_config_db_add_remove_operations(monitoring_config_db,
 
 
 def test_remote_monitoring_config_db_filter_by_source(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+    
     record = kafka_consumer_record.copy()
     record["source"] = "FORTA"
     monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
@@ -108,6 +112,8 @@ def test_remote_monitoring_config_db_filter_by_source(monitoring_config_db, kafk
 
 
 def test_remote_monitoring_config_db_filter_by_schame_and_version(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
     record = kafka_consumer_record.copy()
     record["schema"]["name"] = "Invalid-Schema"
     record["schema"]["version"] = "0.1.0"
@@ -116,6 +122,8 @@ def test_remote_monitoring_config_db_filter_by_schame_and_version(monitoring_con
 
 
 def test_remote_monitoring_config_db_filter_by_network(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
     record = kafka_consumer_record.copy()
     record["contract"]["chainUid"] = "bsc"
     monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
@@ -123,6 +131,8 @@ def test_remote_monitoring_config_db_filter_by_network(monitoring_config_db, kaf
 
 
 def test_remote_monitoring_config_db_disabled_records(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
     record = kafka_consumer_record.copy()
     monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
     assert monitoring_config_db.size == 1, "Incorrect number of records in db"
@@ -134,6 +144,8 @@ def test_remote_monitoring_config_db_disabled_records(monitoring_config_db, kafk
 
 
 def test_remote_monitoring_config_db_duplicated_records(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
     record = kafka_consumer_record.copy()
     monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
     assert monitoring_config_db.size == 1, "Incorrect number of records in db"
