@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.70
+
+Fix
+
+- Make the `implementation` field optional (#499)
+
 ## v0.5.69
 
 Refactoring
