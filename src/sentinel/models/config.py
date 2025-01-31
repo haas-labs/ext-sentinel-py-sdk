@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -17,7 +17,7 @@ class Contract(BaseModel):
     project_id: int = Field(alias="projectId")
     tenant_id: int = Field(alias="tenantId")
     chain_uid: str = Field(alias="chainUid")
-    implementation: str | None
+    implementation: Optional[str] = None 
     address: str
     name: str
 
