@@ -44,7 +44,6 @@ def kafka_consumer_record() -> Dict:
             "projectId": 503,
             "tenantId": 519,
             "chainUid": "ethereum",
-            "implementation": None,
             "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
             "name": "eth",
         },
