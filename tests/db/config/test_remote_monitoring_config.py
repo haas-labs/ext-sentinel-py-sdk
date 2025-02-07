@@ -155,3 +155,26 @@ def test_remote_monitoring_config_db_duplicated_records(monitoring_config_db, ka
     assert monitoring_config_db.addresses == {
         "0xdac17f958d2ee523a2206206994597c13d831ec7": [1705]
     }, "Incorrect monitored addresses list"
+
+def test_remote_monitoring_config_db_with_empty_address(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    record["contract"]["address"] = None
+    monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_config_db.size == 1, "Incorrect number of records in db"
+    assert monitoring_config_db.addresses == {
+        None: [1705]
+    }, "Incorrect monitored addresses list"
+
+
+def test_remote_monitoring_config_db_with_no_address(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    del record["contract"]["address"]
+    monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_config_db.size == 1, "Incorrect number of records in db"
+    assert monitoring_config_db.addresses == {
+        None: [1705]
+    }, "Incorrect monitored addresses list"
