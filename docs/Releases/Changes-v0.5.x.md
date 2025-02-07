@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.71
+
+- Make the `address` field optional (#501)
+
 ## v0.5.70
 
 Fix
