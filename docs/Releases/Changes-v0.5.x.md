@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.72
+
+- Make the `chain_uid` field optional (#503)
+
 ## v0.5.71
 
 - Make the `address` field optional (#501)
