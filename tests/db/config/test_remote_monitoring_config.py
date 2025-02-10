@@ -167,7 +167,6 @@ def test_remote_monitoring_config_db_with_empty_address(monitoring_config_db, ka
         None: [1705]
     }, "Incorrect monitored addresses list"
 
-
 def test_remote_monitoring_config_db_with_no_address(monitoring_config_db, kafka_consumer_record):
     assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
 
@@ -178,3 +177,13 @@ def test_remote_monitoring_config_db_with_no_address(monitoring_config_db, kafka
     assert monitoring_config_db.addresses == {
         None: [1705]
     }, "Incorrect monitored addresses list"
+
+def test_remote_monitoring_config_db_with_empty_chain_uid(monitoring_config_db, kafka_consumer_record):
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
+    record = kafka_consumer_record.copy()
+    record["contract"]["chainUid"] = None
+    monitoring_config_db.update(ConsumerRecord(key=1705, value=record))
+    assert monitoring_config_db.size == 0, "Incorrect number of records in db"
+    assert monitoring_config_db.network == "ethereum", "Incorrect chain uid"
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
