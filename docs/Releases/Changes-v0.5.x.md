@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.73
+
+- Rename `sepolia` to `ethereum_sepolia` in the blockchain definitions (#504)
+
 ## v0.5.72
 
 - Make the `chain_uid` field optional (#503)
