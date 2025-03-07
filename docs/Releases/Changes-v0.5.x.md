@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.74
+
+- Set default value for `chain_uid` in Contract model (#508)
+
 ## v0.5.73
 
 - Rename `sepolia` to `ethereum_sepolia` in the blockchain definitions (#504)
