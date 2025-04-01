@@ -39,4 +39,7 @@ BLOCKCHAIN = {
     "vechain": Blockchain(
         network="vechain", chain_id=100009, short_name="vechain", description="VeChain Mainnet", currency="VET"
     ),
+    "zeta": Blockchain(
+        network="zeta", chain_id=7000, short_name="zeta", description="ZetaChain Mainnet", currency="ZETA"
+    ),
 }
