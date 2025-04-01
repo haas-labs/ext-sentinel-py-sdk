@@ -50,6 +50,7 @@ class NetworkTag(str, Enum):
     ZKSYNC = "zksync"
     SCROLL = "scroll"
     AVALANCHE = "avalanche"
+    ZETA = "zeta"
 
     # // test
     ANVIL = "anvil"
