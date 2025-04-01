@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.75
+
+- Add zeta network in definitions (#510)
+
 ## v0.5.74
 
 - Set default value for `chain_uid` in Contract model (#508)
