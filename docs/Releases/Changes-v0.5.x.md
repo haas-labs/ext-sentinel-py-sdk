@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.76
+
+- Add polygon amoy and ethereum holesky in definitions (#512)
+
 ## v0.5.75
 
 - Add zeta network in definitions (#510)
