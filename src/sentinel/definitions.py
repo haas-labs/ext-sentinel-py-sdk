@@ -42,4 +42,10 @@ BLOCKCHAIN = {
     "zeta": Blockchain(
         network="zeta", chain_id=7000, short_name="zeta", description="ZetaChain Mainnet", currency="ZETA"
     ),
+    "polygon_amoy": Blockchain(
+        network="polygon_amoy", chain_id=80002, short_name="amoy", description="Polygon Amoy Testnet", currency="POL"
+    ),
+    "ethereum_holesky": Blockchain(
+        network="ethereum_holesky", chain_id=17000, short_name="holesky", description="Ethereum Holesky Testnet", currency="ETH"
+    ),
 }

@@ -51,6 +51,8 @@ class NetworkTag(str, Enum):
     SCROLL = "scroll"
     AVALANCHE = "avalanche"
     ZETA = "zeta"
+    POLYGON_AMOY = "polygon_amoy"
+    ETHEREUM_HOLESKY = "ethereum_holesky"
 
     # // test
     ANVIL = "anvil"
