@@ -26,6 +26,7 @@ class Tag(str, Enum):
     SECURITY = "SECURITY"
     COMPLIANCE = "COMPLIANCE"
     FINANCIAL = "FINANCIAL"
+    FIREWALL = "FIREWALL"
 
 
 class NetworkTag(str, Enum):
