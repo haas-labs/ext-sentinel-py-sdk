@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.77
+
+- Add FIREWALL tag to manifest (#514)
+
 ## v0.5.76
 
 - Add polygon amoy and ethereum holesky in definitions (#512)
