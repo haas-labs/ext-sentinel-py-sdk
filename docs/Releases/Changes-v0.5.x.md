@@ -2,7 +2,7 @@
 
 ## v0.5.77
 
-- Add FIREWALL tag to manifest (#514)
+- Add FIREWALL to manifest tag (#514)
 
 ## v0.5.76
 
