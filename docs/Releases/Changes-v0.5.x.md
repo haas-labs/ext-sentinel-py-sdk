@@ -2,7 +2,7 @@
 
 ## v0.5.78
 
-- Add cleanup logic for empty monitored contracts managed as entities
+- Add cleanup logic for empty monitored contracts managed as entities (#518)
 
 ## v0.5.77
 
