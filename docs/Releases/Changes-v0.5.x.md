@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.78
+
+- Add cleanup logic for empty monitored contracts managed as entities
+
 ## v0.5.77
 
 - Add FIREWALL to manifest tag (#514)
