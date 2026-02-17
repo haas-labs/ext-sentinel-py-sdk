@@ -131,10 +131,9 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
                 # Cleanup config database
                 del self._config_db[config.id]
                 # Cleanup address database
-                if monitored_address is not None:
-                    self._address_db[monitored_address].remove(config.id)
-                    if len(self._address_db[monitored_address]) == 0:
-                        del self._address_db[monitored_address]
+                self._address_db[monitored_address].remove(config.id)
+                if len(self._address_db[monitored_address]) == 0:
+                    del self._address_db[monitored_address]
             return
 
         # Proceed with active configs only
