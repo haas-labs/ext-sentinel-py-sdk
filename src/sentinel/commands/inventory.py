@@ -27,7 +27,7 @@ class Command(SentinelCommand):
         super().run(opts, args)
 
         if args.settings.project is None or not args.settings.project.path.exists():
-            logger.error("Cannot detect project directory, missed sentinel.yalm file")
+            logger.error("Cannot detect project directory, missed sentinel.yaml file")
             return
 
         if args.type:
