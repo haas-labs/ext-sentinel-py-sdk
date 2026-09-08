@@ -1,0 +1,266 @@
+{
+ "offset": 261,
+ "entries": [
+  {
+   "workflowId": "",
+   "contractEntry": {
+    "JsActiveContract": {
+     "createdEvent": {
+      "offset": 47,
+      "nodeId": 0,
+      "contractId": "0008c0e7ce4a89b595885d5fbe213c8421561ca5732243e2619ee377bc88a00d30ca121220c1263f5701d0b585dae44d8681c8a22c72b889e73ac55c175fd6ffb78ea1e4a7",
+      "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+      "contractKey": null,
+      "contractKeyHash": "",
+      "createArgument": {
+       "payer": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "owner": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+       "amount": {
+        "value": "100.0000000000",
+        "currency": "USD"
+       },
+       "viewers": []
+      },
+      "createdEventBlob": "",
+      "interfaceViews": [],
+      "witnessParties": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+      ],
+      "signatories": [
+       "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+      ],
+      "observers": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+      ],
+      "createdAt": "2026-09-08T14:11:13.895724Z",
+      "packageName": "CantonExamples",
+      "representativePackageId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a",
+      "acsDelta": true
+     },
+     "synchronizerId": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+     "reassignmentCounter": 0
+    }
+   },
+   "streamContinuationToken": "CgIICxIE6Mpg1g=="
+  },
+  {
+   "workflowId": "",
+   "contractEntry": {
+    "JsActiveContract": {
+     "createdEvent": {
+      "offset": 251,
+      "nodeId": 0,
+      "contractId": "0025cd5757a86586f49ada6e0490431a35e1434d97072bb1fb528aa2c78604d91aca121220863ab5f88bbe778add45a6db6170f7c1f4b937a209702ff2a432735948bb0246",
+      "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+      "contractKey": null,
+      "contractKeyHash": "",
+      "createArgument": {
+       "payer": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "owner": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+       "amount": {
+        "value": "100.0000000000",
+        "currency": "USD"
+       },
+       "viewers": [
+        "obs001::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs002::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs003::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs004::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs005::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs006::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs007::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs008::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs009::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs010::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs011::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs012::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs013::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs014::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs015::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs016::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs017::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs018::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs019::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs020::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs021::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs022::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs023::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs024::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs025::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs026::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs027::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs028::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs029::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs030::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs031::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs032::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs033::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs034::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs035::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs036::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs037::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs038::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs039::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs040::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs041::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs042::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs043::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs044::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs045::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs046::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs047::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs048::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs049::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs050::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs051::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs052::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs053::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs054::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs055::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs056::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs057::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs058::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs059::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "obs060::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+       ]
+      },
+      "createdEventBlob": "",
+      "interfaceViews": [],
+      "witnessParties": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+      ],
+      "signatories": [
+       "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+      ],
+      "observers": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+       "obs001::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs002::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs003::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs004::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs005::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs006::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs007::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs008::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs009::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs010::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs011::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs012::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs013::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs014::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs015::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs016::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs017::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs018::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs019::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs020::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs021::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs022::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs023::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs024::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs025::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs026::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs027::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs028::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs029::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs030::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs031::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs032::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs033::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs034::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs035::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs036::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs037::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs038::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs039::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs040::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs041::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs042::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs043::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs044::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs045::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs046::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs047::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs048::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs049::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs050::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs051::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs052::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs053::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs054::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs055::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs056::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs057::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs058::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs059::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "obs060::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+      ],
+      "createdAt": "2026-09-08T14:12:31.520817Z",
+      "packageName": "CantonExamples",
+      "representativePackageId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a",
+      "acsDelta": true
+     },
+     "synchronizerId": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+     "reassignmentCounter": 0
+    }
+   },
+   "streamContinuationToken": "CgIITBIE6Mpg1g=="
+  },
+  {
+   "workflowId": "",
+   "contractEntry": {
+    "JsIncompleteUnassigned": {
+     "createdEvent": {
+      "offset": 254,
+      "nodeId": 0,
+      "contractId": "003f2d3570b98bf9a162c5574aab62ab17eab253f493928a0ae6e548465cda5a7aca121220b5da1eab73913a52f4f5471f1a0b20eff78623a31069e6983e54b1e30bc8fa34",
+      "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+      "contractKey": null,
+      "contractKeyHash": "",
+      "createArgument": {
+       "payer": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+       "owner": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+       "amount": {
+        "value": "100.0000000000",
+        "currency": "USD"
+       },
+       "viewers": []
+      },
+      "createdEventBlob": "",
+      "interfaceViews": [],
+      "witnessParties": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+      ],
+      "signatories": [
+       "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+      ],
+      "observers": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+      ],
+      "createdAt": "2026-09-08T14:12:42.961985Z",
+      "packageName": "CantonExamples",
+      "representativePackageId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a",
+      "acsDelta": true
+     },
+     "unassignedEvent": {
+      "reassignmentId": "001220927f32f3d94f4c774191d5a6728f4e32ccdb0ef0020212667f2f701351cdbb41",
+      "contractId": "003f2d3570b98bf9a162c5574aab62ab17eab253f493928a0ae6e548465cda5a7aca121220b5da1eab73913a52f4f5471f1a0b20eff78623a31069e6983e54b1e30bc8fa34",
+      "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+      "source": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+      "target": "sync2::12208211085a990911929e44f64e8bba71e566f107fdf5c70f534605bc4d922d8c4a",
+      "submitter": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+      "reassignmentCounter": 1,
+      "assignmentExclusivity": "2026-09-08T14:11:13.420667Z",
+      "witnessParties": [
+       "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+      ],
+      "packageName": "CantonExamples",
+      "offset": 259,
+      "nodeId": 0
+     }
+    }
+   },
+   "streamContinuationToken": "CgUIThCDAhIE6Mpg1g=="
+  }
+ ]
+}

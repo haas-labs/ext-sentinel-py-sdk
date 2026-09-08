@@ -1,0 +1,57 @@
+{
+ "update": {
+  "Transaction": {
+   "value": {
+    "updateId": "1220712abffd5b7c1d6bf3df3cc2317076f0dea6fafa92a0862ae7c6c637953b25ad",
+    "commandId": "",
+    "workflowId": "",
+    "effectiveAt": "2026-09-08T14:11:13.895724Z",
+    "events": [
+     {
+      "CreatedEvent": {
+       "offset": 47,
+       "nodeId": 0,
+       "contractId": "0008c0e7ce4a89b595885d5fbe213c8421561ca5732243e2619ee377bc88a00d30ca121220c1263f5701d0b585dae44d8681c8a22c72b889e73ac55c175fd6ffb78ea1e4a7",
+       "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+       "contractKey": null,
+       "contractKeyHash": "",
+       "createArgument": {
+        "payer": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "owner": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+        "amount": {
+         "value": "100.0000000000",
+         "currency": "USD"
+        },
+        "viewers": []
+       },
+       "createdEventBlob": "",
+       "interfaceViews": [],
+       "witnessParties": [
+        "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+       ],
+       "signatories": [
+        "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+       ],
+       "observers": [
+        "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+       ],
+       "createdAt": "2026-09-08T14:11:13.895724Z",
+       "packageName": "CantonExamples",
+       "representativePackageId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a",
+       "acsDelta": true
+      }
+     }
+    ],
+    "offset": 47,
+    "synchronizerId": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+    "traceContext": {
+     "traceparent": "00-3ad5652f0fa8708790ec4a5e9acf5acb-b9662b0fa1dd1dcb-03",
+     "tracestate": null
+    },
+    "recordTime": "2026-09-08T14:11:15.204406Z",
+    "externalTransactionHash": null,
+    "paidTrafficCost": null
+   }
+  }
+ }
+}
