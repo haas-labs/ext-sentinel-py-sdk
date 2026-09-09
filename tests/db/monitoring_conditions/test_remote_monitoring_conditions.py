@@ -9,7 +9,8 @@ from sentinel.models.database import Database
 
 class ConsumerRecord(BaseModel):
     key: int
-    value: Optional[Dict] = Field(default_factory=dict)
+    value: Optional[object] = Field(default_factory=dict)
+    offset: int = 0
 
 
 class ConditionsModel(BaseModel):
@@ -257,3 +258,63 @@ def test_remote_monitoring_conditions_db_duplicated_records(
     assert monitoring_conditions_db.addresses == {
         "0xdac17f958d2ee523a2206206994597c13d831ec7": [1705]
     }, "Incorrect monitored addresses list"
+
+
+def test_remote_monitoring_conditions_db_ignores_another_source_the_model_cannot_parse(
+    monitoring_conditions_db,
+    kafka_consumer_active_record,
+):
+    """
+    The topic is shared. A record from another producer can carry values this model rejects —
+    dev has WORKFLOW records with status UNKNOWN — and one of them used to raise out of update(),
+    abort the whole ingest, and leave the sentry with no addresses at all.
+    """
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    foreign = {"id": 1, "status": "UNKNOWN", "source": "WORKFLOW", "name": "ReportContext"}
+    monitoring_conditions_db.update(ConsumerRecord(key=1, value=foreign, offset=6901))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+    # and the records that follow it still land
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=kafka_consumer_active_record))
+    assert monitoring_conditions_db.size == 1, "Incorrect number of records in db"
+
+
+def test_remote_monitoring_conditions_db_ignores_our_own_malformed_record(
+    monitoring_conditions_db,
+    kafka_consumer_active_record,
+):
+    assert len(monitoring_conditions_db.addresses) == 0, "Expect to have empty db"
+
+    malformed = kafka_consumer_active_record.copy()
+    malformed["status"] = "UNKNOWN"
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=malformed, offset=42))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+
+    monitoring_conditions_db.update(ConsumerRecord(key=1705, value=kafka_consumer_active_record))
+    assert monitoring_conditions_db.size == 1, "Incorrect number of records in db"
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        {},
+        {"source": "ATTACK_DETECTOR"},
+        {"source": "ATTACK_DETECTOR", "id": "not-an-int"},
+        {"source": "ATTACK_DETECTOR", "status": "UNKNOWN"},
+        {"source": "ATTACK_DETECTOR", "contract": "not-an-object"},
+        {"source": "WORKFLOW", "status": "UNKNOWN"},
+        {"source": None},
+        [],
+        "a string",
+        42,
+    ],
+)
+def test_remote_monitoring_conditions_db_update_never_raises(monitoring_conditions_db, value):
+    """
+    A record is data, not a contract. update() is called per record both by the ingest rebuild
+    and, live, by every detector's on_config_change — so no shape may raise out of it.
+    """
+    monitoring_conditions_db.update(ConsumerRecord(key=1, value=value, offset=1))
+    assert monitoring_conditions_db.size == 0, "Incorrect number of records in db"
+

@@ -45,4 +45,4 @@ class Configuration(BaseModel):
 
     # Configuration based on published scheme for detector
     # TODO need to make data validation before use in a detector
-    config: Dict = Field(default_factory=Dict)
+    config: Dict = Field(default_factory=dict)

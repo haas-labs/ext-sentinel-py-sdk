@@ -10,6 +10,7 @@ from sentinel.models.database import Database
 class ConsumerRecord(BaseModel):
     key: int
     value: Optional[Dict] = Field(default_factory=dict)
+    offset: int = 0
 
 
 class ConfigModel(BaseModel):
@@ -187,3 +188,20 @@ def test_remote_monitoring_config_db_with_empty_chain_uid(monitoring_config_db, 
     assert monitoring_config_db.size == 0, "Incorrect number of records in db"
     assert monitoring_config_db.network == "ethereum", "Incorrect chain uid"
     assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
+
+def test_remote_monitoring_config_db_ignores_another_source_the_model_cannot_parse(
+    monitoring_config_db,
+    kafka_consumer_record,
+):
+    """
+    Same shared topic, same failure mode as the monitoring conditions db.
+    """
+    assert len(monitoring_config_db.addresses) == 0, "Expect to have empty db"
+
+    foreign = {"id": 1, "status": "UNKNOWN", "source": "WORKFLOW", "name": "ReservesSnapshot"}
+    monitoring_config_db.update(ConsumerRecord(key=1, value=foreign, offset=7057))
+    assert len(monitoring_config_db.addresses) == 0, "Incorrect number of records in db"
+
+    monitoring_config_db.update(ConsumerRecord(key=1705, value=kafka_consumer_record))
+    assert len(monitoring_config_db.addresses) == 1, "Incorrect number of records in db"
