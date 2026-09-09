@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.81
+
+- Do not let a single record stop the monitoring conditions ingest: the `source` is read off the raw record before parsing, the parse is guarded, and the rebuild loop carries on per record (#522)
+- Fix `Configuration.config` default factory — `typing.Dict` is not callable, so every record without a `config` field raised `TypeError` (#522)
+
 ## v0.5.80
 
 - Canton sentry base: `metadata.policy` (manifest name, version, monitoring condition id) on every event, and deduplication of republished updates by `update_id` (#524)
