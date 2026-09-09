@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.82
+
+- Canton event model: a `CantonEvent` keeps every ledger fact of the event (`created_at`, `acs_delta`, `interface_ids`), and the contract data (`contract_key`, `interface_views`, `exercise_result`) with `keep_payload`, like the payload (#528)
+- Canton sentry base: a monitoring condition reaches a detector only when its schema name is that detector's policy name (#527)
+
 ## v0.5.81
 
 - Do not let a single record stop the monitoring conditions ingest: the `source` is read off the raw record before parsing, the parse is guarded, and the rebuild loop carries on per record (#522)
