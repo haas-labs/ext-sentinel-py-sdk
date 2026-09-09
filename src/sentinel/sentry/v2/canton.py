@@ -1,6 +1,7 @@
 import hashlib
 import time
-from typing import Any, Dict, Optional
+from collections import deque
+from typing import Any, Deque, Dict, Optional, Set
 
 from sentinel.core.v2.sentry import AsyncCoreSentry
 from sentinel.core.v2.settings import Settings
@@ -32,9 +33,19 @@ already scoped to one participant and one set of parties by the adapter that pro
 """
 
 
+RECENT_UPDATES = 10_000  # update_ids remembered for deduplication
+
+
 class CantonUpdateDetector(AsyncCoreSentry):
     name = "CantonUpdateDetector"
     description = "Base detector over a Canton participant's update stream"
+
+    # The policy an alert was judged against: the detector's manifest (name, version) and, when
+    # the parameters came from the Extractor, the monitoring condition id. Subclasses set the
+    # first two in configure(); on_config_change sets the third.
+    policy_name: Optional[str] = None
+    policy_version: Optional[str] = None
+    policy_config_id: Optional[int] = None
 
     def __init__(
         self,
@@ -60,11 +71,13 @@ class CantonUpdateDetector(AsyncCoreSentry):
             **kwargs,
         )
         self.logger_name = "canton://" + self.name
+        self._recent_ids: Deque[str] = deque(maxlen=RECENT_UPDATES)
+        self._recent_set: Set[str] = set()
 
     def init(self) -> None:
         super().init()
         if getattr(self.inputs, "updates", None):
-            self.inputs.updates.on_update = self.on_update
+            self.inputs.updates.on_update = self.handle_update
         else:
             raise AttributeError("Missed required updates input channel, please check configuration")
         # Optional: the Extractor's monitoring conditions, one configuration per tenant. Its
@@ -72,8 +85,29 @@ class CantonUpdateDetector(AsyncCoreSentry):
         if getattr(self.inputs, "config", None):
             self.inputs.config.on_config_change = self.on_config_change
 
+    async def handle_update(self, update: CantonUpdate) -> None:
+        """
+        Every update passes here before on_update. The adapter persists its offset only after
+        the broker's ack, so a crash in between republishes a page; update_id is the
+        cross-participant identity of an update and the key that makes that republish harmless.
+        Snapshots carry no update_id and are never deduplicated.
+        """
+        if update.update_id:
+            if update.update_id in self._recent_set:
+                self.logger.info(f"update {update.update_id[:12]}… already seen at this offset range, skipped")
+                return
+            if len(self._recent_ids) == self._recent_ids.maxlen:
+                self._recent_set.discard(self._recent_ids[0])
+            self._recent_ids.append(update.update_id)
+            self._recent_set.add(update.update_id)
+        await self.on_update(update)
+
     # handle incoming Canton update
     async def on_update(self, update: CantonUpdate) -> None: ...
+
+    @property
+    def policy(self) -> Dict[str, Any]:
+        return {"name": self.policy_name, "version": self.policy_version, "config_id": self.policy_config_id}
 
     # ------------------------------------------------------------- configuration
 
@@ -91,8 +125,10 @@ class CantonUpdateDetector(AsyncCoreSentry):
         base = dict(getattr(self, "profile_parameters", None) or self.parameters or {})
         if config.status == Status.ACTIVE:
             base.update(config.config or {})
+            self.policy_config_id = config.id
             self.logger.info(f"configuration {config.id} applied: {sorted((config.config or {}).keys())}")
         else:
+            self.policy_config_id = None
             self.logger.info(f"configuration {config.id} {config.status.value}: back to profile parameters")
         self.profile_parameters = dict(self.parameters or {})
         self.configure(base)
@@ -124,6 +160,7 @@ class CantonUpdateDetector(AsyncCoreSentry):
                 "offset": update.offset,
                 "update_id": update.update_id,
                 "synchronizer_id": update.synchronizer_id,
+                "policy": self.policy,
                 **metadata,
             },
         )

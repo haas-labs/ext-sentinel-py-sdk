@@ -73,3 +73,30 @@ async def test_config_change_applies_schema_fields_and_disable_restores():
     raw["status"] = "DISABLED"
     await d.on_config_change(Configuration(**raw))
     assert applied[-1] == {"max_stakeholders_default": 10, "severity": 0.6}
+
+
+@pytest.mark.asyncio
+async def test_emit_carries_the_policy():
+    update = CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()))
+    d = _detector()
+    d.policy_name, d.policy_version, d.policy_config_id = "Canton Test", "0.1.0", 42
+    ev = await d.emit("canton_test", 0.6, update)
+    assert ev.metadata["policy"] == {"name": "Canton Test", "version": "0.1.0", "config_id": 42}
+
+
+@pytest.mark.asyncio
+async def test_a_republished_update_is_handled_once():
+    update = CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()))
+    d = _detector()
+    d.logger = MagicMock()
+    from collections import deque
+    d._recent_ids, d._recent_set = deque(maxlen=10_000), set()
+    seen = []
+    async def on_update(u): seen.append(u.update_id)
+    d.on_update = on_update
+    await d.handle_update(update)
+    await d.handle_update(update)  # the adapter republished the page after a crash
+    assert seen == [update.update_id]
+    snapshot = CantonUpdate(kind="snapshot", offset=1)
+    await d.handle_update(snapshot); await d.handle_update(snapshot)
+    assert len(seen) == 3, "snapshots have no update_id and are never deduplicated"
