@@ -1,0 +1,62 @@
+{
+ "update": {
+  "Reassignment": {
+   "value": {
+    "updateId": "12204c2f56b199f22c5c0bc21677977314dd04754ec5f3677146539de9cb710dc0ac",
+    "commandId": "cf35d60c-56e6-4990-8f67-955775448626",
+    "workflowId": "",
+    "offset": 271,
+    "events": [
+     {
+      "JsAssignmentEvent": {
+       "source": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+       "target": "sync2::12208211085a990911929e44f64e8bba71e566f107fdf5c70f534605bc4d922d8c4a",
+       "reassignmentId": "001220927f32f3d94f4c774191d5a6728f4e32ccdb0ef0020212667f2f701351cdbb41",
+       "submitter": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+       "reassignmentCounter": 1,
+       "createdEvent": {
+        "offset": 271,
+        "nodeId": 0,
+        "contractId": "003f2d3570b98bf9a162c5574aab62ab17eab253f493928a0ae6e548465cda5a7aca121220b5da1eab73913a52f4f5471f1a0b20eff78623a31069e6983e54b1e30bc8fa34",
+        "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+        "contractKey": null,
+        "contractKeyHash": "",
+        "createArgument": {
+         "payer": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+         "owner": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+         "amount": {
+          "value": "100.0000000000",
+          "currency": "USD"
+         },
+         "viewers": []
+        },
+        "createdEventBlob": "",
+        "interfaceViews": [],
+        "witnessParties": [
+         "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+        ],
+        "signatories": [
+         "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+        ],
+        "observers": [
+         "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+        ],
+        "createdAt": "2026-09-08T14:12:42.961985Z",
+        "packageName": "CantonExamples",
+        "representativePackageId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a",
+        "acsDelta": true
+       }
+      }
+     }
+    ],
+    "traceContext": {
+     "traceparent": "00-a5db06c9a3acad1bd2c47f05fc4b4117-914cb982d507df89-03",
+     "tracestate": null
+    },
+    "recordTime": "2026-09-08T14:13:05.647332Z",
+    "synchronizerId": "sync2::12208211085a990911929e44f64e8bba71e566f107fdf5c70f534605bc4d922d8c4a",
+    "paidTrafficCost": 0
+   }
+  }
+ }
+}

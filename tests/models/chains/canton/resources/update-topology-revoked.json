@@ -1,0 +1,28 @@
+{
+ "update": {
+  "TopologyTransaction": {
+   "value": {
+    "updateId": "1220e8b5bb5dffaea07117624d609c06b6e5f091eb1a5dc3dac46ea2dff8d7d2bfad",
+    "offset": 55,
+    "synchronizerId": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+    "recordTime": "2026-09-08T14:11:30.620458Z",
+    "events": [
+     {
+      "event": {
+       "ParticipantAuthorizationRevoked": {
+        "value": {
+         "partyId": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+         "participantId": "p1::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+        }
+       }
+      }
+     }
+    ],
+    "traceContext": {
+     "traceparent": "00-5ccaa48f0f897e5f01380c77ede658b5-b2a7ad70cb6c327d-03",
+     "tracestate": null
+    }
+   }
+  }
+ }
+}

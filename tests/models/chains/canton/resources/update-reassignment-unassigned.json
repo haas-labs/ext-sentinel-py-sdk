@@ -1,0 +1,41 @@
+{
+ "update": {
+  "Reassignment": {
+   "value": {
+    "updateId": "1220fd211de25ac76205d6c484dbc6983f2ae577cb9d0b2f5fe20ee83a7eb4b4eb7c",
+    "commandId": "bdc42ffb-ce57-4d66-9be7-6f69613115f3",
+    "workflowId": "",
+    "offset": 259,
+    "events": [
+     {
+      "JsUnassignedEvent": {
+       "value": {
+        "reassignmentId": "001220927f32f3d94f4c774191d5a6728f4e32ccdb0ef0020212667f2f701351cdbb41",
+        "contractId": "003f2d3570b98bf9a162c5574aab62ab17eab253f493928a0ae6e548465cda5a7aca121220b5da1eab73913a52f4f5471f1a0b20eff78623a31069e6983e54b1e30bc8fa34",
+        "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+        "source": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+        "target": "sync2::12208211085a990911929e44f64e8bba71e566f107fdf5c70f534605bc4d922d8c4a",
+        "submitter": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+        "reassignmentCounter": 1,
+        "assignmentExclusivity": "2026-09-08T14:11:13.420667Z",
+        "witnessParties": [
+         "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+        ],
+        "packageName": "CantonExamples",
+        "offset": 259,
+        "nodeId": 0
+       }
+      }
+     }
+    ],
+    "traceContext": {
+     "traceparent": "00-cc8a0f8818b0e1e6ac32b597a441f3cd-f76eaedd1aec6f90-03",
+     "tracestate": null
+    },
+    "recordTime": "2026-09-08T14:12:43.953311Z",
+    "synchronizerId": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+    "paidTrafficCost": 0
+   }
+  }
+ }
+}

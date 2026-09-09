@@ -1,0 +1,85 @@
+{
+ "update": {
+  "Transaction": {
+   "value": {
+    "updateId": "12201a26d7a686bcaedf93728afcf6df0e21514e1632fe2ecc03902d263e9787aa63",
+    "commandId": "d2c952f2-6147-48e9-abbf-ff383f35ac17",
+    "workflowId": "",
+    "effectiveAt": "2026-09-08T14:12:54.670924Z",
+    "events": [
+     {
+      "ExercisedEvent": {
+       "offset": 265,
+       "nodeId": 0,
+       "contractId": "00ce2c9986ed0a483b55a5c819e37ca87f6d52779b4b179fdb522c94e6f58921cdca121220d4b05f941f56bae283a64bcef7bdb19b73349ed336dd68556cdfc2134f4dcc53",
+       "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+       "interfaceId": null,
+       "choice": "Share",
+       "choiceArgument": {
+        "viewer": "stranger::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+       },
+       "actingParties": [
+        "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+       ],
+       "consuming": true,
+       "witnessParties": [
+        "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+       ],
+       "lastDescendantNodeId": 1,
+       "exerciseResult": "00a351b43b9d3a64c15c6ebada60b674eda47a8c344cf76584d29aa19293b889e0ca121220bc90c788eaf3d9fb40eb82db37080b7be424a0874892964215adcdc30b4c9366",
+       "packageName": "CantonExamples",
+       "implementedInterfaces": [],
+       "acsDelta": true
+      }
+     },
+     {
+      "CreatedEvent": {
+       "offset": 265,
+       "nodeId": 1,
+       "contractId": "00a351b43b9d3a64c15c6ebada60b674eda47a8c344cf76584d29aa19293b889e0ca121220bc90c788eaf3d9fb40eb82db37080b7be424a0874892964215adcdc30b4c9366",
+       "templateId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a:Iou:Iou",
+       "contractKey": null,
+       "contractKeyHash": "",
+       "createArgument": {
+        "payer": "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940",
+        "owner": "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+        "amount": {
+         "value": "100.0000000000",
+         "currency": "USD"
+        },
+        "viewers": [
+         "stranger::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+        ]
+       },
+       "createdEventBlob": "",
+       "interfaceViews": [],
+       "witnessParties": [
+        "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed"
+       ],
+       "signatories": [
+        "counterparty::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+       ],
+       "observers": [
+        "client::12208f1c682d47e4f443b6b83b58c645f6f0ae6b77daaee37947cceaa7e4b5a6e0ed",
+        "stranger::12201fe11e83326abfaf115657eedee557e647a5a5043f5d5c7f821709daef529940"
+       ],
+       "createdAt": "2026-09-08T14:12:54.670924Z",
+       "packageName": "CantonExamples",
+       "representativePackageId": "764252f6c2236376a83c134318e7856e046ff469481b28dcdc84372fa636d91a",
+       "acsDelta": true
+      }
+     }
+    ],
+    "offset": 265,
+    "synchronizerId": "sync1::1220dd30d0a566676278472ab282219459121256ac6103d5543806e8b90116cbc292",
+    "traceContext": {
+     "traceparent": "00-515224cf03db63b6021d59d8ac920652-8c079c19a8d9e3c7-03",
+     "tracestate": null
+    },
+    "recordTime": "2026-09-08T14:12:54.753159Z",
+    "externalTransactionHash": null,
+    "paidTrafficCost": 0
+   }
+  }
+ }
+}

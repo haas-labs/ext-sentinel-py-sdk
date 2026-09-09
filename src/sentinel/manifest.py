@@ -31,6 +31,7 @@ class Tag(str, Enum):
 
 class NetworkTag(str, Enum):
     # Network groups
+    CANTON = "canton"
     EVM = "evm"
     ICP = "icp"
     STELLAR = "stellar"
