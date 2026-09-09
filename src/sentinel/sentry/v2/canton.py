@@ -1,8 +1,23 @@
-from typing import Dict
+import hashlib
+import time
+from typing import Any, Dict, Optional
 
 from sentinel.core.v2.sentry import AsyncCoreSentry
 from sentinel.core.v2.settings import Settings
 from sentinel.models.chains.canton.update import CantonUpdate
+from sentinel.models.event import Blockchain, Event
+
+CANTON = Blockchain(network="canton", chain_id="canton")
+
+
+def hash_id(value: Optional[str]) -> Optional[str]:
+    """
+    Party, contract and participant ids never leave a Canton sentry in the clear: every alert
+    carries their sha256 instead, under a key with a _hash suffix.
+    """
+    if value is None:
+        return None
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 """
 Canton Update Detector: the base for sentries that watch a participant's update stream.
@@ -54,3 +69,36 @@ class CantonUpdateDetector(AsyncCoreSentry):
 
     # handle incoming Canton update
     async def on_update(self, update: CantonUpdate) -> None: ...
+
+    async def emit(
+        self,
+        type: str,
+        severity: float,
+        update: CantonUpdate,
+        category: str = "ALERT",
+        desc: Optional[str] = None,
+        **metadata: Any,
+    ) -> Event:
+        """
+        Build and send the Event every Canton detector emits alike: blockchain fixed to canton,
+        ts = the update's record_time, and offset / update_id / synchronizer_id always in metadata
+        so an alert is traceable to the ledger. Callers pass ids already hashed (see hash_id).
+        """
+        event = Event(
+            did=self.name,
+            sid="ext:sentinel",
+            category=category,
+            type=type,
+            severity=severity,
+            desc=desc,
+            ts=update.record_time or int(time.time() * 1000),
+            blockchain=CANTON,
+            metadata={
+                "offset": update.offset,
+                "update_id": update.update_id,
+                "synchronizer_id": update.synchronizer_id,
+                **metadata,
+            },
+        )
+        await self.outputs.events.send(event)
+        return event
