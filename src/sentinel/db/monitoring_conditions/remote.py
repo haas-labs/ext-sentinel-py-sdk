@@ -93,8 +93,6 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         if record.value is None:
             return
 
-        config = Configuration(**record.value)
-
         """
         filtering schema by
         - ignore if source != ATTACK_DETECTOR
@@ -102,8 +100,20 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
         - ignore if network is not matched with specified
         - ignore if status != ACTIVE
         """
-        # Select ATTACK_DETECTOR configs only
-        if config.source != ATTACK_DETECTOR_SOURCE:
+        # Select ATTACK_DETECTOR configs only. The topic is shared with other producers, whose
+        # records this model does not describe, so the source is read off the raw record: parsing
+        # one of them raises, and ingest is a full state rebuild that then leaves the detector
+        # with no monitored addresses at all.
+        if not isinstance(record.value, dict) or record.value.get("source") != ATTACK_DETECTOR_SOURCE:
+            return
+
+        # A malformed record of our own must not cost us every other one either. Deliberately
+        # broad: update() is also the live path, called per record by every detector's
+        # on_config_change, and no record shape may take a running sentry down.
+        try:
+            config = Configuration(**record.value)
+        except Exception as err:
+            self.logger.error(f"Ignoring malformed configuration, offset: {record.offset}, error: {err}")
             return
 
         # handle configuration for predefined network only
@@ -157,7 +167,15 @@ class RemoteMonitoringConditionsDB(CoreMonitoringConditionsDB):
                     if data:
                         for _, records in data.items():
                             for record in records:
-                                self.update(record=record)
+                                # ingest is a full state rebuild: one record must never be able
+                                # to end it, or the sentry comes up monitoring nothing.
+                                try:
+                                    self.update(record=record)
+                                except Exception as err:
+                                    self.logger.error(
+                                        f"Ignoring record that could not be applied, "
+                                        f"offset: {record.offset}, error: {err}"
+                                    )
                     else:
                         if time.time() - last_msg_time > INGEST_TIMEOUT_SECS:
                             self.logger.info(
