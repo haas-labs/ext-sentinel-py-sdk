@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 from sentinel.core.v2.sentry import AsyncCoreSentry
 from sentinel.core.v2.settings import Settings
 from sentinel.models.chains.canton.update import CantonUpdate
+from sentinel.models.config import Configuration, Status
 from sentinel.models.event import Blockchain, Event
 
 CANTON = Blockchain(network="canton", chain_id="canton")
@@ -66,9 +67,35 @@ class CantonUpdateDetector(AsyncCoreSentry):
             self.inputs.updates.on_update = self.on_update
         else:
             raise AttributeError("Missed required updates input channel, please check configuration")
+        # Optional: the Extractor's monitoring conditions, one configuration per tenant. Its
+        # fields are the detector's manifest Schema and land on top of the profile parameters.
+        if getattr(self.inputs, "config", None):
+            self.inputs.config.on_config_change = self.on_config_change
 
     # handle incoming Canton update
     async def on_update(self, update: CantonUpdate) -> None: ...
+
+    # ------------------------------------------------------------- configuration
+
+    def configure(self, parameters: Dict) -> None:
+        """Detectors override this to read their parameters; called again on every config change."""
+
+    async def on_config_change(self, config: Configuration) -> None:
+        """
+        A monitoring condition for this detector arrived or changed. Its `config` carries the
+        fields of the detector's manifest Schema; an ACTIVE one replaces the parameters of the
+        same name, a DISABLED or DELETED one restores the profile defaults.
+        """
+        if config.config_schema.name != getattr(self, "schema_name", config.config_schema.name):
+            return
+        base = dict(getattr(self, "profile_parameters", None) or self.parameters or {})
+        if config.status == Status.ACTIVE:
+            base.update(config.config or {})
+            self.logger.info(f"configuration {config.id} applied: {sorted((config.config or {}).keys())}")
+        else:
+            self.logger.info(f"configuration {config.id} {config.status.value}: back to profile parameters")
+        self.profile_parameters = dict(self.parameters or {})
+        self.configure(base)
 
     async def emit(
         self,
@@ -101,4 +128,7 @@ class CantonUpdateDetector(AsyncCoreSentry):
             },
         )
         await self.outputs.events.send(event)
+        webhook = getattr(self.outputs, "webhook", None)
+        if webhook is not None:  # the client's own receiver, when the profile declares one
+            await webhook.send(event)
         return event

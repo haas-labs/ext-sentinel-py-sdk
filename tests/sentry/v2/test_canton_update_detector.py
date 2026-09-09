@@ -15,6 +15,7 @@ def _detector():
     d.name = "TestDetector"
     d.outputs = MagicMock()
     d.outputs.events.send = AsyncMock()
+    d.outputs.webhook = None  # a Channels object without a webhook output resolves to None
     return d
 
 
@@ -43,3 +44,32 @@ async def test_emit_event_category_for_informational_output():
     update = CantonUpdate.from_json_api(json.load((RES / "update-topology-added.json").open()))
     ev = await _detector().emit("canton_first_seen", 0.3, update, category="EVENT")
     assert ev.category == "EVENT"
+
+
+@pytest.mark.asyncio
+async def test_emit_fans_out_to_a_webhook_when_declared():
+    update = CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()))
+    d = _detector()
+    d.outputs.webhook = MagicMock()
+    d.outputs.webhook.send = AsyncMock()
+    ev = await d.emit("canton_test", 0.6, update)
+    d.outputs.webhook.send.assert_awaited_once_with(ev)
+
+
+@pytest.mark.asyncio
+async def test_config_change_applies_schema_fields_and_disable_restores():
+    from sentinel.models.config import Configuration
+    d = _detector()
+    d.parameters = {"max_stakeholders_default": 10, "severity": 0.6}
+    d.logger = MagicMock()
+    applied = []
+    d.configure = lambda p: applied.append(dict(p))
+    raw = {"id": 7, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": "c", "source": "ext",
+           "contract": {"id": 1, "createdAt": 1, "updatedAt": 1, "projectId": 1, "tenantId": 1, "chainUid": "canton", "name": "client party"},
+           "schema": {"id": 3, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": "Canton Stakeholder Anomaly", "version": "0.1.0"},
+           "config": {"max_stakeholders_default": 25}}
+    await d.on_config_change(Configuration(**raw))
+    assert applied[-1] == {"max_stakeholders_default": 25, "severity": 0.6}
+    raw["status"] = "DISABLED"
+    await d.on_config_change(Configuration(**raw))
+    assert applied[-1] == {"max_stakeholders_default": 10, "severity": 0.6}
