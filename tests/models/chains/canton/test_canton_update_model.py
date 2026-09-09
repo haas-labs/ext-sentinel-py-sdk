@@ -40,6 +40,22 @@ def test_transaction_created_keeps_payload_on_request():
     assert u.events[0].payload["amount"]["currency"] == "USD"
 
 
+def test_created_carries_the_ledger_facts_that_are_not_payload():
+    (ev,) = CantonUpdate.from_json_api(load("update-transaction-created.json")).events
+    assert ev.created_at and ev.created_at > 1_700_000_000_000, "createdAt is epoch ms"
+    assert ev.acs_delta is True, "the create enters the reading parties' active set"
+    assert ev.interface_ids == [], "the example Iou implements no interface"
+    assert ev.contract_key is None and ev.interface_views is None, "contract data is kept only on request"
+
+
+def test_exercised_result_and_key_are_contract_data_kept_only_on_request():
+    hashed = CantonUpdate.from_json_api(load("update-transaction-exercised.json")).events[0]
+    assert hashed.exercise_result is None and hashed.acs_delta is True and hashed.interface_ids == []
+    kept = CantonUpdate.from_json_api(load("update-transaction-exercised.json"), keep_payload=True).events[0]
+    assert isinstance(kept.exercise_result, str) and kept.exercise_result.startswith("00"), "Share returns the new contract id"
+    assert kept.payload_hash == hashed.payload_hash, "keeping the data does not change the hash"
+
+
 def test_transaction_exercised_carries_the_subtree():
     u = CantonUpdate.from_json_api(load("update-transaction-exercised.json"))
     exercised, created = u.events
