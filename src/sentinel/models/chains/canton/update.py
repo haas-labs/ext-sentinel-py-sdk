@@ -57,9 +57,10 @@ class CantonEvent(BaseModel):
     """
     One event inside an update. Which fields are set depends on `type`:
 
-    - created / exercised / archived: contract_id, template_id, package_name, witness_parties;
-      created adds signatories, observers, payload_hash; exercised adds choice, acting_parties,
-      consuming, last_descendant_node_id, payload_hash (of the choice argument)
+    - created / exercised / archived: contract_id, template_id, package_name, witness_parties,
+      interface_ids, acs_delta; created adds signatories, observers, created_at, payload_hash;
+      exercised adds choice, acting_parties, consuming, last_descendant_node_id, payload_hash (of
+      the choice argument)
     - unassigned / assigned: contract_id, template_id, reassignment_id, source, target, submitter,
       reassignment_counter; unassigned adds assignment_exclusivity; assigned adds the created
       contract fields (signatories, observers) on the target synchronizer
@@ -77,6 +78,9 @@ class CantonEvent(BaseModel):
     signatories: List[str] = Field(default_factory=list)
     observers: List[str] = Field(default_factory=list)
     witness_parties: List[str] = Field(default_factory=list)
+    interface_ids: List[str] = Field(default_factory=list)  # interfaces the contract implements (views on created, interface_id / implemented on exercised)
+    acs_delta: Optional[bool] = None  # whether the event changes the active-contracts set of the reading parties
+    created_at: Optional[int] = None  # epoch ms, created events
 
     # exercised
     choice: Optional[str] = None
@@ -97,10 +101,14 @@ class CantonEvent(BaseModel):
     participant: Optional[str] = None
     permission: Optional[ParticipantPermission] = None
 
-    # Contract payload never leaves the client's trust boundary in the clear. The hash is always
-    # present for created/exercised; the raw payload is optional and meant for local-only topics.
+    # Contract data never leaves the client's trust boundary in the clear. The hash is always
+    # present for created/exercised; the raw payload, the contract key, the interface views and the
+    # choice result are optional (keep_payload) and meant for the local pipeline only.
     payload_hash: Optional[str] = None
     payload: Optional[Dict[str, Any]] = None
+    contract_key: Optional[Any] = None
+    interface_views: Optional[List[Dict[str, Any]]] = None
+    exercise_result: Optional[Any] = None
 
     @property
     def stakeholders(self) -> List[str]:
@@ -249,27 +257,36 @@ def _contract_event(raw: Dict[str, Any], keep_payload: bool) -> CantonEvent:
         template_id=b.get("templateId"),
         package_name=b.get("packageName"),
         witness_parties=list(b.get("witnessParties", [])),
+        acs_delta=b.get("acsDelta"),
     )
     if kind == "CreatedEvent":
         arg = b.get("createArgument", b.get("createArguments"))
+        views = b.get("interfaceViews") or []
         return CantonEvent(
             type=CantonEventType.CREATED,
             signatories=list(b.get("signatories", [])),
             observers=list(b.get("observers", [])),
+            interface_ids=[v.get("interfaceId") for v in views if v.get("interfaceId")],
+            created_at=_ts(b.get("createdAt")),
             payload_hash=payload_hash(arg),
             payload=arg if keep_payload else None,
+            contract_key=b.get("contractKey") if keep_payload else None,
+            interface_views=views if keep_payload and views else None,
             **common,
         )
     if kind == "ExercisedEvent":
         arg = b.get("choiceArgument")
+        interfaces = ([b["interfaceId"]] if b.get("interfaceId") else []) + list(b.get("implementedInterfaces") or [])
         return CantonEvent(
             type=CantonEventType.EXERCISED,
             choice=b.get("choice"),
             acting_parties=list(b.get("actingParties", [])),
             consuming=b.get("consuming"),
             last_descendant_node_id=b.get("lastDescendantNodeId"),
+            interface_ids=list(dict.fromkeys(interfaces)),
             payload_hash=payload_hash(arg),
             payload=arg if keep_payload else None,
+            exercise_result=b.get("exerciseResult") if keep_payload else None,
             **common,
         )
     if kind == "ArchivedEvent":
