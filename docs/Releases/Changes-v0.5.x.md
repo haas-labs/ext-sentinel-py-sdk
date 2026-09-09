@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.80
+
+- Canton sentry base: `metadata.policy` (manifest name, version, monitoring condition id) on every event, and deduplication of republished updates by `update_id` (#524)
+
 ## v0.5.79
 
 - Add the Canton participant update model (`sentinel.models.chains.canton`), the `updates` Kafka and file channels, and the `CantonUpdateDetector` sentry base with hashed ids, a common `emit`, and a monitoring-condition hook (#521)
