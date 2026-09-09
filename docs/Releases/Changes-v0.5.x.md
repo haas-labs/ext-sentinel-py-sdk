@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.79
+
+- Add the Canton participant update model (`sentinel.models.chains.canton`), the `updates` Kafka and file channels, and the `CantonUpdateDetector` sentry base with hashed ids, a common `emit`, and a monitoring-condition hook (#521)
+- Add `OutboundWebhookChannel` for delivering events to a client's own receiver (#521)
+- Add `CANTON` to the manifest network tags (#521)
+
 ## v0.5.78
 
 - Add cleanup logic for empty monitored contracts managed as entities (#518)
