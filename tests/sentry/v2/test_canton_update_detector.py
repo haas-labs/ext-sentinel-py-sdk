@@ -100,3 +100,23 @@ async def test_a_republished_update_is_handled_once():
     snapshot = CantonUpdate(kind="snapshot", offset=1)
     await d.handle_update(snapshot); await d.handle_update(snapshot)
     assert len(seen) == 3, "snapshots have no update_id and are never deduplicated"
+
+
+@pytest.mark.asyncio
+async def test_config_change_ignores_another_detectors_condition():
+    from sentinel.models.config import Configuration
+    d = _detector()
+    d.parameters = {"max_stakeholders_default": 10}
+    d.policy_name, d.policy_version = "Canton Stakeholder Anomaly", "0.1.1"
+    d.logger = MagicMock()
+    applied = []
+    d.configure = lambda p: applied.append(dict(p))
+    other = {"id": 8, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": "c", "source": "ext",
+             "contract": {"id": 1, "createdAt": 1, "updatedAt": 1, "projectId": 1, "tenantId": 1, "chainUid": "canton", "name": "x"},
+             "schema": {"id": 4, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": "Canton Topology Drift", "version": "0.1.1"},
+             "config": {"max_stakeholders_default": 99}}
+    await d.on_config_change(Configuration(**other))
+    assert applied == [], "another detector's condition never reaches configure"
+    mine = dict(other, schema={**other["schema"], "name": "Canton Stakeholder Anomaly"})
+    await d.on_config_change(Configuration(**mine))
+    assert applied == [{"max_stakeholders_default": 99}] and d.policy_config_id == 8

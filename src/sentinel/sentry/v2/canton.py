@@ -120,8 +120,8 @@ class CantonUpdateDetector(AsyncCoreSentry):
         fields of the detector's manifest Schema; an ACTIVE one replaces the parameters of the
         same name, a DISABLED or DELETED one restores the profile defaults.
         """
-        if config.config_schema.name != getattr(self, "schema_name", config.config_schema.name):
-            return
+        if self.policy_name and config.config_schema.name != self.policy_name:
+            return  # a condition of another detector on the shared conditions topic
         base = dict(getattr(self, "profile_parameters", None) or self.parameters or {})
         if config.status == Status.ACTIVE:
             base.update(config.config or {})
