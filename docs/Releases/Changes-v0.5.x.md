@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.83
+
+- Canton sentry base: monitoring conditions arrive the platform's way, the `config` channel's raw record through a `RemoteMonitoringConditionsDB` ingested at init; the newest active condition of the detector is applied on top of the profile, its party becomes a monitored party, and every alert carries its id as `cid` (#530)
+
 ## v0.5.82
 
 - Canton event model: a `CantonEvent` keeps every ledger fact of the event (`created_at`, `acs_delta`, `interface_ids`), and the contract data (`contract_key`, `interface_views`, `exercise_result`) with `keep_payload`, like the payload (#528)
