@@ -1,1 +1,1 @@
-VERSION = "0.5.82.dev1"
+VERSION = "0.5.83"
