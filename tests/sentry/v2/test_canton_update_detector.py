@@ -120,3 +120,88 @@ async def test_config_change_ignores_another_detectors_condition():
     mine = dict(other, schema={**other["schema"], "name": "Canton Stakeholder Anomaly"})
     await d.on_config_change(Configuration(**mine))
     assert applied == [{"max_stakeholders_default": 99}] and d.policy_config_id == 8
+
+
+def _raw_condition(cid=7, updated=1, status="ACTIVE", schema="Canton Stakeholder Anomaly", config=None, address="client::1220aa"):
+    return {"id": cid, "createdAt": 1, "updatedAt": updated, "status": status, "name": "c", "source": "ATTACK_DETECTOR",
+            "contract": {"id": 1, "createdAt": 1, "updatedAt": 1, "projectId": 1, "tenantId": 1, "chainUid": "canton_devnet", "name": "client party", "address": address},
+            "schema": {"id": 3, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": schema, "version": "0.1.1"},
+            "config": config if config is not None else {"max_stakeholders_default": 25}}
+
+
+class _FakeConditionsDB:
+    """Stands in for RemoteMonitoringConditionsDB: keeps ACTIVE configs of one schema, like the real one."""
+
+    def __init__(self, schema="Canton Stakeholder Anomaly"):
+        from sentinel.models.config import Configuration, Status
+        self._config_db, self.schema, self.ingested = {}, schema, 0
+        self._Configuration, self._Status = Configuration, Status
+
+    def ingest(self):
+        self.ingested += 1
+
+    def update(self, record):
+        c = self._Configuration(**record.value)
+        if c.config_schema.name != self.schema:
+            return
+        if c.status == self._Status.ACTIVE:
+            self._config_db[c.id] = c
+        else:
+            self._config_db.pop(c.id, None)
+
+
+def _record(raw):
+    r = MagicMock()
+    r.value = raw
+    return r
+
+
+@pytest.mark.asyncio
+async def test_a_condition_record_goes_through_the_database_and_sets_the_policy():
+    d = _detector()
+    d.parameters = {"max_stakeholders_default": 10}
+    d.logger = MagicMock()
+    d.policy_name = "Canton Stakeholder Anomaly"
+    applied = []
+    d.configure = lambda p: applied.append(dict(p))
+    d.databases = MagicMock()
+    d.databases.monitoring_conditions = _FakeConditionsDB()
+    await d.on_config_change(record=_record(_raw_condition(cid=7)))
+    assert d.policy_config_id == 7
+    assert applied[-1] == {"max_stakeholders_default": 25, "monitored_parties": ["client::1220aa"]}, "the condition's entity is a monitored party"
+    await d.on_config_change(record=_record(_raw_condition(cid=7, updated=2, config={"max_stakeholders_default": 30})))
+    assert applied[-1]["max_stakeholders_default"] == 30, "an updated condition is re-applied"
+    await d.on_config_change(record=_record(_raw_condition(cid=9, schema="Canton Topology Drift")))
+    assert d.policy_config_id == 7, "another detector's condition is filtered out by the database"
+    await d.on_config_change(record=_record(_raw_condition(cid=7, updated=3, status="DISABLED")))
+    assert d.policy_config_id is None and applied[-1] == {"max_stakeholders_default": 10}, "no active condition: profile defaults"
+
+
+@pytest.mark.asyncio
+async def test_the_alert_carries_the_condition_id_as_cid():
+    update = CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()))
+    d = _detector()
+    d.policy_name, d.policy_version = "Canton Stakeholder Anomaly", "0.1.1"
+    d.parameters, d.logger, d.configure = {}, MagicMock(), lambda p: None
+    from sentinel.models.config import Configuration
+    d.apply_configuration(Configuration(**_raw_condition(cid=42)))
+    event = await d.emit("canton_stakeholder_anomaly", 0.5, update)
+    assert event.cid == 42 and event.metadata["policy"]["config_id"] == 42
+    d.restore_profile("test")
+    event = await d.emit("canton_stakeholder_anomaly", 0.5, update)
+    assert event.cid is None, "profile parameters: no condition to link the alert to"
+
+
+def test_init_ingests_the_conditions_database_before_the_loop():
+    d = _detector()
+    d.parameters, d.logger, d.configure, d.policy_name = {}, MagicMock(), lambda p: None, "Canton Stakeholder Anomaly"
+    d.inputs = MagicMock()
+    d.databases = MagicMock()
+    db = _FakeConditionsDB()
+    from sentinel.models.config import Configuration
+    db._config_db[5] = Configuration(**_raw_condition(cid=5))
+    d.databases.monitoring_conditions = db
+    # only the part of init after the SDK's own setup is under test: ingest, then the policy
+    d.conditions_db().ingest()
+    d.sync_policy()
+    assert db.ingested == 1 and d.policy_config_id == 5
