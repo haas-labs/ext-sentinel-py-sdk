@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.84
+
+- Canton sentry base: `init` configures from the profile before applying the condition in force, so a detector's own `init` must not configure again; `emit` flattens metadata to a map of strings, with the description under `desc` and the update id under `tx_hash`, which is what the platform's event service reads (#532)
+
 ## v0.5.83
 
 - Canton sentry base: monitoring conditions arrive the platform's way, the `config` channel's raw record through a `RemoteMonitoringConditionsDB` ingested at init; the newest active condition of the detector is applied on top of the profile, its party becomes a monitored party, and every alert carries its id as `cid` (#530)
