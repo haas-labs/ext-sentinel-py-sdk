@@ -1,4 +1,5 @@
 import hashlib
+import json
 import time
 from collections import deque
 from typing import Any, Deque, Dict, Optional, Set
@@ -10,6 +11,27 @@ from sentinel.models.config import Configuration, Status
 from sentinel.models.event import Blockchain, Event
 
 CANTON = Blockchain(network="canton", chain_id="canton")
+
+
+def flat_metadata(metadata: Dict[str, Any]) -> Dict[str, str]:
+    """
+    The platform reads an event's metadata as a map of strings and drops, without a log line,
+    any record whose metadata holds a list, an object or a number. Numbers become their text,
+    lists and objects their JSON; None is left out.
+    """
+    out: Dict[str, str] = {}
+    for key, value in metadata.items():
+        if value is None:
+            continue
+        if isinstance(value, str):
+            out[key] = value
+        elif isinstance(value, bool):
+            out[key] = "true" if value else "false"
+        elif isinstance(value, (int, float)):
+            out[key] = str(value)
+        else:
+            out[key] = json.dumps(value, separators=(",", ":"), sort_keys=True, default=str)
+    return out
 
 
 def hash_id(value: Optional[str]) -> Optional[str]:
@@ -87,6 +109,10 @@ class CantonUpdateDetector(AsyncCoreSentry):
         # fields landing on top of the profile parameters. One tenant per sentry.
         if getattr(self.inputs, "config", None):
             self.inputs.config.on_config_change = self.on_config_change
+        # The profile is the baseline every detector starts from; a condition in force lands on
+        # top of it. Detectors must not configure again after this, or they undo the condition.
+        self.profile_parameters = dict(self.parameters or {})
+        self.configure(dict(self.profile_parameters))
         db = self.conditions_db()
         if db is not None:
             db.ingest()  # the full state of the topic, before the loop starts (as every detector does)
@@ -200,7 +226,10 @@ class CantonUpdateDetector(AsyncCoreSentry):
         Build and send the Event every Canton detector emits alike: blockchain fixed to canton,
         cid = the monitoring condition in force (None when the parameters come from the profile),
         ts = the update's record_time, and offset / update_id / synchronizer_id always in metadata
-        so an alert is traceable to the ledger. Callers pass ids already hashed (see hash_id).
+        so an alert is traceable to the ledger. Metadata is flattened to strings, with the
+        description under `desc` and the update id under `tx_hash`, which is how the platform's
+        event service reads an alert's message and builds its explorer link. Callers pass ids
+        already hashed (see hash_id).
         """
         event = Event(
             did=self.name,
@@ -212,13 +241,19 @@ class CantonUpdateDetector(AsyncCoreSentry):
             desc=desc,
             ts=update.record_time or int(time.time() * 1000),
             blockchain=CANTON,
-            metadata={
-                "offset": update.offset,
-                "update_id": update.update_id,
-                "synchronizer_id": update.synchronizer_id,
-                "policy": self.policy,
-                **metadata,
-            },
+            metadata=flat_metadata(
+                {
+                    # what the platform's event service reads off metadata: the alert's message,
+                    # and the "transaction hash" that becomes the explorer link; for Canton, the update id
+                    "desc": desc,
+                    "tx_hash": update.update_id,
+                    "offset": update.offset,
+                    "update_id": update.update_id,
+                    "synchronizer_id": update.synchronizer_id,
+                    "policy": self.policy,
+                    **metadata,
+                }
+            ),
         )
         await self.outputs.events.send(event)
         webhook = getattr(self.outputs, "webhook", None)

@@ -34,7 +34,7 @@ async def test_emit_carries_the_common_fields():
     assert ev.did == "TestDetector" and ev.category == "ALERT" and ev.type == "canton_test"
     assert ev.blockchain.network == "canton" and ev.blockchain.chain_id == "canton"
     assert ev.ts == update.record_time
-    assert ev.metadata["offset"] == update.offset and ev.metadata["update_id"] == update.update_id
+    assert ev.metadata["offset"] == str(update.offset) and ev.metadata["update_id"] == update.update_id
     assert ev.metadata["synchronizer_id"] == update.synchronizer_id
     assert ev.metadata["party_hash"] == hash_id("x")
 
@@ -81,7 +81,7 @@ async def test_emit_carries_the_policy():
     d = _detector()
     d.policy_name, d.policy_version, d.policy_config_id = "Canton Test", "0.1.0", 42
     ev = await d.emit("canton_test", 0.6, update)
-    assert ev.metadata["policy"] == {"name": "Canton Test", "version": "0.1.0", "config_id": 42}
+    assert json.loads(ev.metadata["policy"]) == {"name": "Canton Test", "version": "0.1.0", "config_id": 42}
 
 
 @pytest.mark.asyncio
@@ -186,7 +186,7 @@ async def test_the_alert_carries_the_condition_id_as_cid():
     from sentinel.models.config import Configuration
     d.apply_configuration(Configuration(**_raw_condition(cid=42)))
     event = await d.emit("canton_stakeholder_anomaly", 0.5, update)
-    assert event.cid == 42 and event.metadata["policy"]["config_id"] == 42
+    assert event.cid == 42 and json.loads(event.metadata["policy"])["config_id"] == 42
     d.restore_profile("test")
     event = await d.emit("canton_stakeholder_anomaly", 0.5, update)
     assert event.cid is None, "profile parameters: no condition to link the alert to"
@@ -205,3 +205,58 @@ def test_init_ingests_the_conditions_database_before_the_loop():
     d.conditions_db().ingest()
     d.sync_policy()
     assert db.ingested == 1 and d.policy_config_id == 5
+
+
+def test_init_configures_from_the_profile_then_lets_the_condition_land_on_top(monkeypatch):
+    """The bug this guards: a detector that configured itself again after super().init() undid the
+    condition the database had just applied, so a condition's fields never reached the running rule."""
+    import sentinel.sentry.v2.canton as canton_module
+
+    seen = []
+
+    class Rule(CantonUpdateDetector):
+        def configure(self, parameters):
+            seen.append(dict(parameters))
+            self.threshold = parameters.get("max_stakeholders_default")
+
+    d = Rule.__new__(Rule)
+    d.parameters, d.logger, d.policy_name = {"max_stakeholders_default": 25}, MagicMock(), "Canton Stakeholder Anomaly"
+    d.policy_config_id, d.name = None, "Rule"
+    d.inputs = MagicMock()
+    d.inputs.updates = MagicMock()
+    d.inputs.config = MagicMock()
+    db = _FakeConditionsDB()
+    from sentinel.models.config import Configuration
+    db._config_db[9] = Configuration(**_raw_condition(cid=9, config={"max_stakeholders_default": 3}))
+    d.databases = MagicMock()
+    d.databases.monitoring_conditions = db
+    monkeypatch.setattr(canton_module.CantonUpdateDetector.__mro__[1], "init", lambda self: None)  # the SDK's own setup is not under test
+
+    Rule.init(d)
+
+    assert [p.get("max_stakeholders_default") for p in seen] == [25, 3], "profile first, then the condition"
+    assert d.threshold == 3 and d.policy_config_id == 9
+    assert d.profile_parameters == {"max_stakeholders_default": 25}, "the profile stays the baseline a DISABLED condition restores"
+
+
+@pytest.mark.asyncio
+async def test_emit_metadata_is_a_map_of_strings():
+    """The platform's event service reads metadata as Map<String,String> and silently drops a record
+    with a list, an object or a number in it; the first Canton alert in dev vanished that way."""
+    d = _detector()
+    update = CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()))
+    await d.emit("t", 0.5, update, hashes=["a", "b"], node_id=3, ratio=0.25, flag=True, nothing=None, nested={"k": [1]})
+    event = d.outputs.events.send.call_args.args[0]
+    assert all(isinstance(v, str) for v in event.metadata.values()), event.metadata
+    assert event.metadata["hashes"] == '["a","b"]' and event.metadata["node_id"] == "3" and event.metadata["ratio"] == "0.25"
+    assert event.metadata["flag"] == "true" and "nothing" not in event.metadata
+    assert event.metadata["policy"].startswith("{") and event.metadata["offset"].isdigit()
+
+
+@pytest.mark.asyncio
+async def test_emit_puts_the_message_and_the_update_id_where_the_platform_reads_them():
+    update = CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()))
+    d = _detector()
+    ev = await d.emit("t", 0.5, update, desc="A party saw what it should not")
+    assert ev.metadata["desc"] == "A party saw what it should not", "ext-event reads the alert message from metadata.desc"
+    assert ev.metadata["tx_hash"] == update.update_id, "ext-event's explorer link comes from metadata.tx_hash" 
