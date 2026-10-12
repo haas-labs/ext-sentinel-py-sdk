@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.85
+
+- Add `sentinel.utils.message.render_message`: fills the `{name}` placeholders of a message template from a dict, leaves unknown placeholders as written, falls back to a default for a blank template, and fills each value once (#535)
+
 ## v0.5.84
 
 - Canton sentry base: `init` configures from the profile before applying the condition in force, so a detector's own `init` must not configure again; `emit` flattens metadata to a map of strings, with the description under `desc` and the update id under `tx_hash`, which is what the platform's event service reads (#532)
