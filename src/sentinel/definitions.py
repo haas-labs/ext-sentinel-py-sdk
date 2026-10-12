@@ -48,4 +48,5 @@ BLOCKCHAIN = {
     "ethereum_holesky": Blockchain(
         network="ethereum_holesky", chain_id=17000, short_name="holesky", description="Ethereum Holesky Testnet", currency="ETH"
     ),
+    "adi": Blockchain(network="adi", chain_id=36900, short_name="adi", description="ADI Network", currency="ADI"),
 }

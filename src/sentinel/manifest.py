@@ -55,6 +55,7 @@ class NetworkTag(str, Enum):
     ZETA = "zeta"
     POLYGON_AMOY = "polygon_amoy"
     ETHEREUM_HOLESKY = "ethereum_holesky"
+    ADI = "adi"
 
     # // test
     ANVIL = "anvil"
