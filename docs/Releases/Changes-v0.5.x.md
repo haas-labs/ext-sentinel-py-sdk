@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.86
+
+- Add ADI Network: `adi` in the blockchain definitions (chain id 36900, currency ADI) and `NetworkTag.ADI`, so a detector can run with `network: adi` (#534)
+
 ## v0.5.85
 
 - Add `sentinel.utils.message.render_message`: fills the `{name}` placeholders of a message template from a dict, leaves unknown placeholders as written, falls back to a default for a blank template, and fills each value once (#535)
