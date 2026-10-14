@@ -2,7 +2,7 @@ import hashlib
 import json
 import time
 from collections import deque
-from typing import Any, Deque, Dict, Optional, Set
+from typing import Any, Deque, Dict, Optional, Set, Tuple
 
 from sentinel.core.v2.sentry import AsyncCoreSentry
 from sentinel.core.v2.settings import Settings
@@ -50,8 +50,10 @@ Mandatory dependencies:
 - an inbound `updates` channel (sentinel.channels.kafka.canton or sentinel.channels.fs.canton)
 - an outbound event channel
 
-Unlike TransactionDetector there is no `network` parameter bound to BLOCKCHAIN: the stream is
-already scoped to one participant and one set of parties by the adapter that produced it.
+Unlike TransactionDetector there is no `network` parameter bound to BLOCKCHAIN: each adapter
+reads one participant and one set of parties. Several adapters may publish to one topic; each
+update then carries the `participant_id` of its node, and a detector scoped with the
+`participant_id` parameter (profile, or a condition field) only sees that node's updates.
 """
 
 
@@ -93,8 +95,8 @@ class CantonUpdateDetector(AsyncCoreSentry):
             **kwargs,
         )
         self.logger_name = "canton://" + self.name
-        self._recent_ids: Deque[str] = deque(maxlen=RECENT_UPDATES)
-        self._recent_set: Set[str] = set()
+        self._recent_ids: Deque[Tuple[Optional[str], str]] = deque(maxlen=RECENT_UPDATES)
+        self._recent_set: Set[Tuple[Optional[str], str]] = set()
 
     def init(self) -> None:
         super().init()
@@ -112,27 +114,73 @@ class CantonUpdateDetector(AsyncCoreSentry):
         # The profile is the baseline every detector starts from; a condition in force lands on
         # top of it. Detectors must not configure again after this, or they undo the condition.
         self.profile_parameters = dict(self.parameters or {})
+        self.scope_participant(self.profile_parameters)
         self.configure(dict(self.profile_parameters))
         db = self.conditions_db()
         if db is not None:
             db.ingest()  # the full state of the topic, before the loop starts (as every detector does)
             self.sync_policy()
 
+    # ------------------------------------------------------------- participant scope
+
+    def scope_participant(self, parameters: Dict) -> None:
+        """
+        The node this detector watches: the `participant_id` parameter, from the profile or from
+        the condition in force. None means every node on the topic, which is right only while the
+        topic carries one node (one adapter per topic, as deployed today).
+        """
+        value = (parameters or {}).get("participant_id") or None
+        if value != getattr(self, "participant_id", None):
+            self.logger.info(f"participant scope: {value or 'any node on the topic'}")
+        self.participant_id = value
+
+    def in_scope(self, update: CantonUpdate) -> bool:
+        """
+        Whether an update belongs to the node this detector watches. An update from another node
+        is dropped here, before deduplication and before on_update, so it never reaches the
+        detector's state, snapshots included. An update without participant_id (published before
+        the field existed) is accepted: a topic with a single adapter keeps working unchanged.
+        """
+        scope = getattr(self, "participant_id", None)
+        source = update.participant_id
+        if source is None:
+            if scope and not getattr(self, "_warned_unstamped", False):
+                self._warned_unstamped = True
+                self.logger.warning("updates without participant_id on the topic: accepted as this detector's node")
+            return True
+        if scope:
+            return source == scope
+        seen = self.__dict__.setdefault("_participants_seen", set())
+        if source not in seen:
+            seen.add(source)
+            if len(seen) == 2:
+                self.logger.warning(
+                    "updates from more than one participant on the topic and no participant_id "
+                    "parameter: every node's copy of a transaction is handled; set participant_id"
+                )
+        return True
+
     async def handle_update(self, update: CantonUpdate) -> None:
         """
-        Every update passes here before on_update. The adapter persists its offset only after
-        the broker's ack, so a crash in between republishes a page; update_id is the
-        cross-participant identity of an update and the key that makes that republish harmless.
-        Snapshots carry no update_id and are never deduplicated.
+        Every update passes here before on_update. Updates from a node outside the detector's
+        scope are dropped first. Then deduplication: the adapter persists its offset only after
+        the broker's ack, so a crash in between republishes a page; (participant_id, update_id)
+        is the key that makes that republish harmless. update_id alone is not enough on a shared
+        topic: the same transaction seen by two nodes has one update_id, and the second node's
+        copy would be dropped without a trace. Snapshots carry no update_id and are never
+        deduplicated.
         """
+        if not self.in_scope(update):
+            return
         if update.update_id:
-            if update.update_id in self._recent_set:
+            key = (update.participant_id, update.update_id)
+            if key in self._recent_set:
                 self.logger.info(f"update {update.update_id[:12]}… already seen at this offset range, skipped")
                 return
             if len(self._recent_ids) == self._recent_ids.maxlen:
                 self._recent_set.discard(self._recent_ids[0])
-            self._recent_ids.append(update.update_id)
-            self._recent_set.add(update.update_id)
+            self._recent_ids.append(key)
+            self._recent_set.add(key)
         await self.on_update(update)
 
     # handle incoming Canton update
@@ -200,6 +248,7 @@ class CantonUpdateDetector(AsyncCoreSentry):
         if party and not fields.get("monitored_parties"):
             fields["monitored_parties"] = sorted(set(base.get("monitored_parties") or []) | {party})
         base.update(fields)
+        self.scope_participant(base)
         self.policy_config_id = config.id
         self._policy_updated_at = config.updated_at
         self.logger.info(f"configuration {config.id} applied: {sorted(fields.keys())}")
@@ -211,6 +260,7 @@ class CantonUpdateDetector(AsyncCoreSentry):
         self._policy_updated_at = None
         self.logger.info(f"{why}: back to profile parameters")
         self.profile_parameters = dict(getattr(self, "profile_parameters", None) or self.parameters or {})
+        self.scope_participant(self.profile_parameters)
         self.configure(dict(self.profile_parameters))
 
     async def emit(
@@ -226,7 +276,8 @@ class CantonUpdateDetector(AsyncCoreSentry):
         Build and send the Event every Canton detector emits alike: blockchain fixed to canton,
         cid = the monitoring condition in force (None when the parameters come from the profile),
         ts = the update's record_time, and offset / update_id / synchronizer_id always in metadata
-        so an alert is traceable to the ledger. Metadata is flattened to strings, with the
+        so an alert is traceable to the ledger, plus the hash of the node it was read from
+        (source_participant_hash) when the update carries one. Metadata is flattened to strings, with the
         description under `desc` and the update id under `tx_hash`, which is how the platform's
         event service reads an alert's message and builds its explorer link. Callers pass ids
         already hashed (see hash_id).
@@ -250,6 +301,7 @@ class CantonUpdateDetector(AsyncCoreSentry):
                     "offset": update.offset,
                     "update_id": update.update_id,
                     "synchronizer_id": update.synchronizer_id,
+                    "source_participant_hash": hash_id(update.participant_id),
                     "policy": self.policy,
                     **metadata,
                 }

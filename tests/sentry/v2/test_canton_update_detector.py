@@ -260,3 +260,99 @@ async def test_emit_puts_the_message_and_the_update_id_where_the_platform_reads_
     ev = await d.emit("t", 0.5, update, desc="A party saw what it should not")
     assert ev.metadata["desc"] == "A party saw what it should not", "ext-event reads the alert message from metadata.desc"
     assert ev.metadata["tx_hash"] == update.update_id, "ext-event's explorer link comes from metadata.tx_hash" 
+
+
+# ------------------------------------------------------------------ several nodes on one topic
+
+NODE_A, NODE_B = "node-a::1220aa", "node-b::1220bb"
+
+
+def _scoped(participant_id=None):
+    from collections import deque
+    d = _detector()
+    d.logger = MagicMock()
+    d._recent_ids, d._recent_set = deque(maxlen=10_000), set()
+    d.scope_participant({"participant_id": participant_id} if participant_id else {})
+    seen = []
+    async def on_update(u): seen.append((u.participant_id, u.kind.value, u.update_id))
+    d.on_update = on_update
+    return d, seen
+
+
+def _tx(participant_id):
+    return CantonUpdate.from_json_api(json.load((RES / "update-transaction-created.json").open()), participant_id=participant_id)
+
+
+@pytest.mark.asyncio
+async def test_a_detector_scoped_to_node_a_ignores_node_b():
+    d, seen = _scoped(NODE_A)
+    await d.handle_update(_tx(NODE_B))
+    assert seen == []
+    await d.handle_update(_tx(NODE_A))
+    assert seen == [(NODE_A, "transaction", _tx(NODE_A).update_id)]
+
+
+@pytest.mark.asyncio
+async def test_node_b_seen_first_does_not_shadow_node_a():
+    # the same transaction seen by both nodes, B's copy first: before, update_id alone was the
+    # dedup key and A's copy was dropped without a log line worth an alert
+    d, seen = _scoped(NODE_A)
+    await d.handle_update(_tx(NODE_B))
+    await d.handle_update(_tx(NODE_A))
+    assert [s[0] for s in seen] == [NODE_A]
+
+
+@pytest.mark.asyncio
+async def test_an_unscoped_detector_handles_each_nodes_copy_once():
+    d, seen = _scoped(None)
+    for u in (_tx(NODE_A), _tx(NODE_B), _tx(NODE_A), _tx(NODE_B)):
+        await d.handle_update(u)
+    assert [s[0] for s in seen] == [NODE_A, NODE_B], "a republish is still deduplicated per node"
+    d.logger.warning.assert_called_once()  # two nodes and no scope: the operator is told
+
+
+@pytest.mark.asyncio
+async def test_a_snapshot_from_node_b_never_reaches_node_a():
+    d, seen = _scoped(NODE_A)
+    await d.handle_update(CantonUpdate(kind="snapshot", offset=9, participant_id=NODE_B))
+    assert seen == []
+    await d.handle_update(CantonUpdate(kind="snapshot", offset=3, participant_id=NODE_A))
+    assert seen == [(NODE_A, "snapshot", None)]
+
+
+@pytest.mark.asyncio
+async def test_updates_without_participant_id_are_still_handled():
+    d, seen = _scoped(NODE_A)
+    old = CantonUpdate.model_validate_json(_tx(None).model_dump_json(exclude_none=True))
+    await d.handle_update(old)
+    await d.handle_update(old)
+    await d.handle_update(CantonUpdate(kind="snapshot", offset=1))
+    assert seen == [(None, "transaction", old.update_id), (None, "snapshot", None)]
+
+
+@pytest.mark.asyncio
+async def test_the_condition_can_scope_the_node_and_disabling_it_restores_the_profile():
+    from sentinel.models.config import Configuration
+    d, seen = _scoped(None)
+    d.parameters = {"severity": 0.6}
+    d.configure = lambda p: None
+    raw = {"id": 8, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": "c", "source": "ext",
+           "contract": {"id": 1, "createdAt": 1, "updatedAt": 1, "projectId": 1, "tenantId": 1, "chainUid": "canton", "name": "client party"},
+           "schema": {"id": 3, "createdAt": 1, "updatedAt": 1, "status": "ACTIVE", "name": "Canton Stakeholder Anomaly", "version": "0.1.0"},
+           "config": {"participant_id": NODE_A}}
+    await d.on_config_change(Configuration(**raw))
+    assert d.participant_id == NODE_A
+    await d.handle_update(_tx(NODE_B))
+    assert seen == []
+    raw["status"] = "DISABLED"
+    await d.on_config_change(Configuration(**raw))
+    assert d.participant_id is None
+
+
+@pytest.mark.asyncio
+async def test_emit_carries_the_hash_of_the_source_node():
+    ev = await _detector().emit("canton_test", 0.6, _tx(NODE_A))
+    assert ev.metadata["source_participant_hash"] == hash_id(NODE_A)
+    assert NODE_A not in json.dumps(ev.metadata)
+    ev = await _detector().emit("canton_test", 0.6, _tx(None))
+    assert "source_participant_hash" not in ev.metadata

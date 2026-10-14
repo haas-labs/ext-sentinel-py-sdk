@@ -122,3 +122,22 @@ def test_round_trip_through_json_lines():
     back = CantonUpdate.model_validate_json(line)
     assert back == u
     assert back.events[0].stakeholders == list(dict.fromkeys(back.events[0].signatories + back.events[0].observers))
+
+
+def test_participant_id_is_stamped_by_the_adapter_and_optional():
+    raw = load("update-transaction-created.json")
+    assert CantonUpdate.from_json_api(raw).participant_id is None
+    u = CantonUpdate.from_json_api(raw, participant_id="node-a::1220aa")
+    assert u.participant_id == "node-a::1220aa"
+    snap = CantonUpdate.snapshot_from_json_api([], 5, participant_id="node-a::1220aa")
+    assert snap.participant_id == "node-a::1220aa" and snap.offset == 5
+
+
+def test_a_record_without_participant_id_is_still_read():
+    # a record as published before the field existed
+    old = CantonUpdate.from_json_api(load("update-transaction-created.json")).model_dump_json(exclude_none=True)
+    assert "participant_id" not in old
+    back = CantonUpdate.model_validate_json(old)
+    assert back.participant_id is None and back.update_id
+    stamped = CantonUpdate.from_json_api(load("update-transaction-created.json"), participant_id="node-b::1220bb")
+    assert CantonUpdate.model_validate_json(stamped.model_dump_json(exclude_none=True)).participant_id == "node-b::1220bb"
