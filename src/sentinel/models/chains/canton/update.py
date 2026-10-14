@@ -8,7 +8,10 @@ OffsetCheckpoint. This model flattens every kind into one envelope plus a list o
 a sentry can pattern-match on `event.type` without caring which kind carried it.
 
 Offsets are participant-local int64 and are not comparable across participants; `update_id` is
-the cross-participant identity of an update and the deduplication key for consumers.
+the cross-participant identity of an update. `participant_id` names the node the adapter read the
+update from, so several adapters can share one topic: the same transaction seen by two nodes
+arrives twice with the same `update_id` and a different `participant_id`, and a consumer
+deduplicates by the pair. It is optional; records published before it existed carry none.
 
 `from_json_api` and `snapshot_from_json_api` build the model from the JSON Ledger API v2 payloads
 (the `value`-wrapped shapes served by the participant's http-ledger-api). The gRPC adapter maps the
@@ -118,6 +121,11 @@ class CantonEvent(BaseModel):
 class CantonUpdate(BaseModel):
     kind: CantonUpdateKind
     offset: int
+    # The participant node the adapter read this update from (`GET /v2/parties/participant-id`).
+    # Not to be confused with CantonEvent.participant, the node whose hosting a topology event
+    # changes. None on records published before the field existed, or by an adapter that could
+    # not learn its node id.
+    participant_id: Optional[str] = None
     update_id: Optional[str] = None
     synchronizer_id: Optional[str] = None
     record_time: Optional[int] = None  # epoch ms
@@ -130,11 +138,20 @@ class CantonUpdate(BaseModel):
     # ------------------------------------------------------------------ JSON Ledger API v2 mapping
 
     @classmethod
-    def from_json_api(cls, update: Dict[str, Any], keep_payload: bool = False) -> "CantonUpdate":
+    def from_json_api(
+        cls, update: Dict[str, Any], keep_payload: bool = False, participant_id: Optional[str] = None
+    ) -> "CantonUpdate":
         """
         Build from one element of a GetUpdates / get-updates-page response
-        (`{"update": {"Transaction": {"value": {...}}}}` or the inner `{"Transaction": ...}`).
+        (`{"update": {"Transaction": {"value": {...}}}}` or the inner `{"Transaction": ...}`),
+        stamped with the participant the adapter read it from, when given.
         """
+        built = cls._from_json_api(update, keep_payload)
+        built.participant_id = participant_id
+        return built
+
+    @classmethod
+    def _from_json_api(cls, update: Dict[str, Any], keep_payload: bool) -> "CantonUpdate":
         kind, body = _unwrap(update.get("update", update))
         if kind == "Transaction":
             events = [_contract_event(e, keep_payload) for e in body.get("events", [])]
@@ -182,7 +199,11 @@ class CantonUpdate(BaseModel):
 
     @classmethod
     def snapshot_from_json_api(
-        cls, entries: List[Dict[str, Any]], offset: int, keep_payload: bool = False
+        cls,
+        entries: List[Dict[str, Any]],
+        offset: int,
+        keep_payload: bool = False,
+        participant_id: Optional[str] = None,
     ) -> "CantonUpdate":
         """
         Build the bootstrap snapshot from a GetActiveContracts response taken at `offset`.
@@ -201,7 +222,7 @@ class CantonUpdate(BaseModel):
                 events.append(_reassignment_event({"UnassignedEvent": body.get("unassignedEvent", body)}, keep_payload))
             elif "Assigned" in kind:
                 events.append(_reassignment_event({"AssignedEvent": body.get("assignedEvent", body)}, keep_payload))
-        return cls(kind=CantonUpdateKind.SNAPSHOT, offset=offset, events=events)
+        return cls(kind=CantonUpdateKind.SNAPSHOT, offset=offset, participant_id=participant_id, events=events)
 
 
 # ---------------------------------------------------------------------------------- helpers
