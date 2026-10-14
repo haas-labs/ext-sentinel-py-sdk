@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.87
+
+- Canton: `CantonUpdate.participant_id` (optional), the node the trunk read the update from, taken by `from_json_api` and `snapshot_from_json_api`; the sentry base reads a `participant_id` parameter (profile or monitoring condition), drops other nodes' updates and snapshots before deduplication, deduplicates by `(participant_id, update_id)`, still accepts records without the field, and `emit` adds `source_participant_hash` (#538)
+
 ## v0.5.86
 
 - Add ADI Network: `adi` in the blockchain definitions (chain id 36900, currency ADI) and `NetworkTag.ADI`, so a detector can run with `network: adi` (#534)
