@@ -7,6 +7,18 @@ from sentinel.models.channel import Channel
 from sentinel.models.transaction import Transaction
 
 
+def is_empty_block_placeholder(data) -> bool:
+    """
+    Check if a record is the placeholder the trunk ingest publishes for an empty block:
+    no transaction hash and a block with zero transactions. It carries the block only
+    and is not a real transaction.
+    """
+    if not isinstance(data, dict) or data.get("hash"):
+        return False
+    block = data.get("block")
+    return isinstance(block, dict) and block.get("transaction_count") == 0
+
+
 class InboundTransactionsChannel(InboundKafkaChannel):
     name = "transactions"
 
@@ -31,6 +43,12 @@ class InboundTransactionsChannel(InboundKafkaChannel):
         Handle consumer message for transaction channel
         """
         data = message.value
+        if is_empty_block_placeholder(data):
+            self.logger.debug(
+                f"{self.name} -> Skipping empty block placeholder, "
+                f"block: {data['block'].get('number')}, offset: {message.offset}"
+            )
+            return
         try:
             transaction: Transaction = self.record_type(**data)
         except Exception as err:
