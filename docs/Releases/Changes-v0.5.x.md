@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.88
+
+- Kafka transactions channel: the empty-block placeholder record the trunk publishes (empty `hash`, `block.transaction_count == 0`, no `gas_price`/receipt fields) is skipped with a debug log instead of raising, so a sentry on a chain with empty blocks (ADI) no longer restarts on it; any other validation error still raises (#540)
+
 ## v0.5.87
 
 - Canton: `CantonUpdate.participant_id` (optional), the node the trunk read the update from, taken by `from_json_api` and `snapshot_from_json_api`; the sentry base reads a `participant_id` parameter (profile or monitoring condition), drops other nodes' updates and snapshots before deduplication, deduplicates by `(participant_id, update_id)`, still accepts records without the field, and `emit` adds `source_participant_hash` (#538)
