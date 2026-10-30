@@ -42,11 +42,53 @@ def test_sources_are_tracked_apart():
     tracker = ErrorTracker()
     assert tracker.should_alert("api", "down") is True
     assert tracker.should_alert("db", "down") is True
-    assert tracker.should_alert(("condition", 7), "down") is True
+    assert tracker.should_alert("api", "down", scope=7) is True
     assert "api" in tracker and tracker.last("api") == "down"
     assert tracker.clear("nothing") is False
     assert tracker.clear() is True
     assert tracker.should_alert("api", "down") is True
+
+
+def test_an_error_reported_for_one_condition_does_not_silence_another():
+    tracker = ErrorTracker()
+    assert tracker.should_alert("ledger-api", "HTTP 401", scope=28079) is True
+    assert tracker.should_alert("ledger-api", "HTTP 401", scope=28079) is False
+    # a new condition with the same failure is a new alert
+    assert tracker.should_alert("ledger-api", "HTTP 401", scope=28081) is True
+    assert tracker.should_alert("ledger-api", "HTTP 401", scope=28081) is False
+    assert tracker.last("ledger-api", scope=28079) == "HTTP 401"
+    assert tracker.last("ledger-api") is None  # the detector without conditions has its own state
+
+
+def test_clear_by_key_reaches_every_condition_and_by_scope_only_one():
+    tracker = ErrorTracker()
+    tracker.should_alert("api", "down", scope=1)
+    tracker.should_alert("api", "down", scope=2)
+    tracker.should_alert("db", "down", scope=2)
+    assert tracker.clear("api", scope=1) is True
+    assert tracker.should_alert("api", "down", scope=1) is True
+    assert tracker.should_alert("api", "down", scope=2) is False
+    assert tracker.clear("api") is True  # the source works again, for every condition
+    assert tracker.should_alert("api", "down", scope=1) is True
+    assert tracker.should_alert("api", "down", scope=2) is True
+    assert "db" in tracker
+
+
+def test_a_disabled_or_removed_condition_loses_its_errors():
+    tracker = ErrorTracker()
+    tracker.should_alert("api", "down", scope=1)
+    tracker.should_alert("api", "down", scope=2)
+    tracker.should_alert("api", "down")  # no condition
+    assert tracker.forget(1) is True
+    assert tracker.forget(1) is False
+    assert tracker.forget(None) is False
+    assert tracker.should_alert("api", "down", scope=1) is True  # back later: alerts as new
+    # only condition 2 is still in force
+    assert tracker.retain([2]) is True
+    assert tracker.last("api", scope=1) is None
+    assert tracker.last("api", scope=2) == "down"
+    assert tracker.last("api") == "down"
+    assert tracker.retain([2]) is False
 
 
 def test_the_schema_fields_carry_the_scala_names():
