@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.89
+
+- Add `sentinel.utils.condition`: the Extractor's Condition syntax (comparisons, `%`, `++` / `--`, once, new max / min) parsed in one place, with `Threshold` for a series of values.
+- Add `sentinel.utils.error_tracking`: `ErrorTrackingSchema` (Track Errors, Track Errors (always)) and `ErrorTracker`, one alert per error until it clears, or every time with always.
+- Add `sentinel.utils.cron`: `CronSchema` and `cron_interval_ms`, the `cron` field read as a time window (a duration, milliseconds, a 5-field cron or a Quartz expression). PR #542.
+
 ## v0.5.88
 
 - Kafka transactions channel: the empty-block placeholder record the trunk publishes (empty `hash`, `block.transaction_count == 0`, no `gas_price`/receipt fields) is skipped with a debug log instead of raising, so a sentry on a chain with empty blocks (ADI) no longer restarts on it; any other validation error still raises (#540)
