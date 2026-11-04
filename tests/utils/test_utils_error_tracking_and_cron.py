@@ -103,6 +103,15 @@ def test_the_schema_fields_carry_the_scala_names():
     assert "severity" in schema
 
 
+@pytest.mark.parametrize("scopes", ["cfg-1", b"cfg-1"])
+def test_retain_refuses_a_single_string(scopes):
+    tracker = ErrorTracker()
+    tracker.should_alert("api", "down", scope="cfg-1")
+    with pytest.raises(TypeError):
+        tracker.retain(scopes)
+    assert not tracker.should_alert("api", "down", scope="cfg-1")
+
+
 # ------------------------------------------------------------------ cron
 
 

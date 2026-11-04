@@ -112,8 +112,11 @@ class ErrorTracker:
     def retain(self, scopes: Iterable[Hashable]) -> bool:
         """
         Keep only the errors of the conditions in `scopes` (the ones in force) and of the detector
-        without conditions (scope None). Returns whether anything was dropped.
+        without conditions (scope None). Returns whether anything was dropped. A single string is
+        refused: it would be read as its characters and drop that condition's own errors.
         """
+        if isinstance(scopes, (str, bytes)):
+            raise TypeError("scopes must be a collection of condition ids, not a single string")
         keep = set(scopes)
         drop = [k for k in self._last if k[0] is not None and k[0] not in keep]
         for k in drop:
