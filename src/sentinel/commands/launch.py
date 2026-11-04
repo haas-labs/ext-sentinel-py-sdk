@@ -37,7 +37,7 @@ class Command(SentinelCommand):
         # TODO make loading project settings through helper/utils
         try:
             if args.settings.project is None or not args.settings.project.path.exists():
-                logger.error("Cannot detect project directory, missed sentinel.yalm file")
+                logger.error("Cannot detect project directory, missed sentinel.yaml file")
                 return
 
             try:
