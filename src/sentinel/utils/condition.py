@@ -18,7 +18,9 @@ Explicit sign (the signed value, no absolute value):
     > -15      value > -15
     < -20      value < -20
 
-Percentage change from the previous value, (v - v0) / v0 * 100 (absolute unless signed):
+Percentage change from the previous value, (v - v0) / |v0| * 100 (absolute unless signed). The base's
+size divides, so the sign always follows the move: -100 to -50 is a rise of 50% (the Scala evaluator
+divides by the signed base and reads it as -50%):
     > 25%      the change is more than 25%, up or down
     < -10%     the value fell by more than 10%
     = 100%     the value doubled
@@ -44,6 +46,9 @@ Max / min: alerts only on a new maximum (minimum) past the threshold:
     <<< 50     a new minimum below 50
     >>>= 100   a new maximum at or above 100
     <<<= 50    a new minimum at or below 50
+
+A percentage from a zero base is +/-Infinity: it can alert, but it is never kept as the record, so
+the finite moves after it can still set one.
 
 Spaces are ignored: `> ++ 100` and `>++100` are the same condition.
 
@@ -173,7 +178,7 @@ class Condition:
         """
         current = to_decimal(value)
         if not self.needs_previous:
-            return abs(current) if self.absolute else current
+            return current.copy_abs() if self.absolute else current
         if previous is None:
             return None
         before = to_decimal(previous)
@@ -235,7 +240,7 @@ class Condition:
         upward = self.operator in ("gt", "gte")
         best = state.get("extreme")
         is_new = best is None or (measured > best if upward else measured < best)
-        if is_new:
+        if is_new and measured.is_finite():
             state["extreme"] = measured
         return result and is_new
 
@@ -280,7 +285,7 @@ def parse_condition(text: str) -> Condition:
         )
     number = Decimal(rest)
     if negative:
-        number = -number
+        number = number.copy_negate()
 
     absolute = not signed and operator not in ("eq", "neq") and delta is None
     return Condition(

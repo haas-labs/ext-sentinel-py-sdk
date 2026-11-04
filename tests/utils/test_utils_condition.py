@@ -142,6 +142,13 @@ def test_numbers_are_compared_exactly():
     )
 
 
+def test_a_plain_comparison_stays_exact_past_the_default_precision():
+    amount = Decimal("1234567890123456789012345678.1234567891")  # 38 digits, 10 decimals
+    assert parse_condition("> 1234567890123456789012345678.1").matches(amount) is True
+    assert parse_condition("<= 1234567890123456789012345678.1234567891").matches(amount) is True
+    assert parse_condition("> -12345678901234567890123456789012").number == Decimal("-12345678901234567890123456789012")
+
+
 def test_a_value_that_is_not_a_number_is_refused():
     for value in ("abc", True, None, float("nan"), float("inf")):
         with pytest.raises(ValueError):
@@ -240,3 +247,27 @@ def test_a_threshold_takes_a_parsed_condition():
     condition = parse_condition("> 5")
     assert isinstance(condition, Condition)
     assert Threshold(condition).check(6) is True
+
+
+def test_a_negative_base_divides_by_its_size():
+    assert series("> 10%", [-100, -50]) == [False, True]  # +50%
+    assert series("< -10%", [-100, -50]) == [False, False]
+    assert series("< -10%", [-100, -150]) == [False, True]  # -50%
+    assert parse_condition("= 50%").matches(-50, previous=-100) is True
+
+
+def test_a_new_maximum_after_a_move_from_zero():
+    # the move from zero alerts; 5 -> 10 (+100%) and 10 -> 100 (+900%) are new maxima, 100 -> 1000 (+900%) is not
+    assert series(">>> 10%", [0, 5, 10, 100, 1000]) == [False, True, True, True, False]
+
+
+def test_a_second_move_from_zero_does_not_wipe_the_maximum():
+    # +900%, then from zero (alerts, not kept), +900% is no record, +1100% is
+    assert series(">>> 10%", [100, 1000, 0, 5, 50, 600]) == [False, True, False, True, False, True]
+
+
+def test_the_record_of_a_decrease_follows_the_operator_as_written():
+    # <<< keeps a minimum, >>> a maximum, of the size of the drop; `--` does not swap them
+    drops = [1000, 850, 700, 400]  # -15%, -17.6%, -42.9%
+    assert series(">>>= --10%", drops) == [False, True, True, True]
+    assert series("<<<= --10%", drops) == [False, True, False, False]
